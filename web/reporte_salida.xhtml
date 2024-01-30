@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+                <center>
+                    <center><h1><b>INVENTARIO/SALIDAS</b></h1></center><br/>
+                    <h:form>
+                        <p:growl  autoUpdate="true" showDetail="true"/>
+                         <p:outputLabel for="rFechaInicio" value="Fecha Inicial" />
+                         <p:calendar  id="rFechaInicio" value="#{reporteSalidaBean.fechaInicial}" mode="popup"  pages="3" showOn="button" required="true"/>
+
+                         <p:outputLabel for="rFechaFinal" value="Fecha Final" />
+                         <p:calendar  id="rFechaFinal" value="#{reporteSalidaBean.fechaFinal}" mode="popup"  pages="3" showOn="button" required="true"/>
+                        
+                        <br/><br/>
+                        <p:commandButton value="Generar" actionListener="#{reporteSalidaBean.generarReporteSalidas()}" update=":formSalidas,:formTotales"/>
+                    </h:form>
+
+                    <h:form id="formSalidas" >
+                        <p:dataTable id="tablaDetalle" value="#{reporteSalidaBean.listaSalidas}" var="salida"  paginator="true" rows="6">
+                        <p:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <p:outputLabel value="#{salida.fecha_salida}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Hora</f:facet>
+                            <p:outputLabel value="#{salida.hora_salida}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cod.Pro</f:facet>
+                            <p:outputLabel value="#{salida.cod_producto}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Producto</f:facet>
+                            <p:outputLabel value="#{salida.nombre_producto}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Concentración</f:facet>
+                            <p:outputLabel value="#{salida.concentracion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Presentación</f:facet>
+                            <p:outputLabel value="#{salida.presentacion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cantidad</f:facet>
+                            <p:outputLabel value="#{salida.cantidad}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Costo</f:facet>
+                            <p:outputLabel value="#{salida.total_costo}">
+                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="2"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Precio</f:facet>
+                            <p:outputLabel value="#{salida.total_precio}">
+                                <f:convertNumber  type="currency" currencySymbol="$"  maxFractionDigits="0"/>
+                            </p:outputLabel>            
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Responsable</f:facet>
+                            <p:outputLabel value="#{salida.primer_nombre}  #{salida.primer_apellido} "/>
+                        </p:column>  
+                        <p:column>
+                            <f:facet name="header">Detalle</f:facet>
+                            <p:outputLabel value="#{salida.detalle} "/>
+                        </p:column>  
+                    </p:dataTable>
+                    <center>
+                        <br/>
+                        <h:commandLink value="Descargar Excel">
+                            <p:dataExporter type="xls" target="tablaDetalle" fileName="Salidas de Productos" />
+                        </h:commandLink>
+                    </center>
+                </h:form>
+                    <hr/>
+                <h:form id="formTotales">
+                    <p:panel>
+                        <center>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="tCosto" value="Total Costo"/>
+                                <p:outputLabel id="tCosto" value="#{reporteSalidaBean.total_costo}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="1"/>
+                                </p:outputLabel>
+                                <p:outputLabel value="Total Precio" for="tPrecio"/>
+                                <p:outputLabel id="tPrecio" value="#{reporteSalidaBean.total_precio}">
+                                     <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                            </p:panelGrid>
+                        </center>
+                    </p:panel>
+                </h:form>
+                </center>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

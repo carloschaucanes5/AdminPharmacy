@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <body>
+        
+        <ui:composition template="./plantillas/tareas.xhtml">
+            
+            <ui:define name="content">       
+                <center><h1><b>REPORTE DE VENTAS</b></h1></center><br/>
+                <center>
+                    <h:form>
+                        <p:growl  autoUpdate="true" showDetail="true"/>
+                        <p:outputLabel value="Cédula empleado" for="rEmpleado" />
+                        <p:selectOneMenu  id="rEmpleado" value="#{reporteVentasBean.empleado}" converter="omnifaces.SelectItemsConverter" >
+                                    <f:selectItem noSelectionOption="true" itemLabel="Todos" value="#{null}"/>
+                                    <f:selectItems value="#{reporteVentasBean.listaEmpleados}" var="emp" itemLabel="#{emp.nombre}" itemValue="#{emp}"/>
+                        </p:selectOneMenu>
+
+                         <p:outputLabel for="rFechaInicio" value="Fecha Inicial" />
+                         <p:calendar  id="rFechaInicio" value="#{reporteVentasBean.fechaInicio}" mode="popup"  pages="3" showOn="button" required="true"/>
+
+                         <p:outputLabel for="rFechaFinal" value="Fecha Final" />
+                         <p:calendar  id="rFechaFinal" value="#{reporteVentasBean.fechaFinal}" mode="popup"  pages="3" showOn="button" required="true"/>
+
+                        <p:outputLabel value="Transacción" for="rTransaccion"/>
+                        <p:selectOneMenu  id="rTransaccion" value="#{reporteVentasBean.tipoTransaccion}" >
+                            <f:selectItem itemLabel="Todo" itemValue="-1" />       
+                            <f:selectItem  itemLabel="Ventas" itemValue="102"/>
+                            <f:selectItem  itemLabel="Cuentas por Cobrar" itemValue="103"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Tipo Reporte" for="rTipo"/>
+                        <p:selectOneMenu  id="rTipo" value="#{reporteVentasBean.tipoReporte}" >
+                            <f:selectItem  itemLabel="General" itemValue="1"/>
+                            <f:selectItem  itemLabel="Detallado" itemValue="2"/>
+                        </p:selectOneMenu>
+                        
+                        <br/><br/>
+                        <p:commandButton value="Generar" actionListener="#{reporteVentasBean.generarReporte()}" update=":formDetalle,:formGeneral,:formTotales"/>
+                    </h:form>
+                    <hr/>
+                </center>
+                
+                <h:form id="formDetalle">
+                    <p:dataTable id="tablaDetalle" value="#{reporteVentasBean.listaFacturaDetalle}" var="detalle" 
+                                 style="display: #{reporteVentasBean.displayTablaDetalle}}" paginator="true" rows="8">
+                        <p:column>
+                            <f:facet name="header">Factura</f:facet>
+                            <p:outputLabel value="#{detalle.numero_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <p:outputLabel value="#{detalle.fecha_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Hora</f:facet>
+                            <p:outputLabel value="#{detalle.hora_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Producto</f:facet>
+                            <p:outputLabel value="#{detalle.nombre_producto}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Concentración</f:facet>
+                            <p:outputLabel value="#{detalle.concentracion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Presentación</f:facet>
+                            <p:outputLabel value="#{detalle.presentacion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cantidad</f:facet>
+                            <p:outputLabel value="#{detalle.cantidad}"/>
+                        </p:column>
+                        <p:column>
+                             <f:facet name="header">Costo</f:facet>
+                            <p:outputLabel value="#{detalle.total_costo}">
+                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="2"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column>
+                             <f:facet name="header">Precio</f:facet>
+                            <p:outputLabel value="#{detalle.total_precio}">
+                                <f:convertNumber  type="currency" currencySymbol="$" />
+                            </p:outputLabel>
+                               
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Responsable</f:facet>
+                            <p:outputLabel value="#{detalle.nombre_empleado}"/>
+                        </p:column>
+                    </p:dataTable>
+                       <center>
+                        <br/>
+                        <h:commandLink value="Descargar Excel" style="display: #{reporteVentasBean.displayTablaDetalle}}">
+                            <p:dataExporter type="xls" target="tablaDetalle" fileName="Ventas detalle" />
+                        </h:commandLink>
+                    </center>
+                </h:form>
+                <h:form id="formGeneral">
+                    <p:dataTable  id="tablaGeneral" value="#{reporteVentasBean.listafacturaGeneral}" var="general" 
+                                  style="display: #{reporteVentasBean.displayTablaGeneral}}" paginator="true" rows="8">
+                        <p:column>
+                            <f:facet name="header">Factura</f:facet>
+                            <p:outputLabel value="#{general.numero_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <p:outputLabel value="#{general.fecha_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Hora</f:facet>
+                            <p:outputLabel value="#{general.hora_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Costo Parcial</f:facet>
+                            <p:outputLabel value="#{general.suma_costo}">
+                                <f:convertNumber  type="currency" currencySymbol="$" integerOnly="true" maxFractionDigits="2"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Precio Parcial</f:facet>
+                            <p:outputLabel value="#{general.suma_precio}">
+                                <f:convertNumber  type="currency" currencySymbol="$" integerOnly="true"/>
+                            </p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+                    <center>
+                        <br/>
+                        <h:commandLink value="Descargar Excel" style="display: #{reporteVentasBean.displayTablaGeneral}}">
+                            <p:dataExporter type="xls" target="tablaGeneral" fileName="Ventas General" />
+                        </h:commandLink>
+                    </center>
+                </h:form>
+                <h:form id="formTotales">
+                    <p:panel>
+                        <center>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="tCosto" value="Total Costo"/>
+                                <p:outputLabel id="tCosto" value="#{reporteVentasBean.totalCosto}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="1"/>
+                                </p:outputLabel>
+                                <p:outputLabel value="Total Precio" for="tPrecio"/>
+                                <p:outputLabel id="tPrecio" value="#{reporteVentasBean.totalPrecio}">
+                                     <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+   
+                                <p:outputLabel for="tGanancia" value="Utilidades"/>
+                                <p:outputLabel id="tGanancia" value="#{reporteVentasBean.ganancia}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                            </p:panelGrid>
+                        </center>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+        
+    </body>
+</html>

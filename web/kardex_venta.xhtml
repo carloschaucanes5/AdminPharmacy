@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./plantillas/tareas.xhtml">                
+            <ui:define name="content">             
+                <h:form id="formBuscar">
+                    <center>
+                        <p:outputLabel value="Digite Producto"/>
+                        <p:inputText value="#{kardexVentaBean.cadenaNombre}"/>
+                        <p:commandButton value="Buscar" actionListener="#{kardexVentaBean.buscarProducto()}" update="resultadoBuscar" />
+                        <hr/>
+                        <p:dataTable id="resultadoBuscar" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="3">
+                            <p:ajax event="rowSelect" />
+                            <p:column headerText="Código">
+                                <p:outputLabel value="#{inv.cod_producto}" />
+                            </p:column>
+                            <p:column headerText="Nombre Producto">
+                                <p:outputLabel value="#{inv.nombre}" />
+                            </p:column>
+
+                            <p:column headerText="Concentración">
+                                <p:outputLabel value="#{inv.concentracion}" />
+                            </p:column>
+
+                            <p:column headerText="Presentación">
+                                <p:outputLabel value="#{inv.presentacion}" />
+                            </p:column> 
+
+                            <!--p:column headerText="Costo/unitario">
+                                <p:outputLabel value="#{inv.costo_unitario}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
+                                </p:outputLabel>
+                            </p:column-->
+                            <p:column headerText="Precio/unitario">
+                                <p:outputLabel value="#{inv.precio_unitario}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Existencias">
+                                <p:outputLabel value="#{inv.existencias}"/>
+                            </p:column>
+                            <p:column headerText="Seleccionar">
+                                <p:commandButton value="Adicionar" actionListener="#{kardexVentaBean.leerIdInventario(inv)}"  oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad"/>                                  
+                            </p:column>
+                    </p:dataTable>
+                    </center>
+                </h:form>
+                <hr/>
+                <p:dialog widgetVar="wDialogoCantidad" id="dDialogoCantidad" header="KardexKdd(Cantidad Venta)" modal="true">
+                    <h:form>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <center>
+                            <h1><b>#{kardexVentaBean.itemInventario.nombre} #{kardexVentaBean.itemInventario.concentracion} </b></h1><br/>
+                            <h1><b>#{kardexVentaBean.itemInventario.presentacion}</b></h1>
+                        </center>
+                        
+                        <center>
+                            <p:outputLabel value="Cantidad" for="dCantidad"/>
+                            <p:inputText id="dCantidad"  size="4" value="#{kardexVentaBean.itemCantidad}" label="Cantidad" required="true">
+                                <f:convertNumber integerOnly="true"  type="number" />
+                                <f:validator validatorId="validatorCero"/>
+                            </p:inputText>
+                        </center><br/>
+                            <p:commandButton value="Agregar" actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemInventario, kardexVentaBean.itemCantidad)}" update=":formTransaccion" oncomplete="PF('wDialogoCantidad').hide()">
+                            </p:commandButton>
+                    </h:form>
+                </p:dialog>
+                <h:form id="formTransaccion">
+                    <div style="position: absolute;left:1100px;top: 20px;">  
+                        <h1><b>Factura No : </b><p:outputLabel  id="numeroFactura" value="#{kardexVentaBean.kardexVenta.numero_factura}"/></h1>
+                    </div>
+                    <div style="position: absolute;left:10px;top: 20px;">  
+                        <h1><b>...!!VENTAS</b></h1>
+                    </div>
+                    <p:panel>
+                        <center><b>ORDEN DE VENTA</b></center><br/>
+                        <p:growl autoUpdate="true"  showDetail="true"/>
+                        <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item" paginator="true" rows="3">
+                            <p:column headerText="Eliminar" id="seleccion">
+                                <center><p:commandLink value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion" /></center>
+                            </p:column>
+                            <p:column headerText="Código">
+                                <center><p:outputLabel value="#{item.inventario.cod_producto}" /></center>
+                            </p:column>
+                            <p:column headerText="Nombre Producto">
+                                <center><p:outputLabel value="#{item.inventario.nombre}" /></center>
+                            </p:column>
+                            
+                            <p:column headerText="cantidad" id="count">
+                                <center>
+                                    <p:outputLabel id="pro_iva"  value="#{item.cantidad}" >
+                                        <f:convertNumber integerOnly="true"  type="number" />
+                                    </p:outputLabel>
+                                </center>
+                            </p:column> 
+                            <p:column headerText="Total">
+                                <center>
+                                    <p:outputLabel  value="#{item.total_precio}">
+                                        <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                    </p:outputLabel>
+                                </center>
+                            </p:column>
+                         </p:dataTable>
+                    </p:panel>
+                    <br/>
+                    <center>
+                        <h1>Total a Pagar <b>
+                        <p:outputLabel id="idTotalPago" value="#{kardexVentaBean.totalPago}">
+                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                        </p:outputLabel></b>
+                        </h1>
+                        <br/>
+                        <p:commandButton value="Venta Contado" action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
+                        <p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/>
+                        <p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/>
+                    </center>
+                </h:form>
+                
+                
+                <p:dialog widgetVar="wFactura" id="dFactura" header="KardexKDD(Factura)" modal="true">
+                    <h:form id="formFactura">
+                        <center>
+                            <p:outputLabel value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
+                            <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
+                            <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
+                            <p:outputLabel value="Teléfono:#{kardexVentaBean.empresa.telefono}"/><br/>
+                            <p:outputLabel value="Ciudad:#{kardexVentaBean.empresa.ciudad}"/>
+                            <br/>
+                            <b>...........................................</b>
+                            <br/>                            
+                            <p:outputLabel value="Factura No: #{kardexVentaBean.kardexVenta.numero_factura}"/><br/>
+                            <p:outputLabel value="Cajero: #{sessionBean.nombre}"/><br/>
+                            <p:outputLabel value="Fecha: #{kardexVentaBean.fecha}"/><br/>
+                            <p:outputLabel value="Hora: #{kardexVentaBean.hora}"/>
+                            <br/>
+                            <b>...........................................</b> 
+                            <br/>
+                        <p:dataTable value="#{kardexVentaBean.listaRecibos}" var="fac" style="text-height: 9">
+                            <p:column headerText="Item" width="10">
+                                <p:outputLabel value="#{fac.variable}" />
+                            </p:column>
+                            <p:column headerText="Cant" width="3">
+                                <p:outputLabel value="#{fac.cantidad}"/>
+                            </p:column>
+                            <p:column headerText="Total" width="10">
+                                <p:outputLabel value="#{fac.total}">
+                                    <f:convertNumber type="currency" maxFractionDigits="0"/>
+                                </p:outputLabel>
+                            </p:column>
+                        </p:dataTable>
+                            <br/>
+                            <b>...........................................</b>
+                            <br/>
+                            <p:outputLabel value="Valor Total: "/>
+                            <p:outputLabel value="#{kardexVentaBean.totalPago}">
+                               <f:convertNumber type="currency" maxFractionDigits="0"/> 
+                            </p:outputLabel>
+                        <br/>
+                        </center>
+                    </h:form>
+                    <h:form>
+                        <br/>
+                        <center>
+                            <p:commandButton value="Imprimir">
+                                    <p:printer target=":formFactura"/>
+                            </p:commandButton>
+                        </center>    
+                    </h:form>
+                </p:dialog>
+                
+                
+                <p:dialog widgetVar="wDialogoCliente" id="dDialogoCliente" header="KardexKdd(Asignar Cliente)" modal="true">
+                    <h:form id="formVerificarCliente">
+                        <p:growl/>
+                        <p:outputLabel value="Identificación" />
+                        <p:inputText  value="#{kardexVentaBean.cliente.cedula_cliente}"/><hr/>
+                        <center>
+                            <p:commandButton value="Verificar" actionListener="#{kardexVentaBean.buscarClienteCedula()}" update=":formCliente"/>
+                            <p:commandButton value="Buscar cliente" oncomplete="PF('wDialogoBuscar').show()" update=":dDialogoBuscar"/>
+                        </center>
+                    </h:form>
+                    <hr/>
+                    <h:form id="formCliente">
+                        <center>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Cedula" for="cliCedula"/>
+                            <p:inputText  id="cliCedula" value="#{kardexVentaBean.cliente.cedula_cliente}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}" accesskey="cliNombres"/>
+                            <p:outputLabel value="Nombres" for="cliNombres"/>
+                            <p:inputText  id="cliNombres" value="#{kardexVentaBean.cliente.nombres}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}" accesskey="cliApellidos"/>
+                            <p:outputLabel value="Apellidos" for="cliApellidos"/>
+                            <p:inputText  id="cliApellidos" value="#{kardexVentaBean.cliente.apellidos}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                            <p:outputLabel value="Dirección" for="cliDireccion"/>
+                            <p:inputText  id="cliDireccion" value="#{kardexVentaBean.cliente.direccion}" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                            <p:outputLabel value="Teléfono" for="cliTelefono"/>
+                            <p:inputText  id="cliTelefono" value="#{kardexVentaBean.cliente.telefono}" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                        </h:panelGrid>
+                            <hr/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Detalle" for="cxcDetalle"/>
+                            <p:inputTextarea id="cxcDetalle" style="size: 200" value="#{kardexVentaBean.detalleCxC}"/>
+                        </h:panelGrid>   
+                            <hr/>
+                            <p:commandButton value="Guardar Usuario" style="display:#{kardexVentaBean.activarBotonCliente}" actionListener="#{kardexVentaBean.guardarCliente(kardexVentaBean.cliente)}" update="formCliente"/>
+                            <p:commandButton value="Ejecutar Venta" style="display:#{kardexVentaBean.activarBotonEjecutarVenta}" action="#{kardexVentaBean.registrarVentaCredito(sessionBean.empleado)}" />
+                                <p:commandButton value="Cancelar"/>     
+                        </center>                       
+                    </h:form>
+                </p:dialog>
+                <p:dialog widgetVar="wDialogoBuscar" id="dDialogoBuscar" header="KardexKdd(Buscar Cliente)" modal="true">
+                    <center>
+                        <h:form>
+                            <p:outputLabel value="Nombre Cliente" for="bNombre"/>
+                            <p:inputText value="#{kardexVentaBean.cadenaClienteNombre}" id="bNombre"/>
+                            <p:commandButton value="Buscar" actionListener="#{kardexVentaBean.buscarClienteNombre()}" update=":formListaClientes:tablaClientes"/>
+                        </h:form>
+                        <h:form id="formListaClientes">
+                            <p:dataTable id='tablaClientes' value="#{kardexVentaBean.listaClientes}" var="cli" paginator="true" rows="6">
+                                <p:column headerText="Cédula">
+                                    <p:outputLabel value="#{cli.cedula_cliente}"/>
+                                </p:column>
+                                <p:column headerText="Nombres">
+                                    <p:outputLabel value="#{cli.nombres}"/>
+                                </p:column>
+                                <p:column headerText="Apellidos">
+                                    <p:outputLabel value="#{cli.apellidos}"/>
+                                </p:column>
+                                <p:column headerText="Dirección">
+                                    <p:outputLabel value="#{cli.direccion}"/>
+                                </p:column>
+                                <p:column headerText="Teléfono">
+                                    <p:outputLabel value="#{cli.telefono}"/>
+                                </p:column>
+                                <p:column headerText="Teléfono">
+                                    <p:commandButton value="Seleccionar" actionListener="#{kardexVentaBean.cliente.setCedula_cliente(cli.cedula_cliente)}" oncomplete="PF('wDialogoBuscar').hide()" update=":formVerificarCliente"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </center>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

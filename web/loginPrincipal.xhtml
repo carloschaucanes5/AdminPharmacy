@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>Login KardexKdd</title>
+        <link href="css/cssFormulario.css" rel="stylesheet"/>
+    </h:head>
+    <h:body>         
+        <center>
+            <h1><b>...! SISTEMA DE VENTAS KARDEXKDD ¡...</b></h1>
+            <hr/>
+        </center>
+                <div class="contenedorLogin">
+                    <h:form class="formulario">
+                        
+                        <p:growl  autoUpdate="true" />
+                        <p:outputLabel value="Cédula"/>
+                        <p:inputText  id="cedula" value="#{loginBean.cedula_empleado}" />
+                        <p:outputLabel value="Clave de Acceso"/>
+                        <p:password  id="clave" value="#{loginBean.contrasenia}" />
+                        <section class="seccionBotones">
+                            <center><p:commandButton value="Ingresar" action="#{loginBean.login()}"/></center>             
+                        </section>
+                        <hr/>
+                            <p:commandLink value="Regístrate" oncomplete="PF('wEmpleado').show()" update=":dEmpleado"/><br/>
+                            <p:commandLink value="Actualizar" oncomplete="PF('wActualizar').show()" update=":dActualizar"/>
+                        
+                    </h:form>
+                </div>
+               
+               
+        <p:dialog widgetVar="wEmpleado" id="dEmpleado" header="KardexKdd(Registro de usuarios)" modal="true" footer="...¡ carlitos3442@hotmail.com !...">
+
+                    <h:form id="formRegistro">
+                        <center>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Cédula" for="emCedula"/>
+                            <p:inputText  id="emCedula" value="#{empleadoBean.empleado.cedula_empleado}" required="true"/>
+                            
+                            <p:outputLabel value="Primer Nombre" for="emPrimerNombre"/>
+                            <p:inputText  id="emPrimerNombre" value="#{empleadoBean.empleado.primer_nombre}" required="true"/>
+                            
+                            <p:outputLabel value="Segundo Nombre" for="emSegundoNombre"/>
+                            <p:inputText  id="emSegundoNombre" value="#{empleadoBean.empleado.segundo_nombre}" />
+                            
+                            <p:outputLabel value="Primer Apellido" for="emPrimerApellido"/>
+                            <p:inputText  id="emPrimerApellido" value="#{empleadoBean.empleado.primer_apellido}" required="true"/>
+                            
+                            <p:outputLabel value="Segundo Apellido" for="emSegundoApellido"/>
+                            <p:inputText  id="emSegundoApellido" value="#{empleadoBean.empleado.segundo_apellido}" />
+                            
+                            <p:outputLabel value="Nueva Contraseña" for="emContrasenia"/>
+                            <p:password id="emContrasenia" value="#{empleadoBean.empleado.clave_acceso}" required="true"/>
+                            
+                            <p:outputLabel value="Confirmar Contraseña" for="emConfirmar"/>
+                            <p:password id="emConfirmar" value="#{empleadoBean.empleado.clave_confirmar}" required="true"/>
+                            
+                        </h:panelGrid>
+                            <hr/>
+
+                            <p:commandButton value="Guardar Usuario" action="#{empleadoBean.registraEmpleado()}"/>
+                        </center>                       
+                    </h:form>
+                </p:dialog>
+        
+        <p:dialog widgetVar="wActualizar" id="dActualizar" header="KardexKdd(Actualizar Información)" modal="true" footer="...¡ carlitos3442@hotmail.com !...">
+
+                    <h:form>
+                        <center>
+                            <h:panelGrid columns="2">
+                                <p:outputLabel  for="bCedula" value="Digite cedula"/>
+                                <p:inputText id="bCedula" value="#{empleadoBean.cedula}"/>
+                                <p:outputLabel  for="bClave" value="Clave de acceso"/>
+                                <p:password id="bClave" value="#{empleadoBean.contrasenia}"/>
+                                <h:panelGroup/>
+                                <p:commandButton value="Verificar" actionListener="#{empleadoBean.verificarEmpleado()}" update=":formActualizar"/>
+                            </h:panelGrid>
+                        </center>
+
+                    </h:form>
+                    <h:form id="formActualizar">
+                        <center>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Cédula" for="acCedula"/>
+                            <p:inputText  id="acCedula" value="#{empleadoBean.empleado.cedula_empleado}" required="true"/>
+                            
+                            <p:outputLabel value="Primer Nombre" for="acPrimerNombre"/>
+                            <p:inputText  id="acPrimerNombre" value="#{empleadoBean.empleado.primer_nombre}" required="true"/>
+                            
+                            <p:outputLabel value="Segundo Nombre" for="acSegundoNombre"/>
+                            <p:inputText  id="acSegundoNombre" value="#{empleadoBean.empleado.segundo_nombre}" />
+                            
+                            <p:outputLabel value="Primer Apellido" for="acPrimerApellido"/>
+                            <p:inputText  id="acPrimerApellido" value="#{empleadoBean.empleado.primer_apellido}" required="true"/>
+                            
+                            <p:outputLabel value="Segundo Apellido" for="acSegundoApellido"/>
+                            <p:inputText  id="acSegundoApellido" value="#{empleadoBean.empleado.segundo_apellido}" />
+                            
+                            <p:outputLabel value="Nueva Contraseña" for="acContrasenia"/>
+                            <p:password id="acContrasenia" value="#{empleadoBean.empleado.clave_acceso}" required="true"/>
+                            
+                            <p:outputLabel value="Confirmar Contraseña" for="acConfirmar"/>
+                            <p:password id="acConfirmar" value="#{empleadoBean.empleado.clave_confirmar}" required="true"/>
+                            
+                        </h:panelGrid>
+                            <hr/>
+
+                            <p:commandButton value="Actualizar" action="#{empleadoBean.actualizarEmpleado()}"/>
+                        </center>                       
+                    </h:form>
+                </p:dialog>
+        
+                
+    </h:body>
+    <img src="imagenes/tux.gif"/>
+    <img src="imagenes/tux.gif" style="position: absolute;left: 1130px;top: 420px"/>
+</html>

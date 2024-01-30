@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+                <center><h1><b>CUENTAS POR COBRAR</b></h1></center>
+                <h:form>
+                    <center>
+                        <p:panel>
+                                <p:outputLabel  for="ccCedula" value="Cédula Cliente"/>
+                                <p:inputText id="ccCedula" value="#{cuentasCobrarBean.cliente.cedula_cliente}"/>
+                                <p:commandButton  value="Buscar"  actionListener="#{cuentasCobrarBean.buscarCxC()}" update=":formGeneral,:formTotales "/>
+                        </p:panel>
+                </center>    
+                </h:form>
+                <h:form id="formGeneral" >
+                    <p:dataTable id="tablaGeneral" value="#{cuentasCobrarBean.listaCxcGeneral}" var="general"  paginator="true" rows="5">
+                        <p:column headerText="Factura">
+                            <p:outputLabel value="#{general.numero_factura}"/>
+                        </p:column>
+                        <p:column headerText="Fecha">
+                            <p:outputLabel value="#{general.fecha_factura}"/>
+                        </p:column>
+                        <p:column headerText="hora">
+                            <p:outputLabel value="#{general.hora_factura}"/>
+                        </p:column>
+                        <p:column headerText="Saldo Pendiente">
+                            <p:outputLabel value="#{general.saldo_pendiente}">
+                                <f:convertNumber  type="currency" currencySymbol="$" minFractionDigits="0"  />
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Detalle">
+                            <p:commandLink value="Detalle" actionListener="#{cuentasCobrarBean.traerItemsFactura(general)}" oncomplete="PF('wDetalle').show()" update=":dDetalle"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+   
+
+                <p:dialog widgetVar="wDetalle" id="dDetalle" modal="true" header="Detalle Factura No: #{cuentasCobrarBean.facturaDetalle}">
+                     <center>
+                         <h1><b>Items</b></h1>
+                         <hr/>
+                    <h:form id="formDetalle">
+                            <p:dataTable id="tablaDetalle" value="#{cuentasCobrarBean.listaCxcDetalle}" var="detalle" paginator="true" rows="5">
+                                <p:column headerText="Producto">
+                                    <p:outputLabel value="#{detalle.nombre_producto}"/>
+                                </p:column>
+                                <p:column headerText="Concentración">
+                                    <p:outputLabel value="#{detalle.concentracion}"/>
+                                </p:column> 
+                                <p:column headerText="Presentación">
+                                    <p:outputLabel value="#{detalle.presentacion}"/>
+                                </p:column>
+                                <p:column headerText="Cantidad">
+                                    <p:outputLabel value="#{detalle.cantidad}"/>
+                                </p:column>
+                                <p:column headerText="Total Costo">
+                                    <p:outputLabel value="#{detalle.total_costo}">
+                                        <f:convertNumber  type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Total Precio">
+                                    <p:outputLabel value="#{detalle.total_precio}">
+                                        <f:convertNumber  type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Responsable">
+                                    <p:outputLabel value="#{detalle.nombre_empleado}"/>
+                                </p:column>                  
+                            </p:dataTable>
+
+                             <p:panelGrid columns="2">                              
+                                        <p:outputLabel for="pCosto" value="Parcial Costo"/>
+                                        <p:outputLabel id="pCosto" value="#{cuentasCobrarBean.parcial_costo}">
+                                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                        </p:outputLabel>
+                                        <p:outputLabel for="pPrecio" value="Parcial Precio"/>
+                                        <p:outputLabel id="pPrecio" value="#{cuentasCobrarBean.parcial_precio}">
+                                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                        </p:outputLabel>
+                              </p:panelGrid>
+                            <p:commandButton value="Salir" oncomplete="PF('wDetalle').hide()" />
+                            </h:form>
+                        </center>
+                </p:dialog>
+                
+                
+                
+                
+                 <h:form id="formTotales">
+                     <p:growl showDetail="true" autoUpdate="true"/>  
+                    <p:panel>
+                        <center>
+                            <p:panelGrid columns="2">                              
+                                <p:outputLabel for="ccSaldo" value="Total Cuenta Por cobrar"/>
+                                <p:outputLabel id="ccSaldo" value="#{cuentasCobrarBean.totalDeuda}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                                <p:outputLabel for="ccSaldoConsignado" value="Saldo Consignado"/>
+                                <p:outputLabel id="ccSaldoConsignado" value="#{cuentasCobrarBean.saldoDisponible}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                                <p:outputLabel for="ccTotal" value="Saldo Total Pendiente"/>
+                                <p:outputLabel id="ccTotal" value="#{cuentasCobrarBean.saldoTotalPagar}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                            </p:panelGrid>
+                        </center>
+                    </p:panel>
+                     <br/>
+                     <center>
+                         <p:commandButton value="Consignar" oncomplete="PF('wBono').show()" update=":dBono"/>
+                         <p:commandButton value="Pagar Todo"  actionListener="#{cuentasCobrarBean.pagarCxC()}" update=":formGeneral,:formTotales"/>
+                     </center>
+                </h:form>
+                <p:dialog widgetVar="wBono" id="dBono" header="Kardex(Consignación Cuenta por Cobrar)">
+                    <h:form>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <center>
+                            <h1><b>#{cuentasCobrarBean.cliente.cedula_cliente}</b></h1><br/>
+                            <h1><b>#{cuentasCobrarBean.cliente.nombres}</b></h1><br/>
+                            <h1><b>#{cuentasCobrarBean.cliente.apellidos}</b></h1>
+                        </center>
+                        <br/>
+                        <center>
+                            <p:outputLabel value="Saldo" for="csSaldo"/>
+                            <p:inputText id="csSaldo"  size="4" value="#{cuentasCobrarBean.bono.saldo_abono}" label="Cantidad" required="true">
+                                <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="0" />
+                                <f:validator validatorId="validatorCero"/>
+                            </p:inputText>
+                            <br/>
+                            <p:commandButton value="Agregar a Cuenta"  oncomplete="PF('wBono').hide()" actionListener="#{cuentasCobrarBean.registrarBono()}" update=":formGeneral,:formTotales,:dBono"/>                       
+                        </center>
+                    </h:form>            
+                </p:dialog>
+            </ui:define>      
+        </ui:composition>
+    </body>
+</html>

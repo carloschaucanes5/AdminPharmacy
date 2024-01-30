@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+               <center><h1><b>CUENTAS COBRAR/CLIENTE</b></h1></center><br/>
+                <center>
+                    <h:form>
+                        <p:growl  autoUpdate="true" showDetail="true"/>
+
+                        <p:outputLabel value="Nombres" for="nombres"/>
+                        <p:inputText id="nombres" value="#{reporteCxcBean.nombres}"/>
+                        <p:outputLabel value="Apellidos"/>
+                        <p:inputText id="apellidos" value="#{reporteCxcBean.apellidos}"/>                        
+                        <br/><br/>
+                        <p:commandButton value="Generar" actionListener="#{reporteCxcBean.buscarCxc()}" update=":formGeneral:tablaGeneral"/>
+                    </h:form>
+                    <hr/>
+                </center>
+
+                <h:form id="formGeneral">
+                    <p:dataTable  id="tablaGeneral" value="#{reporteCxcBean.listaGeneral}" var="general"  paginator="true" rows="10">
+                        <p:column>
+                            <f:facet name="header">Factura</f:facet>
+                            <p:outputLabel value="#{general.numero_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Fecha</f:facet>
+                            <p:outputLabel value="#{general.fecha_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Hora</f:facet>
+                            <p:outputLabel value="#{general.hora_factura}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Saldo Pendiente</f:facet>
+                            <p:outputLabel value="#{general.saldo_pendiente}">
+                                <f:convertNumber  type="currency" currencySymbol="$" integerOnly="true"/>
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cliente/Ced</f:facet>
+                            <p:outputLabel value="#{general.cedula}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cliente/Nom</f:facet>
+                            <p:outputLabel value="#{general.nombres}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cliente/Ape</f:facet>
+                            <p:outputLabel value="#{general.apellidos}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+                    <center>
+                        <h:commandLink value="Descargar Excel">
+                            <p:dataExporter type="xls" target="tablaGeneral" fileName="Reporte cuentas por cobrar" />
+                        </h:commandLink>
+                    </center>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

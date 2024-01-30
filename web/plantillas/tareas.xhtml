@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="default.css"/>
+        <h:outputStylesheet library="css" name="cssLayout.css"/>
+        <title>KARDEXKDD</title>
+    </h:head>
+    <h:body rendered="#{sessionBean.estadoSession}" >
+
+        <div id="top">
+            <ui:insert name="top">
+                <center>
+                    <center><h2>...¡ SISTEMA DE VENTAS KARDEXKDD !...</h2></center>
+                    <div id="cerrarSesion">
+                        <h:form>
+                            <p:commandLink value="Cerrar Sesión" action="#{sessionBean.cerrarSession()}"/>
+                        </h:form>
+                    </div>
+                    <div id="datosSesion">
+                        <h:form>
+                            <p:outputLabel value="Sesión:"/>
+                            <p:outputLabel value="#{sessionBean.nombre}"/>
+                        </h:form>
+                    </div>
+                    <h:form>
+                        <p:megaMenu>
+                            <p:submenu label="Productos" icon="ui-icon-print" >
+                                <p:column>
+                                    <p:submenu label="--Productos--">
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Nuevo" url="/faces/inventario_nuevo.xhtml" />
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Entradas" url="/faces/kardex_entrada.xhtml"/>
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Salidas" url="/faces/kardex_salida.xhtml"/>
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Actualizar" url="/faces/inventario_actualizar.xhtml"/>
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+                            <p:submenu  label="Ventas" icon="ui-icon-disk" >
+                                <p:column>
+                                    <p:submenu label="--Ventas--">
+                                        <p:menuitem value="Nueva"  url="/faces/kardex_venta.xhtml"/>
+                                        <p:menuitem value="Devolución" url="/faces/kardex_devolucion.xhtml"/>
+                                        <p:menuitem value="Cuentas por Cobrar" url="/faces/kardex_cuentas_cobrar.xhtml"/>
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+                           <p:submenu label="Reportes" icon="ui-icon-document" >
+                                <p:column>
+                                    <p:submenu label="--Reportes--">
+                                    <p:menuitem  value="Ventas" url="/faces/reportes_ventas.xhtml"/>
+                                    <p:menuitem value="Productos Vencidos" url="/faces/reporte_vencidos.xhtml"/>
+                                    <p:menuitem value="Clietes/Cuentas por cobrar" url="/faces/reporte_cxc.xhtml"/>
+                                    <p:menuitem value="Facturas/Entradas de productos" url="/faces/reporte_entrada.xhtml"/>
+                                    <p:menuitem value="Inventario/Salidas" url="/faces/reporte_salida.xhtml"/>
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+                        </p:megaMenu>
+                    </h:form>
+                </center>
+            </ui:insert>
+        </div>
+
+        <div id="content" class="center_content">
+            <ui:insert name="content"></ui:insert>
+        </div>
+
+        <div id="bottom">
+            <ui:insert name="bottom">
+                <center>
+                    <b>Software con derechos reservados</b><br/>
+                    <b>GriasKDD</b><br/>
+                    <b>2015</b>
+                </center>
+            </ui:insert>
+        </div>
+
+    </h:body>
+    <h:body rendered="#{sessionBean.mensajeSession}">
+
+         <h:form>
+            <center><h1><b>Debes iniciar sesión para continuar</b></h1></center><br/>
+            <center><p:commandLink value="Iniciar Sesión" action="loginPrincipal?faces-redirect=true"/></center>
+         </h:form>
+        
+    </h:body>
+    
+        
+
+</html>

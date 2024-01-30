@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+                <center><h1><b>REPORTE DE PRODUCTOS PRÓXIMOS A VENCER</b></h1></center><br/>
+                <h:form id="formDetalle" >
+                    <p:dataTable id="tablaVencidos" value="#{reporteVencidosBean.listaVencidos}" var="ven"  paginator="true" rows="10">
+                        <p:column headerText="Fecha de Vencimiento">
+                            <f:facet name="header">Fecha de Vencimiento</f:facet>
+                            <p:outputLabel value="#{ven.fecha_vencimiento}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Cod. Producto</f:facet>
+                            <p:outputLabel value="#{ven.cod_producto}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Nombre</f:facet>
+                            <p:outputLabel value="#{ven.nombre_producto}"/>
+                        </p:column> 
+                        <p:column>
+                            <f:facet name="header">Concentración</f:facet>
+                            <p:outputLabel value="#{ven.concentracion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Presentación</f:facet>
+                            <p:outputLabel value="#{ven.presentacion}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Laboratorio</f:facet>
+                            <p:outputLabel value="#{ven.nombre_laboratorio}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">NIT Prov.</f:facet>
+                            <p:outputLabel value="#{ven.nit_proveedor}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Proveedor</f:facet>
+                            <p:outputLabel value="#{ven.nombre_proveedor}"/>
+                        </p:column>
+                    </p:dataTable>
+                    <center>
+                        <br/>
+                        <h:commandLink value="Descargar Excel">
+                            <p:dataExporter type="xls" target="tablaVencidos" fileName="Productos proximos a vencer" />
+                        </h:commandLink>
+                    </center>
+                </h:form>
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

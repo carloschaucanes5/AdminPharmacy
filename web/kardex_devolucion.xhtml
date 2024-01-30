@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+                <center><h1><b>DEVOLUCIÓN</b></h1></center>
+                <h:form>
+                    <center>
+                        <p:outputLabel value="Número de Factura" for="bFactura"/>
+                        <p:inputText value="#{kardexDevolucionBean.facturaBuscar}" id="bFactura"/>
+                        <p:commandButton value="Buscar" actionListener="#{kardexDevolucionBean.buscarKardexVenta()}" update=":formItemsVenta,:formDevolucion" />
+                    </center>
+                </h:form>
+                <br/>
+                <h:form id="formItemsVenta">
+                    <p:dataTable id="datosItemsVenta" value="#{kardexDevolucionBean.listaItemsVenta}" var="item" paginator="true" rows="3">
+                        <p:column headerText="código">
+                            <p:outputLabel value="#{item.inventario.cod_producto}"/>
+                        </p:column>
+                        <p:column headerText="Producto">
+                            <p:outputLabel value="#{item.inventario.nombre}"/>
+                        </p:column>
+                        <p:column headerText="Concentración">
+                            <p:outputLabel value="#{item.inventario.concentracion}"/>
+                        </p:column>
+                        <p:column headerText="Presentación">
+                            <p:outputLabel value="#{item.inventario.presentacion}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad">
+                            <p:outputLabel value="#{item.cantidad}"/>
+                        </p:column>
+                        <p:column headerText="TotalPrecio">
+                            <p:outputLabel value="#{item.total_precio}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Seleccionar">
+                            <p:commandButton value="Seleccionar" actionListener="#{kardexDevolucionBean.leerIdItemVenta(item)}" oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad"/>
+                        </p:column>
+                    </p:dataTable>
+                    <center>
+                        <h1>
+                            <b>Total Venta :
+                                <p:outputLabel value="#{kardexDevolucionBean.saldoTotalVenta}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                                </p:outputLabel>
+                            </b>
+                        </h1>
+                        <br/>
+                    </center> 
+                </h:form>
+                <p:dialog widgetVar="wDialogoCantidad" id="dDialogoCantidad" header="KerdexKdd(Cantidad Devolución)" >
+                    <h:form>
+                        <p:growl showDetail="true" autoUpdate="true"/>
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Código" for="cCodigo"/>
+                            <p:outputLabel id="cCodigo" value="#{kardexDevolucionBean.itemVenta.inventario.cod_producto}"/>
+                            <p:outputLabel value="Cantidad" for="cCantidad" />
+                            <p:inputText  id="cCantidad" value="#{kardexDevolucionBean.cantidadRetornada}" required="true"/>
+                            <h:panelGroup/>
+                            <p:commandButton value="Agragar" actionListener="#{kardexDevolucionBean.adicionarKardexDevolucionItems(kardexDevolucionBean.itemVenta)}"                         
+                                             update=":formDevolucion" oncomplete="PF('wDialogoCantidad').hide()"/>
+                        </p:panelGrid>
+                    </h:form>    
+                </p:dialog>
+                <center>ITEMS EN PROCESO DE DEVOLUCIÓN</center>
+                <br/>
+                <h:form id="formDevolucion">
+                    <p:dataTable id="itemsDevueltos" value="#{kardexDevolucionBean.kardeDevolucion.listaItemsDevolucion}" var="itemDevolucion" paginator="true" rows="3">
+                        <p:column headerText="Código">
+                            <p:commandLink value="Eliminar Item" actionListener="#{kardexDevolucionBean.eliminarItemDevolucion(itemDevolucion)}" update="itemsDevueltos"/>
+                        </p:column>
+                        <p:column headerText="Código">
+                            <p:outputLabel value="#{itemDevolucion.cod_producto}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad Retornada">
+                            <p:outputLabel value="#{itemDevolucion.cantidad}"/>
+                        </p:column>
+
+                        <p:column headerText="Total Costo">
+                            <p:outputLabel value="#{itemDevolucion.total_costo}">
+                               <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                            </p:outputLabel>
+                        </p:column>
+                        
+                        <p:column headerText="Total Precio">
+                            <p:outputLabel value="#{itemDevolucion.total_precio}">
+                               <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                            </p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+                    <hr/>
+                    <center>
+                        <h1>
+                            <b>Total Devolución
+                                <p:outputLabel value="#{kardexDevolucionBean.saldoDevolucion}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                                </p:outputLabel>
+                            </b>
+                        </h1>
+                    <p:commandButton value="Efectuar Devolución" action="#{kardexDevolucionBean.registrarDevolucion(sessionBean.empleado)}"/>
+                    </center>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

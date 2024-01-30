@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./plantillas/tareas.xhtml">
+            <ui:define name="content">
+                <center><h1><b>ACTUALIZAR PRODUCTO</b></h1></center>
+                <br/>
+                <h:form id="formInventario">
+                    <p:growl autoUpdate="true" showDetail="true"/>
+                    <center>
+                        <p:outputLabel value="Digite Producto"/>
+                        <p:inputText value="#{inventarioActualizarBean.cadenaNombre}"/>
+                        <p:commandButton value="Buscar" actionListener="#{inventarioActualizarBean.buscarProducto()}" update="datos"/>
+                        <hr/>
+                        <p:dataTable id="datos" value="#{inventarioActualizarBean.listaInventario}" var="inv" paginator="true" rows="8">
+                        <p:column headerText="Código">
+                            <p:outputLabel value="#{inv.cod_producto}" />
+                        </p:column>
+                        <p:column headerText="Nombre Producto">
+                            <p:outputLabel value="#{inv.nombre}" />
+                        </p:column>
+                        
+                        <p:column headerText="Concentración">
+                            <p:outputLabel value="#{inv.concentracion}" />
+                        </p:column>
+                        
+                        <p:column headerText="Presentación">
+                            <p:outputLabel value="#{inv.presentacion}" />
+                        </p:column> 
+                       
+                        <p:column headerText="IVA">
+                            <p:outputLabel value="#{inv.iva}">
+                                <f:convertNumber integerOnly="true"  type="number" />
+                            </p:outputLabel>
+
+                        </p:column>
+                            
+                        <p:column headerText="Costo/unitario">
+                            <p:outputLabel value="#{inv.costo_unitario}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
+                            </p:outputLabel>
+                        </p:column>
+                            
+                        <p:column headerText="Precio/unitario">
+                            <p:outputLabel value="#{inv.precio_unitario}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                            </p:outputLabel>
+                        </p:column>
+                            
+                        <p:column headerText="Actualizar">
+                            <p:commandLink value="Actualizar" actionListener="#{inventarioActualizarBean.leerIdInventario(inv)}" oncomplete="PF('wActualizar').show()" update=":dActualizar,:formActualizar"/>
+                        </p:column>
+                    </p:dataTable>
+                    </center>
+                </h:form>
+                
+                <p:dialog widgetVar="wActualizar" id="dActualizar" header="KardexKdd(Actualizar producto #{inventarioActualizarBean.inventario.cod_producto})" modal="true" footer="KardexKDD" closable="false">
+                    <center>
+                    <h3>Actualización de Datos de Producto</h3> 
+                    <p:panel style="background-color: sandybrown" >
+                            <b>Advertencia:El punto(.) indica separador de miles y la coma(,) indica separador de valores decimales<br/>en los campos Precio/Unidad y Costo/Unidad</b>
+                    </p:panel>
+                    <br/>
+                    <h:form id="formActualizar">
+                        <p:growl showDetail="true" autoUpdate="true"/>
+                        <h:panelGrid columns="2" title="Actualización del Producto #{inventarioActualizarBean.inventario.cod_producto} ">
+                            
+                            <p:outputLabel for="pro_nombre" value="Nombre"/>
+                            <p:inputText  id="pro_nombre" size="30" maxlength="100" value="#{inventarioActualizarBean.inventario.nombre}" required="true"/>
+                                            
+                            <p:outputLabel for="pro_concentracion" value="Concentración"/>
+                            <p:inputText  id="pro_concentracion" size="30" maxlength="50" value="#{inventarioActualizarBean.inventario.concentracion}" required="true"/>
+                            
+                            <p:outputLabel for="pro_presentacion" value="Presentación"/>
+                            <p:inputText  id="pro_presentacion" size="30" maxlength="50" value="#{inventarioActualizarBean.inventario.presentacion}" required="true"/>
+                                       
+                            <p:outputLabel for="pro_iva" value="IVA"/>
+                            <p:inputText id="pro_iva"  size="4" value="#{inventarioActualizarBean.inventario.iva}" required="true">
+                                <f:convertNumber integerOnly="true"  type="number"/>
+                                <f:validator validatorId="validatorCero" for="pro_iva"/>
+                            </p:inputText>
+                            
+                            <p:outputLabel for="pro_costo" value="Costo/Unidad" />
+                            <p:inputText id="pro_costo"  size="10"  value="#{inventarioActualizarBean.inventario.costo_unitario}" required="true">
+                                <f:convertNumber   type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                <f:validator validatorId="validatorDouble" for="pro_costo" />
+                            </p:inputText>
+                            
+                            <p:outputLabel for="pro_precio" value="Precio/Unidad "/>
+                            <p:inputText id="pro_precio"  size="10"  value="#{inventarioActualizarBean.inventario.precio_unitario}" required="true">
+                                <f:convertNumber type="currency" maxFractionDigits="0" currencySymbol="$"/>
+                                <f:validator validatorId="validatorCero" for="pro_precio"/>
+                            </p:inputText>
+                        </h:panelGrid>
+                        <hr/>
+                        <p:commandButton value="Actualizar" action="#{inventarioActualizarBean.actualizarProducto()}"/>
+                        <p:commandButton value="Cancelar" oncomplete="PF('wActualizar').hide()" actionListener="#{inventarioActualizarBean.cancelarActualizacionProducto()}"/>
+
+                    </h:form>
+                                        
+                </center>               
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

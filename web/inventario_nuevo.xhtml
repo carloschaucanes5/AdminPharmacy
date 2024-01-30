@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./plantillas/tareas.xhtml">
+
+            <ui:define name="content">
+
+                <center>
+                    <h1><b>NUEVO PRODUCTO</b></h1>
+                    <br/>
+                    <p:panel style="background-color: sandybrown" >
+                            <b>Advertencia:El punto(.) indica separador de miles y la coma(,) indica separador de valores decimales<br/>en los campos Precio/Unidad y Costo/Unidad</b>
+                    </p:panel> 
+                    <br/>
+                    <h:form >
+                        <p:growl autoUpdate="true" showDetail="true" />
+                        <h:panelGrid columns="2" title="Acceso al sistema de Ventas">
+                            
+                            <p:outputLabel for="pro_nombre" value="Nombre"/>
+                            <p:inputText  id="pro_nombre" size="30" maxlength="100"  value="#{inventarioBean.inventario.nombre}" required="true"/>
+
+                            
+                            <p:outputLabel for="pro_concentracion" value="Concentración"/>
+                            <p:inputText  id="pro_concentracion" size="30" maxlength="50" value="#{inventarioBean.inventario.concentracion}" required="true"/>
+                            
+                            <p:outputLabel for="pro_presentacion" value="Presentación"/>
+                            <p:inputText  id="pro_presentacion" size="30" maxlength="50" value="#{inventarioBean.inventario.presentacion}" required="true"/>
+                                 
+                            <p:outputLabel for="pro_iva" value="IVA"/>
+                            <p:inputText id="pro_iva"  size="4" value="#{inventarioBean.inventario.iva}" >
+                                <f:convertNumber integerOnly="true"  type="number"/>
+                                <!--f:validator validatorId="validatorCero" for="pro_iva"/-->
+                            </p:inputText>
+                            
+                            <p:outputLabel for="pro_costo" value="Costo/Unidad" />
+                            <p:inputText id="pro_costo"  size="10"  value="#{inventarioBean.inventario.costo_unitario}" required="true">
+                                <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                <f:validator validatorId="validatorDouble" for="pro_costo" />
+                            </p:inputText>
+                            
+                            <p:outputLabel for="pro_precio" value="Precio/Unidad "/>
+                            <p:inputText id="pro_precio"  size="10"  value="#{inventarioBean.inventario.precio_unitario}" required="">
+                                <f:convertNumber type="currency" maxFractionDigits="0" currencySymbol="$"/>
+                                <f:validator validatorId="validatorCero" for="pro_precio"/>
+                            </p:inputText>
+                            
+                            <h:panelGroup/>
+                            
+                            <p:commandButton value="Guardar"  action="#{inventarioBean.registrarInventario()}" />
+                        </h:panelGrid>
+                    </h:form>
+
+                </center>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

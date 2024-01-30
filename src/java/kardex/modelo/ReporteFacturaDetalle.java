@@ -1,0 +1,104 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package kardex.modelo;
+
+/**
+ *
+ * @author Carlitos
+ */
+public class ReporteFacturaDetalle {
+    private int numero_factura;
+    private String fecha_factura;
+    private String hora_factura;
+    private String nombre_producto;
+    private String concentracion;
+    private String presentacion;
+    private int  cantidad;
+    private double total_precio;
+    private double total_costo;
+    private String nombre_empleado; 
+
+    public int getNumero_factura() {
+        return numero_factura;
+    }
+
+    public void setNumero_factura(int numero_factura) {
+        this.numero_factura = numero_factura;
+    }
+
+    public String getFecha_factura() {
+        return fecha_factura;
+    }
+
+    public void setFecha_factura(String fecha_factura) {
+        this.fecha_factura = fecha_factura;
+    }
+
+    public String getHora_factura() {
+        return hora_factura;
+    }
+
+    public void setHora_factura(String hora_factura) {
+        this.hora_factura = hora_factura;
+    }
+
+    public String getNombre_producto() {
+        return nombre_producto;
+    }
+
+    public void setNombre_producto(String nombre_producto) {
+        this.nombre_producto = nombre_producto;
+    }
+
+    public String getConcentracion() {
+        return concentracion;
+    }
+
+    public void setConcentracion(String concentracion) {
+        this.concentracion = concentracion;
+    }
+
+    public String getPresentacion() {
+        return presentacion;
+    }
+
+    public void setPresentacion(String presentacion) {
+        this.presentacion = presentacion;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getTotal_precio() {
+        return total_precio;
+    }
+
+    public void setTotal_precio(double total_precio) {
+        this.total_precio = total_precio;
+    }
+
+    public double getTotal_costo() {
+        return total_costo;
+    }
+
+    public void setTotal_costo(double total_costo) {
+        this.total_costo = total_costo;
+    }
+
+    public String getNombre_empleado() {
+        return nombre_empleado;
+    }
+
+    public void setNombre_empleado(String nombre_empleado) {
+        this.nombre_empleado = nombre_empleado;
+    }
+}
