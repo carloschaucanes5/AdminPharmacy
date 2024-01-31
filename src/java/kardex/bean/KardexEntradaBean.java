@@ -31,16 +31,25 @@ import kardex.modelo.Proveedor;
 public class KardexEntradaBean {
     private KardexEntrada kardexEntrada = new KardexEntrada();
     private String cadenaNombre;
+    private String numeroFactura;
     private List<Inventario> listaInventario = new ArrayList<>();
     private List<Proveedor> listaProveedores = new ArrayList<>();
     private List<Laboratorio> listaLaboratorios = new ArrayList<>();
 
     public KardexEntradaBean() {
     }
+
+    public String getNumeroFactura() {
+        return numeroFactura;
+    }
+
+    public void setNumeroFactura(String numeroFactura) {
+        this.numeroFactura = numeroFactura;
+    }
     
     
-    
-    
+   
+ 
     public KardexEntrada getKardexEntrada() {
         return kardexEntrada;
     }
@@ -87,13 +96,15 @@ public class KardexEntradaBean {
         {
             KardexEntradaDao dao = new KardexEntradaDao();
             this.listaInventario = dao.getListarNombresProductos(this.cadenaNombre);
+            this.cadenaNombre = "";
         }catch(Exception err)
         {
             throw err;
         }
     }
     public void leerIdKardexEntrada(Inventario inventario) throws Exception
-    {     
+    {   
+        this.kardexEntrada.setNumero_factura(this.numeroFactura);
         this.kardexEntrada.setInventario(inventario);
     }
    

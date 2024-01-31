@@ -23,11 +23,18 @@ public class KardexEntrada {
    private double total_costo;
    private double total_precio;
    private String numero_factura;
-   private Laboratorio laboratorio = new Laboratorio();
    private Proveedor proveedor = new Proveedor(); 
-
+   private double iva;
     public int getCod_entrada() {
         return cod_entrada;
+    }
+
+    public double getIva() {
+        return iva;
+    }
+
+    public void setIva(double iva) {
+        this.iva = iva;
     }
 
     public void setCod_entrada(int cod_entrada) {
@@ -120,14 +127,6 @@ public class KardexEntrada {
 
     public void setNumero_factura(String numero_factura) {
         this.numero_factura = numero_factura;
-    }
-
-    public Laboratorio getLaboratorio() {
-        return laboratorio;
-    }
-
-    public void setLaboratorio(Laboratorio laboratorio) {
-        this.laboratorio = laboratorio;
     }
 
     public Proveedor getProveedor() {

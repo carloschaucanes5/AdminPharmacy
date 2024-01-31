@@ -14,6 +14,11 @@ body
     font-family: sans-serif;
 }
   
+.resaltar_texto{
+    font-size: 20px;
+    font-weight: bold;
+    color:green;
+}
 .contenedorLogin
 {
     margin-top: 100px;
@@ -113,6 +118,8 @@ body
     text-align: right;
 }
   
+
+
 @-webkit-keyframes entrada
 {
     0%
@@ -202,3 +209,4 @@ body
         transform: rotate(0deg);
     }
 }
+

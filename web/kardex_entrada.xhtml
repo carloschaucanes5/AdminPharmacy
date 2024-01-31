@@ -6,54 +6,57 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
-    <body>
 
+    <body>
         <ui:composition template="./plantillas/tareas.xhtml">
 
             <ui:define name="content">
-                <center><h1><b>ENTRADA DE PRODUCTOS</b></h1></center><br/>
+                <center><h5><b>ENTRADA DE PRODUCTOS</b></h5></center>
                 <h:form id="frmInventario">
-                    <center>
-                        <p:outputLabel value="Digite Producto"/>
-                        <p:inputText value="#{kardexEntradaBean.cadenaNombre}"/>
-                        <p:commandButton value="Buscar" actionListener="#{kardexEntradaBean.buscarProducto()}" update="datos"/>
-                        <hr/>
-                        <p:dataTable id="datos" value="#{kardexEntradaBean.listaInventario}" var="inv" paginator="true" rows="8">
-                        <p:column headerText="Código">
-                            <p:outputLabel value="#{inv.cod_producto}" />
-                        </p:column>
-                        <p:column headerText="Nombre Producto">
-                            <p:outputLabel value="#{inv.nombre}" />
-                        </p:column>
-                        
-                        <p:column headerText="Concentración">
-                            <p:outputLabel value="#{inv.concentracion}" />
-                        </p:column>
-                        
-                        <p:column headerText="Presentación">
-                            <p:outputLabel value="#{inv.presentacion}" />
-                        </p:column> 
-                       
-                        <p:column headerText="Costo/unitario">
-                            <p:outputLabel value="#{inv.costo_unitario}">
-                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Precio/unitario">
-                            <p:outputLabel value="#{inv.precio_unitario}">
-                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Existencias">
-                            <p:outputLabel value="#{inv.existencias}"/>
-                        </p:column>
+                    <div class="contenedorAdicionProductos">
+                        <div class="contenedorBuscador">
+                            <p:outputLabel value="Agregar Producto"/>
+                            <br></br>
+                            <p:inputText class="campo_busqueda" value="#{kardexEntradaBean.cadenaNombre}"/>
+                            <p:commandButton value="Buscar" class="btn btn-primary" actionListener="#{kardexEntradaBean.buscarProducto()}" update="datos"><i class="bi bi-bag-plus"></i></p:commandButton>
                             
-                            <p:column headerText="Entradas">
-                                <p:commandLink value="Nueva Entrada" actionListener="#{kardexEntradaBean.leerIdKardexEntrada(inv)}"
-                                  oncomplete="PF('wDialogoEntrada').show()" update=":dDialogoEntrada" />
-                            </p:column>
-                    </p:dataTable>
-                    </center>
+                        </div>  
+                        <div class="contenedorFactura">
+                            <div class="mb-3 row">
+                                <p:outputLabel value="Factura No."/>
+                                <p:inputText  value="#{kardexEntradaBean.numeroFactura}"/>
+                            </div >
+                            <div class="mb-3 row">
+                                <p:outputLabel value="Proveedor" for="proveedor"/>
+                                <p:selectOneMenu  id="proveedor" value="#{kardexEntradaBean.kardexEntrada.proveedor}" converter="omnifaces.SelectItemsConverter" required="true">
+                                    <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
+                                    <f:selectItems value="#{kardexEntradaBean.listaProveedores}" var="prov" itemLabel="#{prov.nombre_proveedor}" itemValue="#{prov}" rendered="true"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                        <hr/>
+                        <div class="contenido_tabla_entradas">
+                            <p:dataTable  id="datos" value="#{kardexEntradaBean.listaInventario}" var="inv" paginator="true" rows="8">
+                                <p:column headerText="Código">
+                                    <p:outputLabel value="#{inv.codigo_barras}" />
+                                </p:column>
+                                <p:column  headerText="Nombre Producto">
+                                    <b><p:outputLabel  value="#{inv.nombre}" /></b> 
+                                </p:column>
+                                <p:column headerText="Presentación / Unidad Medida">
+                                    <p:outputLabel value="#{inv.presentacion} / #{inv.concentracion} " />
+                                </p:column> 
+                                <p:column headerText="Existencias">
+                                    <p:outputLabel value="#{inv.existencias}"/>
+                                </p:column>
+
+                                    <p:column headerText="Entradas">
+                                        <p:commandLink value="Nueva Entrada" actionListener="#{kardexEntradaBean.leerIdKardexEntrada(inv)}"
+                                          oncomplete="PF('wDialogoEntrada').show()" update=":dDialogoEntrada" />
+                                    </p:column>
+                            </p:dataTable>
+                        </div>
                 </h:form>
 
                 <p:dialog header="KardexKDD(Entradas)"  id="dDialogoEntrada" widgetVar="wDialogoEntrada"  >
@@ -69,30 +72,23 @@
                             <p:outputLabel id="nombre" value="#{kardexEntradaBean.kardexEntrada.inventario.nombre}"/>
                             
                             <p:outputLabel value="Número Factura" for="numeroFactura"/>
-                            <p:inputText id="numeroFactura"  size="10" value="#{kardexEntradaBean.kardexEntrada.numero_factura}" required="true"/>
+                            <p:inputText id="numeroFactura"  size="10" readonly="true" value="#{kardexEntradaBean.kardexEntrada.numero_factura}" required="true"/>
                             
                              <p:outputLabel for="cantidad" value="Cantidad"/>
                              <p:inputText id="cantidad"  size="4" value="#{kardexEntradaBean.kardexEntrada.cantidad}" required="true">
                                 <f:convertNumber integerOnly="true"  type="number"/>
                                 <f:validator validatorId="validatorCero" for="cantidad"/>
                             </p:inputText>
+                             
+                            <p:outputLabel for="iva" value="Iva"/>
+                            <p:inputText id="iva"  size="4" value="#{kardexEntradaBean.kardexEntrada.iva}" required="true">
+                                <f:convertNumber integerOnly="true"  type="number"/>
+                                <f:validator validatorId="validatorCero" for="iva"/>
+                            </p:inputText>
                             
                             <p:outputLabel for="fechaVencimiento" value="Fecha de vencimiento" />
                             <p:calendar  id="fechaVencimiento" value="#{kardexEntradaBean.kardexEntrada.fecha_vencimiento}" mode="popup"  pages="3" showOn="button" required="true"/>
                             
-                            <p:outputLabel value="Proveedor" for="proveedor"/>
-                            <p:selectOneMenu  id="proveedor" value="#{kardexEntradaBean.kardexEntrada.proveedor}" converter="omnifaces.SelectItemsConverter" required="true">
-                                <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
-                                <f:selectItems value="#{kardexEntradaBean.listaProveedores}" var="prov" itemLabel="#{prov.nombre_proveedor}" itemValue="#{prov}" rendered="true"/>
-                            </p:selectOneMenu>
-                            
-                            <p:outputLabel value="Laboratorio" for="laboratorio"/>
-                            <p:selectOneMenu  id="laboratorio" value="#{kardexEntradaBean.kardexEntrada.laboratorio}" converter="omnifaces.SelectItemsConverter" required="true">
-                                <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
-                                <f:selectItems value="#{kardexEntradaBean.listaLaboratorios}" var="lab" itemLabel="#{lab.nombre_laboratorio}" itemValue="#{lab}"/>
-                            </p:selectOneMenu>
-                            <p:outputLabel  for="detalle" value="Detalle"/>
-                            <p:inputTextarea id="detalle" value="#{kardexEntradaBean.kardexEntrada.detalle}" autoResize="true"/>
                         </h:panelGrid>
                         <br/> 
                         <center>

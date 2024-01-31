@@ -61,12 +61,12 @@ public class KardexEntradaDao extends Dao{
            sql1=""+
            "insert into kardex_entrada"+
            "(cod_tipo_transaccion,cod_producto,fecha_transaccion,hora_transaccion,fecha_vencimiento,"+
-           "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,cod_laboratorio,nit_proveedor)"+
+           "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,cod_laboratorio,nit_proveedor,iva)"+
            "values(100,"+kardexEntrada.getInventario().getCod_producto()+","+
            "'"+this.getFecha()+"','"+this.getHora()+"',"+
            "'"+kardexEntrada.getFecha_vencimiento()+"',"+kardexEntrada.getCantidad()+",'"+kardexEntrada.getEmpleado().getCedula_empleado()+"',"+
            "'"+kardexEntrada.getDetalle()+"',"+kardexEntrada.getTotal_costo()+","+kardexEntrada.getTotal_precio()+","+
-           "'"+kardexEntrada.getNumero_factura()+"',"+kardexEntrada.getLaboratorio().getCod_laboratorio()+",'"+kardexEntrada.getProveedor().getNit_proveedor()+"')";
+           "'"+kardexEntrada.getNumero_factura()+"','"+kardexEntrada.getProveedor().getNit_proveedor()+"',"+kardexEntrada.getIva()+")";
           st1  = this.getCn().prepareStatement(sql1);
           st1.executeUpdate();
           st1.close();
@@ -129,12 +129,12 @@ public class KardexEntradaDao extends Dao{
          sql1=""+
              "insert into kardex_entrada_historico"+
              "(cod_entrada,cod_tipo_transaccion,cod_producto,fecha_transaccion,hora_transaccion,fecha_vencimiento,"+
-             "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,cod_laboratorio,nit_proveedor)"+
+             "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,nit_proveedor,iva)"+
              "values("+codEntrada+",100,"+kardexEntrada.getInventario().getCod_producto()+","+
              "'"+this.getFecha()+"','"+this.getHora()+"',"+
              "'"+kardexEntrada.getFecha_vencimiento()+"',"+kardexEntrada.getCantidad()+",'"+kardexEntrada.getEmpleado().getCedula_empleado()+"',"+
              "'"+kardexEntrada.getDetalle()+"',"+kardexEntrada.getTotal_costo()+","+kardexEntrada.getTotal_precio()+","+
-             "'"+kardexEntrada.getNumero_factura()+"',"+kardexEntrada.getLaboratorio().getCod_laboratorio()+",'"+kardexEntrada.getProveedor().getNit_proveedor()+"')";
+             "'"+kardexEntrada.getNumero_factura()+"','"+kardexEntrada.getProveedor().getNit_proveedor()+"',"+kardexEntrada.getIva()+")";
             st1  = this.getCn().prepareStatement(sql1);
             st1.executeUpdate();
             st1.close();
@@ -205,7 +205,7 @@ public class KardexEntradaDao extends Dao{
         try
         {
             this.conectar();
-            String sql = "select * from inventario  where nombre_producto ilike '"+nombreProducto+"%'";
+            String sql = "select * from inventario  where nombre_producto ilike '"+nombreProducto+"%' or codigo_barras ilike '"+nombreProducto+"'";
             PreparedStatement st =  this.getCn().prepareStatement(sql);
             ResultSet rs = st.executeQuery();
 
@@ -213,12 +213,13 @@ public class KardexEntradaDao extends Dao{
             {
                 Inventario inv = new Inventario();
                 inv.setCod_producto(rs.getInt("cod_producto"));
+                inv.setCodigo_barras(rs.getString("codigo_barras"));
                 inv.setNombre(rs.getString("nombre_producto"));
                 inv.setConcentracion(rs.getString("concentracion"));
                 inv.setPresentacion(rs.getString("presentacion"));
-                inv.setIva(rs.getDouble("iva"));
-                inv.setCosto_unitario(rs.getDouble("costo_unitario"));
-                inv.setPrecio_unitario(rs.getDouble("precio_unitario"));
+                /*inv.setIva(rs.getDouble("iva"));*/
+                /*inv.setCosto_unitario(rs.getDouble("costo_unitario"));
+                inv.setPrecio_unitario(rs.getDouble("precio_unitario"));*/
                 inv.setEstado(rs.getString("estado"));
                 inv.setExistencias(rs.getInt("existencias"));
                 li.add(inv);

@@ -32,13 +32,21 @@ public class Inventario {
     private double precio_unitario;
     private String estado;
     private int existencias;
-    
+    private String codigo_barras;
     public int getCod_producto() {
         return cod_producto;
     }
 
     public void setCod_producto(int cod_producto) {
         this.cod_producto = cod_producto;
+    }
+
+    public String getCodigo_barras() {
+        return codigo_barras;
+    }
+
+    public void setCodigo_barras(String codigo_barras) {
+        this.codigo_barras = codigo_barras;
     }
 
     public String getNombre() {

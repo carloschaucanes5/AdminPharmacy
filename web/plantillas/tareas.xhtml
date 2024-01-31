@@ -8,16 +8,20 @@
 
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="bootstrap.min.css"/>
+        <h:outputScript library="js" name="bootstrap.bundle.min.js" />
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputStylesheet library="css" name="cssLayout.css"/>
-        <title>KARDEXKDD</title>
-    </h:head>
-    <h:body rendered="#{sessionBean.estadoSession}" >
 
-        <div id="top">
+        <title>AdminPharmacy</title>
+    </h:head>
+    <!--h:body rendered="#{sessionBean.estadoSession}" -->
+    <h:body >
+        <div class="contenedor_principal">
+        <div id="top" class="barra_superior">
             <ui:insert name="top">
                 <center>
-                    <center><h2>...¡ SISTEMA DE VENTAS KARDEXKDD !...</h2></center>
+                    <center><h4>...¡ SISTEMA DE VENTAS KARDEXKDD !...</h4></center>
                     <div id="cerrarSesion">
                         <h:form>
                             <p:commandLink value="Cerrar Sesión" action="#{sessionBean.cerrarSession()}"/>
@@ -74,22 +78,20 @@
         <div id="bottom">
             <ui:insert name="bottom">
                 <center>
-                    <b>Software con derechos reservados</b><br/>
-                    <b>GriasKDD</b><br/>
-                    <b>2015</b>
+                    <b>Software con derechos reservados (2024) Ing.CG AdminPharmacy</b><br/>
                 </center>
             </ui:insert>
         </div>
-
+            </div>
     </h:body>
-    <h:body rendered="#{sessionBean.mensajeSession}">
+    <!--h:body rendered="#{sessionBean.mensajeSession}">
 
          <h:form>
             <center><h1><b>Debes iniciar sesión para continuar</b></h1></center><br/>
             <center><p:commandLink value="Iniciar Sesión" action="loginPrincipal?faces-redirect=true"/></center>
          </h:form>
         
-    </h:body>
+    </h:body-->
     
         
 
