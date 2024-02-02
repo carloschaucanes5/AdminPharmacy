@@ -108,3 +108,37 @@ contenedor_principal{
     width: 70%;
     margin: auto;
 }
+/* Estilos modal ingreso de entradas*/
+.contenedor-row{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 2%;
+}
+.control{
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+.control1{
+    display: flex;
+    flex-direction: column;
+    width: 15%; 
+}
+
+.control2{
+    display: flex;
+    flex-direction: column;
+    width: 30%; 
+}
+.control,control1,control2 > *{
+    width: 95%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+}
+
+.modalCustom{
+    padding: 0;
+    margin: 0;
+    padding-left: 0;
+}

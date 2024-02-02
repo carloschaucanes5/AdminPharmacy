@@ -61,13 +61,14 @@ public class KardexEntradaDao extends Dao{
            sql1=""+
            "insert into kardex_entrada"+
            "(cod_tipo_transaccion,cod_producto,fecha_transaccion,hora_transaccion,fecha_vencimiento,"+
-           "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,cod_laboratorio,nit_proveedor,iva)"+
+           "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,nit_proveedor,iva)"+
            "values(100,"+kardexEntrada.getInventario().getCod_producto()+","+
            "'"+this.getFecha()+"','"+this.getHora()+"',"+
            "'"+kardexEntrada.getFecha_vencimiento()+"',"+kardexEntrada.getCantidad()+",'"+kardexEntrada.getEmpleado().getCedula_empleado()+"',"+
            "'"+kardexEntrada.getDetalle()+"',"+kardexEntrada.getTotal_costo()+","+kardexEntrada.getTotal_precio()+","+
            "'"+kardexEntrada.getNumero_factura()+"','"+kardexEntrada.getProveedor().getNit_proveedor()+"',"+kardexEntrada.getIva()+")";
-          st1  = this.getCn().prepareStatement(sql1);
+          System.out.println(sql1); 
+           st1  = this.getCn().prepareStatement(sql1);
           st1.executeUpdate();
           st1.close();
         }
@@ -135,7 +136,8 @@ public class KardexEntradaDao extends Dao{
              "'"+kardexEntrada.getFecha_vencimiento()+"',"+kardexEntrada.getCantidad()+",'"+kardexEntrada.getEmpleado().getCedula_empleado()+"',"+
              "'"+kardexEntrada.getDetalle()+"',"+kardexEntrada.getTotal_costo()+","+kardexEntrada.getTotal_precio()+","+
              "'"+kardexEntrada.getNumero_factura()+"','"+kardexEntrada.getProveedor().getNit_proveedor()+"',"+kardexEntrada.getIva()+")";
-            st1  = this.getCn().prepareStatement(sql1);
+              
+         st1  = this.getCn().prepareStatement(sql1);
             st1.executeUpdate();
             st1.close();
         }
@@ -290,7 +292,28 @@ public class KardexEntradaDao extends Dao{
             this.cerrarConexion();
         }
         return lb;
-    }    
+    }
+    //funcion para obtener el prcentaje ddel precio
+    public double getPorcentajePrecio() throws Exception
+    {
+        double porcentajePrecio = 0;
+        try
+        {
+            ResultSet rs = null;
+            this.conectar();
+            PreparedStatement st = this.getCn().prepareStatement("select * from metadatos where metadato = 'PORCENTAJEPRECIO' and estado = 'A' ");
+            rs=st.executeQuery();
+            if(rs.next()==true)
+            {
+                porcentajePrecio = Double.parseDouble(rs.getString("valor"));
+            }
+            return porcentajePrecio;
+        }catch(Exception e){
+            throw e;
+        }finally{
+            this.cerrarConexion();
+        }
+    }      
 }
     
     

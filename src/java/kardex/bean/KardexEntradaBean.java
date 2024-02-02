@@ -32,10 +32,22 @@ public class KardexEntradaBean {
     private KardexEntrada kardexEntrada = new KardexEntrada();
     private String cadenaNombre;
     private String numeroFactura;
+    private double precioSugerido = 0;
+    private Proveedor proveedorFactura;
     private List<Inventario> listaInventario = new ArrayList<>();
     private List<Proveedor> listaProveedores = new ArrayList<>();
     private List<Laboratorio> listaLaboratorios = new ArrayList<>();
 
+    public Proveedor getProveedorFactura() {
+        return proveedorFactura;
+    }
+
+    public void setProveedorFactura(Proveedor proveedorFactura) {
+        this.proveedorFactura = proveedorFactura;
+    }
+
+    
+    
     public KardexEntradaBean() {
     }
 
@@ -141,16 +153,16 @@ public class KardexEntradaBean {
         }
     }
     
-    public String registrarEntrada(Empleado empleado) throws Exception
+    public String registrarEntrada(Empleado empleado)
     {
+        System.out.print(this.kardexEntrada.getFecha_vencimiento().toString());
+        /*
         try
         {
             if(empleado != null)
             {
-                double costoTotal = this.kardexEntrada.getCantidad() * this.kardexEntrada.getInventario().getCosto_unitario();
-                double precioTotal = this.kardexEntrada.getCantidad() * this.kardexEntrada.getInventario().getPrecio_unitario();
-                this.kardexEntrada.setTotal_costo(costoTotal);
-                this.kardexEntrada.setTotal_precio(precioTotal);
+                this.kardexEntrada.setNumero_factura(this.numeroFactura);
+                this.kardexEntrada.setProveedor(this.proveedorFactura);
                 this.kardexEntrada.setEmpleado(empleado);
                 KardexEntradaDao dao = new KardexEntradaDao();
                 dao.registrarEntrada(this.kardexEntrada);
@@ -168,7 +180,40 @@ public class KardexEntradaBean {
         }finally
         {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        }
+        }*/
         return "";
+    }
+    
+    public double calcularPrecioSugerido(double iva,double cantidad,double costoUnitario){
+        double porcentajePrecio = 0;
+        double totalDivicionPorcentaje = 0;
+        double valorPrecioSugeridoUnitario = 0;
+        double valorTotal = 0;
+        try{
+            KardexEntradaDao dao = new KardexEntradaDao();
+            porcentajePrecio = dao.getPorcentajePrecio()/100;
+            valorTotal = costoUnitario * cantidad;
+            if(iva == 0){
+                totalDivicionPorcentaje = valorTotal/porcentajePrecio;
+                valorPrecioSugeridoUnitario = totalDivicionPorcentaje/cantidad;
+            }else{
+                double valorIva = ((iva * valorTotal)/100);
+                double valorConIva = valorTotal + valorIva;
+                totalDivicionPorcentaje = valorConIva /porcentajePrecio;
+                valorPrecioSugeridoUnitario = totalDivicionPorcentaje/cantidad;
+            }
+            return Math.round(valorPrecioSugeridoUnitario);
+        }catch(Exception err){
+            System.out.println(err);
+        }finally{
+        }
+        return 0;
+    }
+    public void calcularPrecio(){
+        double iva = kardexEntrada.getIva();
+        int cantidad = kardexEntrada.getCantidad();
+        double  costo = kardexEntrada.getTotal_costo();
+        this.kardexEntrada.setTotal_precio(this.calcularPrecioSugerido(iva,cantidad,costo));
+        System.out.println("ESte es el precio =>>"+this.kardexEntrada.getTotal_precio());
     }
 }

@@ -5,8 +5,6 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-
-
     <body>
         <ui:composition template="./plantillas/tareas.xhtml">
 
@@ -28,7 +26,7 @@
                             </div >
                             <div class="mb-3 row">
                                 <p:outputLabel value="Proveedor" for="proveedor"/>
-                                <p:selectOneMenu  id="proveedor" value="#{kardexEntradaBean.kardexEntrada.proveedor}" converter="omnifaces.SelectItemsConverter" required="true">
+                                <p:selectOneMenu  id="proveedor" value="#{kardexEntradaBean.proveedorFactura}" converter="omnifaces.SelectItemsConverter">
                                     <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
                                     <f:selectItems value="#{kardexEntradaBean.listaProveedores}" var="prov" itemLabel="#{prov.nombre_proveedor}" itemValue="#{prov}" rendered="true"/>
                                 </p:selectOneMenu>
@@ -58,46 +56,70 @@
                             </p:dataTable>
                         </div>
                 </h:form>
-
-                <p:dialog header="KardexKDD(Entradas)"  id="dDialogoEntrada" widgetVar="wDialogoEntrada"  >
-                    <center>
+                <p:dialog header="KardexKDD(Entradas)"  id="dDialogoEntrada" widgetVar="wDialogoEntrada" class="modal modalCustom"  >
                     <h:form id="frm">
                         <p:growl id="avisoEntrada" showSummary="true" autoUpdate="true" showDetail="true"/>
-                        <h:panelGrid columns="2">
-                            
-                            <p:outputLabel   value="Código" for="codigo"/>
-                            <h:outputText id="codigo" value="#{kardexEntradaBean.kardexEntrada.inventario.cod_producto}"/>
-                            
-                            <p:outputLabel   value="Nombre" for="nombre"/>
-                            <p:outputLabel id="nombre" value="#{kardexEntradaBean.kardexEntrada.inventario.nombre}"/>
-                            
-                            <p:outputLabel value="Número Factura" for="numeroFactura"/>
-                            <p:inputText id="numeroFactura"  size="10" readonly="true" value="#{kardexEntradaBean.kardexEntrada.numero_factura}" required="true"/>
-                            
-                             <p:outputLabel for="cantidad" value="Cantidad"/>
-                             <p:inputText id="cantidad"  size="4" value="#{kardexEntradaBean.kardexEntrada.cantidad}" required="true">
+                        <div class="contenedor-row">
+                            <div class="control">
+                                <p:outputLabel   value="Código" for="codigo"/>
+                                <h:outputText id="codigo"  value="#{kardexEntradaBean.kardexEntrada.inventario.cod_producto}"/>
+                                </div>
+                            <div class="control">
+                                <p:outputLabel   value="Nombre" for="nombre"/>
+                                <p:outputLabel id="nombre"  value="#{kardexEntradaBean.kardexEntrada.inventario.nombre}"/>
+                            </div>
+                            <div class="control">
+                                <p:outputLabel value="Número Factura" for="numeroFactura"/>
+                                <p:outputLabel id="numeroFactura"    value="#{kardexEntradaBean.kardexEntrada.numero_factura}" />
+                            </div>
+                            <div class="control">
+                                <p:outputLabel value="Proveedor" for="proveedorFactura"/>
+                                <p:outputLabel id="proveedorFactura"    value="#{kardexEntradaBean.kardexEntrada.proveedor.nombre_proveedor}" />
+                            </div>
+                        </div>
+                        <div class="contenedor-row">
+                        <div class="control1">
+                            <p:outputLabel for="iva" value="Iva"/>
+                            <p:inputText id="iva" class="form-control"  value="#{kardexEntradaBean.kardexEntrada.iva}" required="true">
+                                <f:convertNumber integerOnly="false"  type="number"/>
+                                <p:ajax event="blur" update=":frmInventario"/>
+                                <!--f:validator validatorId="validatorCero" for="iva"/-->
+                            </p:inputText>
+                        </div>
+                        <div class="control1">
+                            <p:outputLabel for="cantidad" value="Cantidad"/>
+                             <p:inputText id="cantidad" class="form-control" value="#{kardexEntradaBean.kardexEntrada.cantidad}" required="true">
                                 <f:convertNumber integerOnly="true"  type="number"/>
                                 <f:validator validatorId="validatorCero" for="cantidad"/>
+                                <p:ajax event="blur" update=":frmInventario"/>
                             </p:inputText>
-                             
-                            <p:outputLabel for="iva" value="Iva"/>
-                            <p:inputText id="iva"  size="4" value="#{kardexEntradaBean.kardexEntrada.iva}" required="true">
-                                <f:convertNumber integerOnly="true"  type="number"/>
-                                <f:validator validatorId="validatorCero" for="iva"/>
+                        </div>
+                        <div class="control">
+                            <p:outputLabel for="pro_costo" value="Costo/Unidad" />
+                            <p:inputText  id="pro_costo"    class="form-control" value="#{kardexEntradaBean.kardexEntrada.total_costo}" required="true">
+                                <f:convertNumber  integerOnly="false"  maxFractionDigits="3"/>
+                                <f:validator validatorId="validatorDouble" for="pro_costo" />
+                                 <p:ajax listener="#{kardexEntradaBean.calcularPrecio()}" event="blur"  update=":frm"/>
                             </p:inputText>
-                            
+                        </div> 
+                        <div class="control">
+                            <p:outputLabel for="pro_precio" value="Precio Sugerido "/>
+                            <p:inputText id="pro_precio"   class="form-control" value="#{kardexEntradaBean.kardexEntrada.total_precio}" required="true">
+                                <f:convertNumber type="currency"  currencySymbol="$" maxFractionDigits="3"/>
+                                <f:validator validatorId="validatorCero" for="pro_precio"/>
+                            </p:inputText>
+                        </div> 
+                        <div class="control2">
                             <p:outputLabel for="fechaVencimiento" value="Fecha de vencimiento" />
-                            <p:calendar  id="fechaVencimiento" value="#{kardexEntradaBean.kardexEntrada.fecha_vencimiento}" mode="popup"  pages="3" showOn="button" required="true"/>
-                            
-                        </h:panelGrid>
-                        <br/> 
+                            <p:calendar  id="fechaVencimiento"  value="#{kardexEntradaBean.kardexEntrada.fecha_vencimiento}" mode="popup"  pages="1" showOn="button" required="true"/>
+                        </div>
+                        </div>
                         <center>
                             <p:panel>
-                                <p:commandButton value="Efectuar Entrada" action="#{kardexEntradaBean.registrarEntrada(sessionBean.empleado)}"  update=":frmInventario" /> 
+                                <p:commandButton value="Efectuar Entrada" action="#{kardexEntradaBean.registrarEntrada(sessionBean.empleado)}"  update=":frm" /> 
                             </p:panel>
-                            </center>
+                        </center>
                     </h:form>
-                    </center>
                 </p:dialog>
             </ui:define>
 
