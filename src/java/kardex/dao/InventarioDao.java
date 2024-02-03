@@ -11,7 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import kardex.modelo.Categoria;
 import kardex.modelo.Inventario;
+import kardex.modelo.Laboratorio;
 
 
 /**
@@ -19,6 +21,8 @@ import kardex.modelo.Inventario;
  * @author Carlitos
  */
 public class InventarioDao extends Dao{
+
+    
     
     public void registrarInventario(Inventario inventario) throws Exception
     {
@@ -29,19 +33,12 @@ public class InventarioDao extends Dao{
           String sql=""+
            "insert into inventario"+
            "(nombre_producto,concentracion,presentacion,"+
-           "iva,costo_unitario,precio_unitario,estado,existencias)"+
+           "estado,existencias,categoria,laboratorio,codigo_barras)"+
            "values('"+inventario.getNombre()+"','"+inventario.getConcentracion()+"',"
-            + "'"+inventario.getPresentacion()+"',"+inventario.getIva()+","+inventario.getCosto_unitario()+","
-                  + ""+inventario.getPrecio_unitario()+",'A',0)";
+            + "'"+inventario.getPresentacion()+"',"
+            + "'A',0,'"+inventario.getCategoria()+"','"+inventario.getLaboratorio()+"','"+inventario.getCodigo_barras()+"')";
+          System.out.println(sql);
           PreparedStatement st  = this.getCn().prepareStatement(sql);
-          //st.setString(1, inventario.getNombre());
-          /*st.setString(2, inventario.getConcentracion());
-          st.setString(3, inventario.getPresentacion());
-          st.setDouble(4, inventario.getIva());
-          st.setDouble(5, inventario.getCosto_unitario());
-          st.setDouble(6, inventario.getPrecio_unitario());
-          st.setString(7, "A");
-          st.setInt(8, 0);*/
           st.executeUpdate();
           st.close();
           System.out.println("Registro almacenado con exito");
@@ -64,17 +61,16 @@ public class InventarioDao extends Dao{
           this.getCn().setAutoCommit(false);
           String sql="update inventario set "
                   + "nombre_producto = ?, concentracion = ?, presentacion = ? , "
-                  + "iva = ?,costo_unitario = ?, precio_unitario = ?, estado=? "
+                  + "iva = ?,costo_unitario = ?, precio_unitario = ?, estado=? , categoria=?, laboratorio=?"
                   + "where cod_producto = ? ";
           PreparedStatement st  = this.getCn().prepareStatement(sql);
           st.setString(1, inventario.getNombre());
           st.setString(2, inventario.getConcentracion());
           st.setString(3, inventario.getPresentacion());
-          st.setDouble(4, inventario.getIva());
-          st.setDouble(5, inventario.getCosto_unitario());
-          st.setDouble(6, inventario.getPrecio_unitario());
-          st.setString(7, inventario.getEstado());
-          st.setInt(8, inventario.getCod_producto());
+          st.setString(4, inventario.getEstado());
+          st.setString(5, inventario.getCategoria());
+          st.setString(6, inventario.getLaboratorio());
+          st.setInt(7, inventario.getCod_producto());
           st.executeUpdate();
           st.close();
           System.out.println("Registro almacenado con éxito");
@@ -106,11 +102,64 @@ public class InventarioDao extends Dao{
                 inv.setNombre(rs.getString("nombre_producto"));
                 inv.setConcentracion(rs.getString("concentracion"));
                 inv.setPresentacion(rs.getString("presentacion"));
-                inv.setIva(rs.getDouble("iva"));
-                inv.setCosto_unitario(rs.getDouble("costo_unitario"));
-                inv.setPrecio_unitario(rs.getDouble("precio_unitario"));
+                inv.setCategoria(rs.getString("categoria"));
+                inv.setLaboratorio(rs.getString("laboratorio"));
+                inv.setLaboratorio(rs.getString("codigo_barras"));
                 inv.setEstado(rs.getString("estado"));
                 inv.setExistencias(rs.getInt("existencias"));
+                li.add(inv);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return li;
+    }
+     
+   public List<Categoria> getListaCategorias() throws Exception
+    {
+        List<Categoria> li = new ArrayList<Categoria>();
+        try
+        {
+            this.conectar();
+            String sql = "select * from categoria_inventario";
+            PreparedStatement st =  this.getCn().prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next() == true)
+            {
+                Categoria inv = new Categoria();
+                inv.setId_categoria(rs.getInt("id_categoria"));
+                inv.setDescripcion(rs.getString("descripcion"));
+                li.add(inv);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return li;
+    }
+   public List<Laboratorio> getListaLaboratorios() throws Exception
+    {
+        List<Laboratorio> li = new ArrayList<Laboratorio>();
+        try
+        {
+            this.conectar();
+            String sql = "select * from laboratorio";
+            PreparedStatement st =  this.getCn().prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next() == true)
+            {
+                Laboratorio inv = new Laboratorio();
+                inv.setCod_laboratorio(rs.getInt("cod_laboratorio"));
+                inv.setNombre_laboratorio(rs.getString("nombre_laboratorio"));
                 li.add(inv);
             }
         }catch(Exception e)

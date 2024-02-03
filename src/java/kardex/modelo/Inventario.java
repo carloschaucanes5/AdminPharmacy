@@ -10,29 +10,35 @@ package kardex.modelo;
  *
  * @author Carlitos
  */
-/*
-  cod_producto integer NOT NULL DEFAULT nextval('inventario1_cod_producto_seq'::regclass),
-  ombren character varying(100) NOT NULL,
-  concentracion character varying(50),
-  presentacion character varying(50),
-  nit_proveedor character varying(15),
-  cod_laboratorio integer,
-  iva double precision NOT NULL,
-  costo_unitario double precision NOT NULL,
-  precio_unitario double precision NOT NULL,
-  cantidad_disponoble integer,
-*/
+
 public class Inventario {
     private int cod_producto;
     private String nombre;
     private String concentracion;
     private String presentacion;
-    private double iva;
-    private double costo_unitario;
-    private double precio_unitario;
     private String estado;
     private int existencias;
     private String codigo_barras;
+    private String categoria;
+    private String laboratorio;
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getLaboratorio() {
+        return laboratorio;
+    }
+
+    public void setLaboratorio(String laboratorio) {
+        this.laboratorio = laboratorio;
+    }
+    
+    
     public int getCod_producto() {
         return cod_producto;
     }
@@ -73,29 +79,6 @@ public class Inventario {
         this.presentacion = presentacion;
     }
 
-    public double getIva() {
-        return iva;
-    }
-
-    public void setIva(double iva) {
-        this.iva = iva;
-    }
-
-    public double getCosto_unitario() {
-        return costo_unitario;
-    }
-
-    public void setCosto_unitario(double costo_unitario) {
-        this.costo_unitario = costo_unitario;
-    }
-
-    public double getPrecio_unitario() {
-        return precio_unitario;
-    }
-
-    public void setPrecio_unitario(double precio_unitario) {
-        this.precio_unitario = precio_unitario;
-    }
 
     public String getEstado() {
         return estado;

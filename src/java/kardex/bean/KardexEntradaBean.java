@@ -7,6 +7,7 @@
 package kardex.bean;
 
 
+import com.sun.xml.ws.client.ResponseContext;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -20,6 +21,8 @@ import kardex.modelo.Inventario;
 import kardex.modelo.KardexEntrada;
 import kardex.modelo.Laboratorio;
 import kardex.modelo.Proveedor;
+import org.primefaces.context.PrimeFacesContext;
+import org.primefaces.context.RequestContext;
 
 
 /**
@@ -30,38 +33,22 @@ import kardex.modelo.Proveedor;
 @ViewScoped
 public class KardexEntradaBean {
     private KardexEntrada kardexEntrada = new KardexEntrada();
-    private String cadenaNombre;
-    private String numeroFactura;
+    private String cadenaNombre = "";
     private double precioSugerido = 0;
-    private Proveedor proveedorFactura;
     private List<Inventario> listaInventario = new ArrayList<>();
     private List<Proveedor> listaProveedores = new ArrayList<>();
     private List<Laboratorio> listaLaboratorios = new ArrayList<>();
+    
 
-    public Proveedor getProveedorFactura() {
-        return proveedorFactura;
+    public double getPrecioSugerido() {
+        return precioSugerido;
     }
 
-    public void setProveedorFactura(Proveedor proveedorFactura) {
-        this.proveedorFactura = proveedorFactura;
+    public void setPrecioSugerido(double precioSugerido) {
+        this.precioSugerido = precioSugerido;
     }
 
     
-    
-    public KardexEntradaBean() {
-    }
-
-    public String getNumeroFactura() {
-        return numeroFactura;
-    }
-
-    public void setNumeroFactura(String numeroFactura) {
-        this.numeroFactura = numeroFactura;
-    }
-    
-    
-   
- 
     public KardexEntrada getKardexEntrada() {
         return kardexEntrada;
     }
@@ -108,7 +95,12 @@ public class KardexEntradaBean {
         {
             KardexEntradaDao dao = new KardexEntradaDao();
             this.listaInventario = dao.getListarNombresProductos(this.cadenaNombre);
-            this.cadenaNombre = "";
+            if(this.listaInventario.size() == 1){
+                RequestContext.getCurrentInstance().execute("PF('wDialogoEntrada').show();");
+                this.kardexEntrada.setInventario(this.listaInventario.get(0));
+                //RequestContext.getCurrentInstance().update("frm");
+            }
+            this.cadenaNombre = "";         
         }catch(Exception err)
         {
             throw err;
@@ -116,7 +108,6 @@ public class KardexEntradaBean {
     }
     public void leerIdKardexEntrada(Inventario inventario) throws Exception
     {   
-        this.kardexEntrada.setNumero_factura(this.numeroFactura);
         this.kardexEntrada.setInventario(inventario);
     }
    
@@ -153,21 +144,23 @@ public class KardexEntradaBean {
         }
     }
     
+
+    
     public String registrarEntrada(Empleado empleado)
-    {
-        System.out.print(this.kardexEntrada.getFecha_vencimiento().toString());
-        /*
+    {  
+        if(this.kardexEntrada.getNumero_factura()==null || this.kardexEntrada.getProveedor()==null || this.kardexEntrada.getNumero_factura().isEmpty() ){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error","No se ha ingresado los datos de factura y proveedor"));
+            return "kardex_entrada?faces-redirect=false";
+        }
         try
         {
             if(empleado != null)
             {
-                this.kardexEntrada.setNumero_factura(this.numeroFactura);
-                this.kardexEntrada.setProveedor(this.proveedorFactura);
                 this.kardexEntrada.setEmpleado(empleado);
                 KardexEntradaDao dao = new KardexEntradaDao();
                 dao.registrarEntrada(this.kardexEntrada);
-                this.buscarProducto();
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Entrada almacenada con éxito"));
+                RequestContext.getCurrentInstance().update("formDatosEntrada");
                 return "kardex_entrada?faces-redirect=true";
             }
             else
@@ -180,7 +173,7 @@ public class KardexEntradaBean {
         }finally
         {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-        }*/
+        }
         return "";
     }
     
@@ -216,4 +209,5 @@ public class KardexEntradaBean {
         this.kardexEntrada.setTotal_precio(this.calcularPrecioSugerido(iva,cantidad,costo));
         System.out.println("ESte es el precio =>>"+this.kardexEntrada.getTotal_precio());
     }
+
 }

@@ -73,26 +73,7 @@ contenedor_principal{
   text-decoration : underline;
 }
 
-.contenedorAdicionProductos{
-    display: flex;
-    flex-direction: row;
-    width: 70%;
-    margin: auto;
-}
 
-.contenedorFactura{
-    width: 50%;
-    display: flex;
-    flex-direction: row;
-}
-.contenedorBuscador{
-    width: 50%;
-}
-
-.campo_busqueda{
-    height: 30px;
-    width: 70%;
-}
 .barra_superior{
     position: fixed;
 }
@@ -141,4 +122,32 @@ contenedor_principal{
     padding: 0;
     margin: 0;
     padding-left: 0;
+}
+/*contenesores para adicion de factura*/
+
+.contenedor_factura{
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    margin: auto;
+}
+.control_factura{
+   width: 30%; 
+}
+.control_factura >*{
+    width: 100%;
+}
+
+.contenedor_buscador{
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+    margin: auto;
+    
+}
+.control_buscador{
+    width: 40%;
+}
+.control_buscador > input{
+    width: 100%;
 }
