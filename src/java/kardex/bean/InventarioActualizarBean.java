@@ -80,18 +80,11 @@ public class InventarioActualizarBean {
     {
         try
         {
-           if(inventario.getCosto_unitario() <= inventario.getPrecio_unitario())
-            {
+
                 InventarioDao dao = new InventarioDao();
                 dao.actualizarInventario(inventario);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Producto actualizado con éxito"));
                 return "inventario_actualizar?faces-redirect=true";
-            }
-           else
-           {
-               FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error","El costo/unitario no sebe ser superior al precio/unitario"));
-               FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Advertencia:","Advertencia:El punto(.) indica separador de miles y la coma(,) indica separador de valores decimales en los campos Precio/Unidad y Costo/Unidad"));
-           }
         }
         catch(Exception err)
         {

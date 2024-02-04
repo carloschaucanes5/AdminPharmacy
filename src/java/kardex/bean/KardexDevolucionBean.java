@@ -174,7 +174,7 @@ public void adicionarKardexDevolucionItems(ItemVenta itemVenta1)
                 nuevoCosto = cantidadRetornada * costoUnitario;
                 nuevoPrecio = cantidadRetornada * precioUnitario;
                 ItemDevolucion itemDevolucion = new ItemDevolucion();
-                itemDevolucion.setCod_producto(itemVenta1.getInventario().getCod_producto());
+                itemDevolucion.setCod_producto(itemVenta1.getInventario().getCod_entrada());
                 itemDevolucion.setCantidad(cantidadRetornada);
                 itemDevolucion.setTotal_costo(nuevoCosto);
                 itemDevolucion.setTotal_precio(nuevoPrecio);

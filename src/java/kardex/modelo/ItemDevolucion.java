@@ -16,7 +16,7 @@ package kardex.modelo;
 
 public class ItemDevolucion {
   private int cod_devolucion;
-  private int cod_producto;
+  private long cod_producto;
   private int cantidad;
   private double  total_costo;
   private double total_precio;
@@ -29,9 +29,15 @@ public class ItemDevolucion {
         this.cod_devolucion = cod_devolucion;
     }
 
-    public int getCod_producto() {
+    public long getCod_producto() {
         return cod_producto;
     }
+
+    public void setCod_producto(long cod_producto) {
+        this.cod_producto = cod_producto;
+    }
+
+
 
     public void setCod_producto(int cod_producto) {
         this.cod_producto = cod_producto;

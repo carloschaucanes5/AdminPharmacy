@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import kardex.modelo.ConsultaProducto;
 import kardex.modelo.Empleado;
 import kardex.modelo.Inventario;
 import kardex.modelo.ItemDevolucion;
@@ -44,21 +45,23 @@ public class KardexDevolucionDao  extends Dao{
         try
         {
             this.conectar();
-            String sql = "select * from kardex_venta natural join inventario where numero_factura = "+numeroFactura+"";
+            String sql = "select ke.cod_entrada,inv.nombre_producto,inv.concentracion,inv.presentacion,ke.iva,ke.cantidad,ke.total_costo,ke.total_precio,kv.numero_factura  \n" +
+                          " from kardex_venta kv inner join kardex_entrada ke on   kv.cod_producto = ke.cod_entrada\n" +
+                          " inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+                          " where kv.numero_factura = "+numeroFactura+"";
             PreparedStatement st =  this.getCn().prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while(rs.next() == true)
             {
-                Inventario inv = new Inventario();
-                inv.setCod_producto(rs.getInt("cod_producto"));
-                inv.setNombre(rs.getString("nombre_producto"));
+                ConsultaProducto inv = new ConsultaProducto();
+                inv.setCod_entrada(rs.getInt("cod_entrada"));
+                inv.setNombre_producto(rs.getString("nombre_producto"));
                 inv.setConcentracion(rs.getString("concentracion"));
                 inv.setPresentacion(rs.getString("presentacion"));
                 inv.setIva(rs.getDouble("iva"));
-                inv.setCosto_unitario(rs.getDouble("costo_unitario"));
-                inv.setPrecio_unitario(rs.getDouble("precio_unitario"));
-                inv.setEstado(rs.getString("estado"));
-                inv.setExistencias(rs.getInt("existencias"));                
+                inv.setTotal_costo(rs.getDouble("total_costo"));
+                inv.setTotal_precio(rs.getDouble("total_precio"));
+                inv.setCantidad(rs.getInt("cantidad"));                
                 ItemVenta iv = new ItemVenta();
                 iv.setNumero_factura(numeroFactura);
                 iv.setInventario(inv);
@@ -284,7 +287,7 @@ public class KardexDevolucionDao  extends Dao{
         }
     }
     
-    private void actualizarExistenciasInventario(int codigoProducto,int cantidadRetornada) throws Exception
+    private void actualizarExistenciasInventario(long codigoProducto,int cantidadRetornada) throws Exception
     {
         String sql1 = "", sql2 = "";
         PreparedStatement st1 = null, st2 = null;
@@ -292,13 +295,13 @@ public class KardexDevolucionDao  extends Dao{
         double suma = 0;
         try
         {
-            sql1 = "select * from inventario where cod_producto = "+codigoProducto+"";
+            sql1 = "select * from kardex_entrada where cod_entrada = "+codigoProducto+"";
             st1 = this.getCn().prepareStatement(sql1);
             rs = st1.executeQuery();
             if(rs.next() == true)
             {
-                int cantidadNueva = rs.getInt("existencias") + cantidadRetornada;
-                sql2 = "update inventario set existencias = "+cantidadNueva+" where cod_producto = "+codigoProducto+"";
+                int cantidadNueva = rs.getInt("cantidad") + cantidadRetornada;
+                sql2 = "update kardex_entrada set cantidad = "+cantidadNueva+" where cod_entrada = "+codigoProducto+"";
                 st2 = this.getCn().prepareStatement(sql2);
                 st2.executeUpdate();
             }

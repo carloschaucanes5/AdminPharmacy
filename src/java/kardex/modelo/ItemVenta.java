@@ -15,10 +15,18 @@ public class ItemVenta {
   private int cod_salida;
   private int numero_factura;
   private int cod_tipo_transaccion; 
-  private Inventario inventario; 
+  private ConsultaProducto inventario; 
   private int cantidad; 
   private double total_costo;
   private double total_precio;
+
+    public ConsultaProducto getInventario() {
+        return inventario;
+    }
+
+    public void setInventario(ConsultaProducto inventario) {
+        this.inventario = inventario;
+    }
 
     public int getCod_salida() {
         return cod_salida;
@@ -44,13 +52,7 @@ public class ItemVenta {
         this.cod_tipo_transaccion = cod_tipo_transaccion;
     }
 
-    public Inventario getInventario() {
-        return inventario;
-    }
 
-    public void setInventario(Inventario inventario) {
-        this.inventario = inventario;
-    }
 
 
     public int getCantidad() {

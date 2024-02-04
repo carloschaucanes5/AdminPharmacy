@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import kardex.dao.KardexSalidaDao;
+import kardex.modelo.ConsultaProducto;
 import kardex.modelo.Empleado;
 import kardex.modelo.Inventario;
 import kardex.modelo.KardexSalida;
@@ -30,8 +31,8 @@ public class KardexSalidaBean {
      */
     private KardexSalida kardexSalida = new KardexSalida();
     private String cadenaNombre;
-    private List<Inventario> listaInventario = new ArrayList<Inventario>();
-    private Inventario inventario = new Inventario();
+    private List<ConsultaProducto> listaInventario = new ArrayList<ConsultaProducto>();
+    private ConsultaProducto inventario = new ConsultaProducto();
     private int cantidad;
     private String detalle;
 
@@ -50,14 +51,16 @@ public class KardexSalidaBean {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
-    public Inventario getInventario() {
+
+    public ConsultaProducto getInventario() {
         return inventario;
     }
 
-    public void setInventario(Inventario inventario) {
+    public void setInventario(ConsultaProducto inventario) {
         this.inventario = inventario;
     }
+    
+
 
     
     
@@ -69,13 +72,15 @@ public class KardexSalidaBean {
         this.cadenaNombre = cadenaNombre;
     }
 
-    public List<Inventario> getListaInventario() {
+    public List<ConsultaProducto> getListaInventario() {
         return listaInventario;
     }
 
-    public void setListaInventario(List<Inventario> listaInventario) {
+    public void setListaInventario(List<ConsultaProducto> listaInventario) {
         this.listaInventario = listaInventario;
     }
+
+
 
     public KardexSalida getKardexSalida() {
         return kardexSalida;
@@ -89,12 +94,12 @@ public class KardexSalidaBean {
     {
         try
         {
-            if(this.cantidad <=this.inventario.getExistencias())
+            if(this.cantidad <=this.inventario.getCantidad())
             {
                 if(this.cantidad > 0)
                 {
-                    double costoTotal = this.cantidad * this.inventario.getCosto_unitario();
-                    double precioTotal = this.cantidad * this.inventario.getPrecio_unitario();
+                    double costoTotal = this.cantidad * this.inventario.getTotal_costo();
+                    double precioTotal = this.cantidad * this.inventario.getTotal_precio();
                     this.kardexSalida.setTotal_costo(costoTotal);
                     this.kardexSalida.setTotal_precio(precioTotal);
                     this.kardexSalida.setInventario(inventario);
@@ -142,7 +147,7 @@ public class KardexSalidaBean {
         }
     }
     
-   public void leerIdKardexSalida(Inventario inventario)
+   public void leerIdKardexSalida(ConsultaProducto inventario)
     {     
         this.inventario = inventario;
     }

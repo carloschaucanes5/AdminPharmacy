@@ -20,33 +20,25 @@
                         <hr/>
                         <p:dataTable id="datos" value="#{kardexSalidaBean.listaInventario}" var="inv" paginator="true" rows="8">
                         <p:column headerText="Código">
-                            <p:outputLabel value="#{inv.cod_producto}" />
+                            <p:outputLabel value="#{inv.cod_entrada}" />
                         </p:column>
                         <p:column headerText="Nombre Producto">
-                            <p:outputLabel value="#{inv.nombre}" />
+                            <p:outputLabel value="#{inv.nombre_producto}" />
                         </p:column>
                         
-                        <p:column headerText="Concentración">
-                            <p:outputLabel value="#{inv.concentracion}" />
+                        <p:column headerText="Unidad Medida/Electrónica">
+                            <p:outputLabel value="#{inv.concentracion}/#{inv.presentacion}" />
                         </p:column>
                         
-                        <p:column headerText="Presentación">
-                            <p:outputLabel value="#{inv.presentacion}" />
+                        <p:column headerText="Laboratorio">
+                            <p:outputLabel value="#{inv.laboratorio}" />
                         </p:column> 
-                       
-                        <p:column headerText="Costo/unitario">
-                            <p:outputLabel value="#{inv.costo_unitario}">
-                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Precio/unitario">
-                            <p:outputLabel value="#{inv.precio_unitario}">
-                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Existencias">
-                            <p:outputLabel value="#{inv.existencias}"/>
-                        </p:column>
+                        <p:column headerText="Laboratorio">
+                            <p:outputLabel value="#{inv.cantidad}" />
+                        </p:column> 
+                        <p:column headerText="Precio Unitario">
+                            <p:outputLabel value="#{inv.total_precio}" />
+                        </p:column> 
                             
                             <p:column headerText="Salidas">
                                 <p:commandLink value="Nueva Salida" actionListener="#{kardexSalidaBean.leerIdKardexSalida(inv)}" oncomplete="PF('wDialogoSalida').show()" update=":dDialogoSalida"/>
@@ -58,9 +50,9 @@
                     <h:form >
                         <p:growl autoUpdate="true" showDetail="true"/>
                          <center>
-                             <h1><b>#{kardexSalidaBean.inventario.cod_producto}</b></h1><br/>
-                            <h1><b>#{kardexSalidaBean.inventario.nombre} #{kardexSalidaBean.inventario.concentracion} </b></h1><br/>
-                            <h1><b>#{kardexSalidaBean.inventario.presentacion}</b></h1><br/>
+                             <h1><b>#{kardexSalidaBean.inventario.cod_entrada}</b></h1><br/>
+                             <h1><b>#{kardexSalidaBean.inventario.nombre_producto} #{kardexSalidaBean.inventario.concentracion}/#{kardexSalidaBean.inventario.presentacion} </b></h1><br/>
+                             <h1><b>#{kardexSalidaBean.inventario.laboratorio}</b></h1><br/>
                             <h:panelGrid columns="2">
                                 <p:outputLabel value="Cantidad" for="sCantidad"/>
                                 <p:inputText id="sCantidad"  size="4" value="#{kardexSalidaBean.cantidad}" label="Cantidad" required="true">

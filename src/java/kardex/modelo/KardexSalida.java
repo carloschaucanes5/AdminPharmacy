@@ -17,7 +17,7 @@ package kardex.modelo;
 public class KardexSalida {
   private int cod_salida;
   private int cod_tipo_transaccion;
-  private Inventario inventario;
+  private ConsultaProducto inventario;
   private String fecha_salid;
   private String hora_salida;
   private int cantidad;
@@ -42,13 +42,15 @@ public class KardexSalida {
         this.cod_tipo_transaccion = cod_tipo_transaccion;
     }
 
-    public Inventario getInventario() {
+    public ConsultaProducto getInventario() {
         return inventario;
     }
 
-    public void setInventario(Inventario inventario) {
+    public void setInventario(ConsultaProducto inventario) {
         this.inventario = inventario;
     }
+
+
 
     public String getFecha_salid() {
         return fecha_salid;

@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import kardex.dao.ClienteDao;
 import kardex.dao.KardexVentaDao;
 import kardex.modelo.Cliente;
+import kardex.modelo.ConsultaProducto;
 import kardex.modelo.CuentaCobrar;
 import kardex.modelo.Empleado;
 import kardex.modelo.Empresa;
@@ -35,10 +36,13 @@ import kardex.modelo.Recibo;
 public class KardexVentaBean {
     private String cadenaNombre;
     private KardexVenta kardexVenta = new KardexVenta();
-    private List<Inventario> listaInventario = new ArrayList<Inventario>();
+    private List<ConsultaProducto> listaInventario = new ArrayList<ConsultaProducto>();
     private Inventario itemInventario = new Inventario();
+    private ConsultaProducto itemProducto = new ConsultaProducto();
     private int itemCantidad;
     private double totalPago;
+    private double formaPago;
+    private double saldoRetorno;
     
     private Cliente cliente = new Cliente();
     private String activarBotonCliente;
@@ -54,6 +58,39 @@ public class KardexVentaBean {
     private String hora;
 
     public KardexVentaBean() {
+    }
+
+    public double getSaldoRetorno() {
+        return saldoRetorno;
+    }
+
+    public void setSaldoRetorno(double saldoRetorno) {
+        this.saldoRetorno = saldoRetorno;
+    }
+
+    public double getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(double formaPago) {
+        this.formaPago = formaPago;
+    }
+
+    public ConsultaProducto getItemProducto() {
+        return itemProducto;
+    }
+
+    public void setItemProducto(ConsultaProducto itemProducto) {
+        this.itemProducto = itemProducto;
+    }
+
+    
+    public List<ConsultaProducto> getListaInventario() {
+        return listaInventario;
+    }
+
+    public void setListaInventario(List<ConsultaProducto> listaInventario) {
+        this.listaInventario = listaInventario;
     }
 
     
@@ -126,13 +163,6 @@ public class KardexVentaBean {
         this.kardexVenta = kardexVenta;
     }
 
-    public List<Inventario> getListaInventario() {
-        return listaInventario;
-    }
-
-    public void setListaInventario(List<Inventario> listaInventario) {
-        this.listaInventario = listaInventario;
-    }
 
     public Inventario getItemInventario() {
         return itemInventario;
@@ -205,18 +235,32 @@ public class KardexVentaBean {
         return res;
     }
     
-    public void adicionarListaKardexItemVenta(Inventario itemInventario, int itemCantidad)
+    
+    public void calcularDineroRetorno(){
+        if(this.formaPago == 0){
+            this.saldoRetorno =0;
+        }
+        else{
+            this.saldoRetorno = this.formaPago - this.totalPago;
+        }
+        
+    }
+    
+    public void adicionarListaKardexItemVenta(ConsultaProducto itemInventario, int itemCantidad)
     {
-        Double precioTotal = itemInventario.getPrecio_unitario() * itemCantidad;
-        Double costoTotal = itemInventario.getCosto_unitario() * itemCantidad;
+        Double precioTotal = itemInventario.getTotal_precio() * itemCantidad;
+        Double costoTotal = itemInventario.getTotal_costo()* itemCantidad;
         ItemVenta itemVenta = new ItemVenta();
         itemVenta.setInventario(itemInventario);
         itemVenta.setCantidad(itemCantidad);
+        itemVenta.getInventario().setTotal_costo(costoTotal);
+        itemVenta.getInventario().setTotal_precio(precioTotal);
         itemVenta.setTotal_costo(costoTotal);
         itemVenta.setTotal_precio(precioTotal);
+
         if(verificarRepetidos(itemInventario)==false)
         {
-            if(itemCantidad <= itemInventario.getExistencias())
+            if(itemCantidad <= itemInventario.getCantidad())
             {
                 this.kardexVenta.getListaItemsVenta().add(itemVenta);
                 this.setTotalPago(calcularTotalVenta());
@@ -234,6 +278,7 @@ public class KardexVentaBean {
     
     public void eliminarItemVenta(ItemVenta itemVenta)
     {
+        
         List<ItemVenta> items = this.kardexVenta.getListaItemsVenta();
         int j = 0;
         int b = 0;
@@ -250,6 +295,7 @@ public class KardexVentaBean {
         if(b==1)
         {
             this.kardexVenta.getListaItemsVenta().remove(pos);
+            this.setTotalPago(calcularTotalVenta());
         }
     }
     
@@ -260,12 +306,12 @@ public class KardexVentaBean {
         while(items.hasNext() == true)
         {
             ItemVenta item = items.next();
-            total = total + item.getTotal_precio();
+            total = total + (item.getInventario().getTotal_precio());
         }
         return total;
     }
    
-    public boolean verificarRepetidos(Inventario inv)
+    public boolean verificarRepetidos(ConsultaProducto inv)
     {   
         int b=0;
         Iterator<ItemVenta> items = this.kardexVenta.getListaItemsVenta().iterator();
@@ -300,9 +346,9 @@ public class KardexVentaBean {
         }
     }
    
-   public void leerIdInventario(Inventario inventario)
+   public void leerIdInventario(ConsultaProducto inventario)
    {
-       this.setItemInventario(inventario);
+       this.setItemProducto(inventario);
    }
    
    @PostConstruct
@@ -366,7 +412,7 @@ public class KardexVentaBean {
                    Recibo re = new Recibo();
                    ItemVenta iv = new ItemVenta();
                    iv = kardexVenta.getListaItemsVenta().get(j);
-                   nombre = iv.getInventario().getNombre()+" "+iv.getInventario().getConcentracion();
+                   nombre = iv.getInventario().getNombre_producto()+" "+iv.getInventario().getConcentracion();
                    re.setVariable(nombre);
                    re.setCantidad(iv.getCantidad());
                    re.setTotal(iv.getTotal_precio());

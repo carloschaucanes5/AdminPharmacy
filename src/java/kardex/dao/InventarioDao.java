@@ -61,16 +61,14 @@ public class InventarioDao extends Dao{
           this.getCn().setAutoCommit(false);
           String sql="update inventario set "
                   + "nombre_producto = ?, concentracion = ?, presentacion = ? , "
-                  + "iva = ?,costo_unitario = ?, precio_unitario = ?, estado=? , categoria=?, laboratorio=?"
+                  + "estado=?"
                   + "where cod_producto = ? ";
           PreparedStatement st  = this.getCn().prepareStatement(sql);
           st.setString(1, inventario.getNombre());
           st.setString(2, inventario.getConcentracion());
           st.setString(3, inventario.getPresentacion());
           st.setString(4, inventario.getEstado());
-          st.setString(5, inventario.getCategoria());
-          st.setString(6, inventario.getLaboratorio());
-          st.setInt(7, inventario.getCod_producto());
+          st.setInt(5, inventario.getCod_producto());
           st.executeUpdate();
           st.close();
           System.out.println("Registro almacenado con éxito");
