@@ -144,8 +144,6 @@ public class KardexEntradaBean {
         }
     }
     
-
-    
     public String registrarEntrada(Empleado empleado)
     {  
         if(this.kardexEntrada.getNumero_factura()==null || this.kardexEntrada.getProveedor()==null || this.kardexEntrada.getNumero_factura().isEmpty() ){

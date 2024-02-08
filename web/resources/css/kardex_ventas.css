@@ -1,0 +1,65 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 6/02/2024, 9:53:48 a. m.
+    Author     : HP
+*/
+.contenedor-superior{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin: auto;
+}
+
+.contenedor-nombre-modulo{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+}
+
+.contenedor-numero-factura{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.contenedor-tabla-busqueda{
+    width: 80%;
+    margin: auto;
+}
+
+.texto-resaltado{
+    font-weight: bold;
+    color:#036fab;
+    font-size: 20px;
+}
+
+.contenedor-carrito{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    margin: auto;
+}
+.contenedor-orden{
+    width: 70%;    
+}
+.contenedor-valores{
+    width: 30%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+        
+}
+
+.contenedor-valores > h1{
+    color: #036fab;
+    font-size: 1rem;
+}
+.total_pago{
+    color: orange;
+    font-size: 2rem;
+    font-weight: bold;
+}

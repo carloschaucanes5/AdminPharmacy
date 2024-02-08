@@ -5,55 +5,71 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+	<h:outputScript library="js" name="kardex_ventas.js" target="head" />
+    </h:head>
     <body>
-        <ui:composition template="./plantillas/tareas.xhtml">                
+        <ui:composition template="./plantillas/tareas.xhtml">   
             <ui:define name="content">             
                 <h:form id="formBuscar">
-                    <center>
-                        <p:outputLabel value="Digite Producto"/>
-                        <p:inputText value="#{kardexVentaBean.cadenaNombre}"/>
-                        <p:commandButton value="Buscar" actionListener="#{kardexVentaBean.buscarProducto()}" update="resultadoBuscar" />
-                        <hr/>
-                        <p:dataTable id="resultadoBuscar" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="3">
-                            <p:ajax event="rowSelect" />
-                            <p:column headerText="Código">
-                                <p:outputLabel value="#{inv.cod_entrada}" />
-                            </p:column>
-                            <p:column headerText="Nombre Producto">
-                                <p:outputLabel value="#{inv.nombre_producto}" />
-                            </p:column>
+                        <p:focus context="panel"/>
+                        <div class="contenedor-superior">
+                            <div class="contenedor-nombre-modulo">
+                                <h1>VENTAS</h1>
+                            </div>
+                            <div class="contenedor-numero-factura">
+                                <h1>Factura No :<p:outputLabel  id="numeroFactura" value="#{kardexVentaBean.kardexVenta.numero_factura}"/></h1>
+                            </div>
+                        </div>
+                        <center>
+                            <h:panelGrid id="panel" columns="2">
+                                <p:inputText   id="idBuscador"  onkeyup="enfocarTareas()" class="idBuscador form-control" value="#{kardexVentaBean.cadenaNombre}" placeholder="Buscar Producto"/>
+                                <p:commandButton value="Buscar" class="btn btn-primary" actionListener="#{kardexVentaBean.buscarProducto()}" update="resultadoBuscar" />
+                            </h:panelGrid>
+                            <br/>
+                        </center>
+                        <div class="contenedor-tabla-busqueda">
+                            <p:dataTable id="resultadoBuscar" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="5" rowIndexVar="rowIndex">
+                                <p:ajax event="rowSelect" />
+                                <p:column headerText="Código">
+                                    <p:outputLabel value="#{inv.cod_entrada}" />
+                                </p:column>
+                                <p:column headerText="Nombre Producto" width="30%">
+                                    <p:outputLabel class="texto-resaltado" value="#{inv.nombre_producto}" />
+                                </p:column>
 
-                            <p:column headerText="UnidadMedida/F.Electrónica">
-                                <p:outputLabel value="#{inv.concentracion}/#{inv.presentacion}" />
-                            </p:column>
+                                <p:column headerText="Un/Medida">
+                                    <p:outputLabel value=" #{inv.concentracion}/#{inv.presentacion}" />
+                                </p:column>
 
-                            <p:column headerText="Laboratorio">
-                                <p:outputLabel value="#{inv.laboratorio}" />
-                            </p:column> 
-                            <p:column headerText="Tipo">
-                                <p:outputLabel value="#{inv.categoria}" />
-                            </p:column> 
-                            <p:column headerText="Fecha Vencimiento">
-                                <p:outputLabel value="#{inv.fecha_vencimiento}"/>
-                            </p:column>
-                            <p:column headerText="Cantidad">
-                                <p:outputLabel value="#{inv.cantidad}"/>
-                            </p:column>
-                            <p:column headerText="Precio/unitario">
-                                <p:outputLabel value="#{inv.total_precio}">
-                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
-                                </p:outputLabel>
-                            </p:column>
-                            <p:column headerText="Seleccionar">
-                                <p:commandButton value="Adicionar" actionListener="#{kardexVentaBean.leerIdInventario(inv)}"  oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad "/>                                  
-                            </p:column>
-                    </p:dataTable>
-                    </center>
+                                <p:column headerText="Laboratorio" >
+                                    <p:outputLabel value="#{inv.laboratorio}" />
+                                </p:column> 
+                                <p:column headerText="Tipo">
+                                    <p:outputLabel value="#{inv.categoria}" />
+                                </p:column> 
+                                <p:column headerText="Fecha Vencimiento">
+                                    <p:outputLabel value="#{inv.fecha_vencimiento}"/>
+                                </p:column>
+                                <p:column headerText="Cant." width="4%">
+                                    <p:outputLabel value="#{inv.cantidad}"/>
+                                </p:column>
+                                <p:column headerText="Precio/Un.">
+                                    <p:outputLabel value="#{inv.total_precio}">
+                                        <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                    </p:outputLabel>
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton value="Adicionar" onkeyup="desplazamientoPorTablaBusqueda(this)" class="btn btn-warning boton-adicionar"  actionListener="#{kardexVentaBean.leerIdInventario(inv)}"  oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad "/>                                
+                                </p:column>
+                        </p:dataTable>
+                    </div>
                 </h:form>
-                <hr/>
                 <p:dialog widgetVar="wDialogoCantidad" id="dDialogoCantidad" header="KardexKdd(Cantidad Venta)" modal="true">
                     <h:form>
+                        <p:focus context="panel1"/>
                         <p:growl autoUpdate="true" showDetail="true"/>
+                        <h:panelGrid id="panel1">
                         <center>
                             <h1><b>#{kardexVentaBean.itemProducto.nombre_producto}/ #{kardexVentaBean.itemProducto.concentracion} </b></h1><br/>
                             <h1><b>#{kardexVentaBean.itemProducto.presentacion}/#{kardexVentaBean.itemProducto.categoria}</b></h1>
@@ -62,57 +78,59 @@
                         
                         <center>
                             <p:outputLabel value="Cantidad" for="dCantidad"/>
-                            <p:inputText id="dCantidad"  size="4" value="#{kardexVentaBean.itemCantidad}" label="Cantidad" required="true">
+                            <p:inputText id="dCantidad" type="number"  size="4" value="#{kardexVentaBean.itemCantidad}" label="Cantidad" required="true">
                                 <f:convertNumber integerOnly="true"  type="number" />
                                 <f:validator validatorId="validatorCero"/>
                             </p:inputText>
                         </center><br/>
-                            <p:commandButton value="Agregar" actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemProducto, kardexVentaBean.itemCantidad)}" update=":formTransaccion:resultadoTransaccion :formTransaccion:idTotalPago" oncomplete="PF('wDialogoCantidad').hide()">
+                        <p:commandButton value="Agregar"  actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemProducto, kardexVentaBean.itemCantidad)}" update=":formTransaccion:resultadoTransaccion :formTransaccion:idTotalPago :formBuscar:idBuscador" oncomplete="PF('wDialogoCantidad').hide();enfocarCampoBuscar()">
                             </p:commandButton>
+                        </h:panelGrid>
                     </h:form>
                 </p:dialog>
                 <h:form id="formTransaccion">
-                    <div style="position: absolute;left:1100px;top: 20px;">  
-                        <h1><b>Factura No : </b><p:outputLabel  id="numeroFactura" value="#{kardexVentaBean.kardexVenta.numero_factura}"/></h1>
+                    <div class="contenedor-carrito">
+                        <div class="contenedor-orden">
+                            <center><b>ORDEN DE VENTA</b></center><br/>
+                            <p:growl autoUpdate="true" id="message"  showDetail="true"/>
+                            <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item" paginator="true" rows="3">
+                                <p:column headerText="Eliminar" id="seleccion">
+                                    <center><p:commandLink value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
+                                </p:column>
+                                <p:column headerText="Código">
+                                    <center><p:outputLabel value="#{item.inventario.cod_entrada}" /></center>
+                                </p:column>
+                                <p:column headerText="Nombre Producto" width="50%">
+                                    <center><p:outputLabel class="texto-resaltado" value="#{item.inventario.nombre_producto}" /></center>
+                                </p:column>
+                                <p:column headerText="cant." id="count" width="4%">
+                                    <center>
+                                        <p:outputLabel id="pro_iva"  value="#{item.cantidad}" >
+                                            <f:convertNumber integerOnly="true"  type="number" />
+                                        </p:outputLabel>
+                                    </center>
+                                </p:column> 
+                                <p:column headerText="Total">
+                                    <center>
+                                        <p:outputLabel  value="#{item.inventario.total_precio}">
+                                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                        </p:outputLabel>
+                                    </center>
+                                </p:column>
+                             </p:dataTable>
+                            
+                        </div>
+                        <div class="contenedor-valores">
+                           <h1><b>Total a Pagar </b></h1>
+                           <p>
+                                <p:outputLabel id="idTotalPago" class="total_pago" value="#{kardexVentaBean.totalPago}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                           </p>
+                        </div>
                     </div>
-                    <div style="position: absolute;left:10px;top: 20px;">  
-                        <h1><b>...!!VENTAS</b></h1>
-                    </div>
-                    <p:panel>
-                        <center><b>ORDEN DE VENTA</b></center><br/>
-                        <p:growl autoUpdate="true"  showDetail="true"/>
-                        <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item" paginator="true" rows="3">
-                            <p:column headerText="Eliminar" id="seleccion">
-                                <center><p:commandLink value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
-                            </p:column>
-                            <p:column headerText="Código">
-                                <center><p:outputLabel value="#{item.inventario.cod_entrada}" /></center>
-                            </p:column>
-                            <p:column headerText="Nombre Producto">
-                                <center><p:outputLabel value="#{item.inventario.nombre_producto}" /></center>
-                            </p:column>
-                            <p:column headerText="cantidad" id="count">
-                                <center>
-                                    <p:outputLabel id="pro_iva"  value="#{item.cantidad}" >
-                                        <f:convertNumber integerOnly="true"  type="number" />
-                                    </p:outputLabel>
-                                </center>
-                            </p:column> 
-                            <p:column headerText="Total">
-                                <center>
-                                    <p:outputLabel  value="#{item.inventario.total_precio}">
-                                        <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
-                                    </p:outputLabel>
-                                </center>
-                            </p:column>
-                         </p:dataTable>
-                    </p:panel>
-                    <br/>
                     <center>
-                        <h1><b>Total a Pagar </b></h1>
-                        <p:outputLabel id="idTotalPago" value="#{kardexVentaBean.totalPago}">
-                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
-                        </p:outputLabel>
+
                         <!--p:inputText id="formaPago"  size="6" value="#{kardexVentaBean.formaPago}" label="Forma Pago" >
                             <f:convertNumber   type="currency" minFractionDigits="0" />
                             <f:validator validatorId="validatorCero"/>
@@ -122,14 +140,14 @@
                             <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
                         </p:outputLabel-->
                         <br/>
-                        <p:commandButton value="Venta Contado" action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
-                        <p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/>
+                        <p:commandButton  value="Venta Contado" onkeyup="enfocarTareas()"  class="btnVentaContado" action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
+                        <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
                         <p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/>
                     </center>
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" id="dFactura" header="KardexKDD(Factura)" modal="true">
+                <p:dialog widgetVar="wFactura" id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" >
                     <h:form id="formFactura">
                         <center>
                             <p:outputLabel value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
@@ -147,14 +165,15 @@
                             <br/>
                             <b>...........................................</b> 
                             <br/>
-                        <p:dataTable value="#{kardexVentaBean.listaRecibos}" var="fac" style="text-height: 9">
-                            <p:column headerText="Item" width="10">
+                            
+                            <p:dataTable value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
+                                <p:column headerText="Item" width="60%" >
                                 <p:outputLabel value="#{fac.variable}" />
                             </p:column>
-                            <p:column headerText="Cant" width="3">
+                            <p:column headerText="Ct" width="10%">
                                 <p:outputLabel value="#{fac.cantidad}"/>
                             </p:column>
-                            <p:column headerText="Total" width="10">
+                            <p:column headerText="Total" width="30%">
                                 <p:outputLabel value="#{fac.total}">
                                     <f:convertNumber type="currency" maxFractionDigits="0"/>
                                 </p:outputLabel>

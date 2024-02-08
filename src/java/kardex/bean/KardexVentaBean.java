@@ -15,6 +15,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.security.auth.message.callback.PrivateKeyCallback;
 import kardex.dao.ClienteDao;
 import kardex.dao.KardexVentaDao;
 import kardex.modelo.Cliente;
@@ -26,6 +27,7 @@ import kardex.modelo.Inventario;
 import kardex.modelo.ItemVenta;
 import kardex.modelo.KardexVenta;
 import kardex.modelo.Recibo;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -264,6 +266,7 @@ public class KardexVentaBean {
             {
                 this.kardexVenta.getListaItemsVenta().add(itemVenta);
                 this.setTotalPago(calcularTotalVenta());
+                this.setCadenaNombre("");
             }
             else
             {
@@ -340,6 +343,11 @@ public class KardexVentaBean {
         {
             KardexVentaDao dao = new KardexVentaDao();
             this.listaInventario = dao.getListarNombresProductos(cadenaNombre);
+            if(this.listaInventario.size()==1){
+                RequestContext.getCurrentInstance().execute("PF('wDialogoCantidad').show()");
+                RequestContext.getCurrentInstance().update("dDialogoCantidad");
+                this.setItemProducto(listaInventario.get(0));
+            }
         }catch(Exception err)
         {
             throw err;
