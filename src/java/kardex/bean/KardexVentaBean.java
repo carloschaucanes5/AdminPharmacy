@@ -421,6 +421,7 @@ public class KardexVentaBean {
    //---------------------------------------------------------------------------
    public void generarFactura()
    {
+      if(this.kardexVenta.getListaItemsVenta().size()==0)return;
        this.listaRecibos.clear();
       try
        {

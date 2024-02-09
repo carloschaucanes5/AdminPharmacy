@@ -46,7 +46,7 @@ function desplazamientoPorTablaItems(btn){
     }
 }
 
-function enfocarTareas(){
+function enfocarTareasBuscador(){
     if(window.event.keyCode ===39){
         enfocarFilasTablaBuscar();
     }
@@ -54,6 +54,26 @@ function enfocarTareas(){
     if(window.event.keyCode === 40)
     {
        document.querySelector(".btnVentaContado").focus();
+    }
+    //flecha hacia arriba
+    if(window.event.keyCode ===38){
+        document.querySelector('.idBuscador').focus();
+    }
+    //const botones = document.querySelectorAll(".boton-eliminar");
+    if(window.event.keyCode ===37){
+        const botones = document.querySelectorAll(".boton-eliminar");
+        botones[botones.length -1].focus();
+    }
+}
+
+function enfocarTareasVentas(){
+    if(window.event.keyCode ===39){
+        enfocarFilasTablaBuscar();
+    }
+    //flecha hacia abajo
+    if(window.event.keyCode === 40)
+    {
+        enfocarBotonFacturar();
     }
     //flecha hacia arriba
     if(window.event.keyCode ===38){
@@ -116,4 +136,23 @@ function imprimir(){
     window.print();
     location.reload();
     //document.body.innerHTML = page;
+}
+
+
+function direccionBotonFacturar(){
+    //37 izquierda  39 derecha
+    if(window.event.keyCode === 39){
+        document.querySelector(".boton-imprimir").focus();
+    }
+}
+
+function direccionBotonImprimir(){
+    if(window.event.keyCode === 37){
+        document.querySelector(".boton-facturar").focus();
+    }
+}
+
+function enfocarBotonFacturar(){
+        document.querySelector(".boton-facturar").focus();
+    
 }
