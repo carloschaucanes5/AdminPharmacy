@@ -45,6 +45,8 @@ public class KardexVentaBean {
     private double totalPago;
     private double formaPago;
     private double saldoRetorno;
+    private String htmlItems;
+    
     
     private Cliente cliente = new Cliente();
     private String activarBotonCliente;
@@ -59,6 +61,15 @@ public class KardexVentaBean {
     private String fecha;
     private String hora;
 
+    public String getHtmlItems() {
+        return htmlItems;
+    }
+
+    public void setHtmlItems(String htmlItems) {
+        this.htmlItems = htmlItems;
+    }
+
+    
     public KardexVentaBean() {
     }
 
@@ -354,8 +365,12 @@ public class KardexVentaBean {
         }
     }
    
+   public void resetFormFactura(){
+       RequestContext.getCurrentInstance().reset(":formFactura");
+   }
    public void leerIdInventario(ConsultaProducto inventario)
    {
+       
        this.setItemProducto(inventario);
    }
    
@@ -406,7 +421,7 @@ public class KardexVentaBean {
    //---------------------------------------------------------------------------
    public void generarFactura()
    {
-       
+       this.listaRecibos.clear();
       try
        {
            this.extraerInformacionEmpresa();
@@ -576,5 +591,6 @@ public class KardexVentaBean {
            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error:",""+err));
        }
    }
+   
 
 }

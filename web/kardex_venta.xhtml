@@ -60,12 +60,12 @@
                                     </p:outputLabel>
                                 </p:column>
                                 <p:column>
-                                    <p:commandButton value="Adicionar" onkeyup="desplazamientoPorTablaBusqueda(this)" class="btn btn-warning boton-adicionar"  actionListener="#{kardexVentaBean.leerIdInventario(inv)}"  oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad "/>                                
+                                    <p:commandButton value="Adicionar" onkeyup="desplazamientoPorTablaBusqueda(this)" class="btn btn-warning boton-adicionar"  actionListener="#{kardexVentaBean.leerIdInventario(inv)}"  oncomplete="PF('wDialogoCantidad').show()" update=":dDialogoCantidad :formTransaccion"/>                                
                                 </p:column>
                         </p:dataTable>
                     </div>
                 </h:form>
-                <p:dialog widgetVar="wDialogoCantidad" id="dDialogoCantidad" header="KardexKdd(Cantidad Venta)" modal="true">
+                <p:dialog widgetVar="wDialogoCantidad"  id="dDialogoCantidad" header="KardexKdd(Cantidad Venta)" modal="true" closeOnEscape="true">
                     <h:form>
                         <p:focus context="panel1"/>
                         <p:growl autoUpdate="true" showDetail="true"/>
@@ -94,8 +94,8 @@
                             <center><b>ORDEN DE VENTA</b></center><br/>
                             <p:growl autoUpdate="true" id="message"  showDetail="true"/>
                             <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item" paginator="true" rows="3">
-                                <p:column headerText="Eliminar" id="seleccion">
-                                    <center><p:commandLink value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
+                                <p:column headerText="Eliminar" id="seleccion" >
+                                    <center><p:commandButton class="btn btn-danger boton-eliminar" onkeypress="enfocarCampoBuscar()" onkeyup="enfocarEliminarItems(this)" value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
                                 </p:column>
                                 <p:column headerText="Código">
                                     <center><p:outputLabel value="#{item.inventario.cod_entrada}" /></center>
@@ -121,6 +121,7 @@
                             
                         </div>
                         <div class="contenedor-valores">
+                            <br/><br/>
                            <h1><b>Total a Pagar </b></h1>
                            <p>
                                 <p:outputLabel id="idTotalPago" class="total_pago" value="#{kardexVentaBean.totalPago}">
@@ -140,15 +141,19 @@
                             <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
                         </p:outputLabel-->
                         <br/>
-                        <p:commandButton  value="Venta Contado" onkeyup="enfocarTareas()"  class="btnVentaContado" action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
+                        <p:commandButton ajax="true" value="Venta Contado" resetValues="true"  onkeyup="enfocarTareas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items">
+                        </p:commandButton>
                         <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
-                        <p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/>
+                        <!--p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/-->
                     </center>
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" >
-                    <h:form id="formFactura">
+                <p:dialog widgetVar="wFactura"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" >
+                    
+                    <h:form id="formFactura" >
+                        <div class='contenedor_impresora'>
+                        <p:growl autoUpdate="true" showDetail="true"/>
                         <center>
                             <p:outputLabel value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
                             <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
@@ -165,8 +170,7 @@
                             <br/>
                             <b>...........................................</b> 
                             <br/>
-                            
-                            <p:dataTable value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
+                            <p:dataTable id='items'  value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
                                 <p:column headerText="Item" width="60%" >
                                 <p:outputLabel value="#{fac.variable}" />
                             </p:column>
@@ -188,12 +192,14 @@
                             </p:outputLabel>
                         <br/>
                         </center>
+                       </div>
                     </h:form>
                     <h:form>
                         <br/>
                         <center>
-                            <p:commandButton value="Imprimir">
-                                    <p:printer target=":formFactura"/>
+                            <p:commandButton  value="Feacturar"  action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
+                            <p:commandButton value="Facturar e Imprimir" ajax="true" >
+                                <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
                             </p:commandButton>
                         </center>    
                     </h:form>

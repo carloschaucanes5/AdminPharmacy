@@ -7,7 +7,44 @@ function enfocarCampoBuscar(){
     document.querySelector('.idBuscador').focus();
 }
 
+function enfocarCampoVentaContado(){
+    document.querySelector('.btnVentaContado').focus();
+}
 
+function enfocarEliminarItems(btn){
+
+    if(window.event.keyCode === 40 || window.event.keyCode===38 ){
+        return desplazamientoPorTablaItems(btn);
+    }
+    if(window.event.keyCode ===39){
+        return  enfocarCampoVentaContado();
+    }
+}
+
+function desplazamientoPorTablaItems(btn){
+    const botones = document.querySelectorAll(".boton-eliminar");
+    let position = getElementPosition(btn,botones);
+    let cantidad_elementos = botones.length;
+    if(cantidad_elementos>1){
+        if(window.event.keyCode === 40 && position < cantidad_elementos-1){
+          botones[position+1].focus();
+        }
+        if(window.event.keyCode === 38 && position > 0){
+            botones[position - 1].focus();
+          }
+        if(window.event.keyCode === 39){
+            document.querySelector(".btnVentaContado").focus();
+        }
+    }
+    else{
+        if(window.event.keyCode === 38){
+            enfocarCampoBuscar();
+        }
+        if(window.event.keyCode === 40){
+            enfocarCampoVentaContado();
+        }
+    }
+}
 
 function enfocarTareas(){
     if(window.event.keyCode ===39){
@@ -21,6 +58,11 @@ function enfocarTareas(){
     //flecha hacia arriba
     if(window.event.keyCode ===38){
         document.querySelector('.idBuscador').focus();
+    }
+    //const botones = document.querySelectorAll(".boton-eliminar");
+    if(window.event.keyCode ===37){
+        const botones = document.querySelectorAll(".boton-eliminar");
+        botones[botones.length -1].focus();
     }
 }
 
@@ -47,10 +89,14 @@ function desplazamientoPorTablaBusqueda(btn){
         }
     }
     else{
-        botones[0].focus();
+        if(window.event.keyCode === 38){
+            enfocarCampoBuscar();
+        }
+        if(window.event.keyCode === 40){
+            enfocarCampoVentaContado();
+        }
+        
     }
-
-
 }
 
 function getElementPosition(btn,botones){
@@ -61,4 +107,13 @@ function getElementPosition(btn,botones){
         }
     }
     return position;
+}
+
+function imprimir(){
+    let contenedor = document.querySelector(".contenedor_impresora").innerHTML;
+    let page = document.body.innerHTML;
+    window.document.body.innerHTML = contenedor;
+    window.print();
+    location.reload();
+    //document.body.innerHTML = page;
 }

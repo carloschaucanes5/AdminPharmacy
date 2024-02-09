@@ -50,8 +50,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     width: 30%;
     display:flex;
     flex-direction: column;
-    align-items: center;
-        
+    align-items: center;   
 }
 
 .contenedor-valores > h1{
