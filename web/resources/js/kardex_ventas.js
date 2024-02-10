@@ -156,3 +156,8 @@ function enfocarBotonFacturar(){
         document.querySelector(".boton-facturar").focus();
     
 }
+
+
+function setHtmlItemsFactura(html){
+    document.querySelector(".contenedor-lista-factura").innerHTML = html;
+}

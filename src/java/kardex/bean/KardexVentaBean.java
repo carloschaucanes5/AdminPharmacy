@@ -593,5 +593,15 @@ public class KardexVentaBean {
        }
    }
    
+   public void generarHtmlItems(){
+       String html = "<table>";
+       html+="<tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>";
+       for(int i = 0; i< this.listaRecibos.size();i++){
+        html+="<tr><td>"+this.listaRecibos.get(i).getVariable()+"</td><td>"+this.listaRecibos.get(i).getCantidad()+"</td><td>"+this.listaRecibos.get(i).getTotal()+"</td></tr>";
+       }
+       html += "</table>";
+       this.setHtmlItems(html);
+   }
+   
 
 }

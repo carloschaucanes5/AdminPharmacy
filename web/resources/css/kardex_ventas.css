@@ -62,3 +62,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-size: 2rem;
     font-weight: bold;
 }
+
+tabla{
+    text-align: center;
+    background-color: red;
+}

@@ -12,13 +12,41 @@ package kardex.modelo;
  */
 public class ReporteVencimiento {
    private String fecha_vencimiento;
-   private int cod_producto;
+   private int cod_entrada;
    private String nombre_producto;
    private String concentracion;
    private String presentacion;
-   private String nombre_laboratorio;
-   private String nit_proveedor;
-   private String nombre_proveedor;
+   private String laboratorio;
+   private String categoria;
+   private int cantidad;
+
+    public String getLaboratorio() {
+        return laboratorio;
+    }
+
+    public void setLaboratorio(String laboratorio) {
+        this.laboratorio = laboratorio;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+   
+   
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+   
+   
    
     public String getFecha_vencimiento() {
         return fecha_vencimiento;
@@ -28,13 +56,15 @@ public class ReporteVencimiento {
         this.fecha_vencimiento = fecha_vencimiento;
     }
 
-    public int getCod_producto() {
-        return cod_producto;
+    public int getCod_entrada() {
+        return cod_entrada;
     }
 
-    public void setCod_producto(int cod_producto) {
-        this.cod_producto = cod_producto;
+    public void setCod_entrada(int cod_entrada) {
+        this.cod_entrada = cod_entrada;
     }
+
+
 
     public String getNombre_producto() {
         return nombre_producto;
@@ -60,29 +90,7 @@ public class ReporteVencimiento {
         this.presentacion = presentacion;
     }
 
-    public String getNombre_laboratorio() {
-        return nombre_laboratorio;
-    }
 
-    public void setNombre_laboratorio(String nombre_laboratorio) {
-        this.nombre_laboratorio = nombre_laboratorio;
-    }
-
-    public String getNombre_proveedor() {
-        return nombre_proveedor;
-    }
-
-    public void setNombre_proveedor(String nombre_proveedor) {
-        this.nombre_proveedor = nombre_proveedor;
-    }
-
-    public String getNit_proveedor() {
-        return nit_proveedor;
-    }
-
-    public void setNit_proveedor(String nit_proveedor) {
-        this.nit_proveedor = nit_proveedor;
-    }
    
    
     

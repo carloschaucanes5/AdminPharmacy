@@ -15,15 +15,15 @@
                 <h:form id="formDetalle" >
                     <p:dataTable id="tablaVencidos" value="#{reporteVencidosBean.listaVencidos}" var="ven"  paginator="true" rows="10">
                         <p:column headerText="Fecha de Vencimiento">
-                            <f:facet name="header">Fecha de Vencimiento</f:facet>
+                            <f:facet name="header" >Fecha de Vencimiento</f:facet>
                             <p:outputLabel value="#{ven.fecha_vencimiento}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">Cod. Producto</f:facet>
-                            <p:outputLabel value="#{ven.cod_producto}"/>
+                            <p:outputLabel value="#{ven.cod_entrada}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">Nombre</f:facet>
+                        <p:column width="30%">
+                            <f:facet name="header" >Nombre</f:facet>
                             <p:outputLabel value="#{ven.nombre_producto}"/>
                         </p:column> 
                         <p:column>
@@ -36,15 +36,15 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">Laboratorio</f:facet>
-                            <p:outputLabel value="#{ven.nombre_laboratorio}"/>
+                            <p:outputLabel value="#{ven.laboratorio}"/>
                         </p:column>
                         <p:column>
-                            <f:facet name="header">NIT Prov.</f:facet>
-                            <p:outputLabel value="#{ven.nit_proveedor}"/>
+                            <f:facet name="header">Categoria</f:facet>
+                            <p:outputLabel value="#{ven.categoria}"/>
                         </p:column>
                         <p:column>
-                            <f:facet name="header">Proveedor</f:facet>
-                            <p:outputLabel value="#{ven.nombre_proveedor}"/>
+                            <f:facet name="header">cantidad</f:facet>
+                            <p:outputLabel value="#{ven.cantidad}"/>
                         </p:column>
                     </p:dataTable>
                     <center>

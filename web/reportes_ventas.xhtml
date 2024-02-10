@@ -4,10 +4,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-    
+      xmlns:p="http://primefaces.org/ui">    
     <body>
-        
         <ui:composition template="./plantillas/tareas.xhtml">
             
             <ui:define name="content">       
@@ -61,7 +59,7 @@
                             <f:facet name="header">Hora</f:facet>
                             <p:outputLabel value="#{detalle.hora_factura}"/>
                         </p:column>
-                        <p:column>
+                        <p:column width="30%">
                             <f:facet name="header">Producto</f:facet>
                             <p:outputLabel value="#{detalle.nombre_producto}"/>
                         </p:column>
@@ -86,9 +84,14 @@
                         <p:column>
                              <f:facet name="header">Precio</f:facet>
                             <p:outputLabel value="#{detalle.total_precio}">
-                                <f:convertNumber  type="currency" currencySymbol="$" />
-                            </p:outputLabel>
-                               
+                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="0" />
+                            </p:outputLabel> 
+                        </p:column>
+                        <p:column>
+                             <f:facet name="header">Total</f:facet>
+                            <p:outputLabel value="#{detalle.cantidad * detalle.total_precio}">
+                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="0"/>
+                            </p:outputLabel> 
                         </p:column>
                         <p:column>
                             <f:facet name="header">Responsable</f:facet>

@@ -83,7 +83,7 @@
                                 <f:validator validatorId="validatorCero"/>
                             </p:inputText>
                         </center><br/>
-                        <p:commandButton value="Agregar"  actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemProducto, kardexVentaBean.itemCantidad)}" update=":formTransaccion:resultadoTransaccion :formTransaccion:idTotalPago :formBuscar:idBuscador" oncomplete="PF('wDialogoCantidad').hide();enfocarCampoBuscar()">
+                        <p:commandButton value="Agregar"  actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemProducto, kardexVentaBean.itemCantidad)}" update=":formTransaccion :formTransaccion:resultadoTransaccion :formTransaccion:idTotalPago :formBuscar:idBuscador" oncomplete="PF('wDialogoCantidad').hide();enfocarCampoBuscar()">
                             </p:commandButton>
                         </h:panelGrid>
                     </h:form>
@@ -132,8 +132,9 @@
                     </div>
                     <center>
                         <br/>
-                        <p:commandButton ajax="true" value="Venta Contado"    onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items">
-                        
+                        <!--p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items"-->
+                        <p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura">
+                            
                         </p:commandButton>
                         <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
                         <!--p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/-->
@@ -141,7 +142,7 @@
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
+                <p:dialog widgetVar="wFactura" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
                     <div class='contenedor_impresora'>
                     <h:form id="formFactura" >
                         <p:growl autoUpdate="true" showDetail="true"/>
@@ -160,8 +161,9 @@
                             <p:outputLabel value="Hora: #{kardexVentaBean.hora}"/>
                             <br/>
                             <b>...........................................</b> 
+                            <div class='contenedor-lista-factura'></div>
                             <br/>
-                            <p:dataTable id='items'  value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
+                            <!--p:dataTable id='items'  value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
                                 <p:column headerText="Item" width="60%" >
                                 <p:outputLabel value="#{fac.variable}" />
                             </p:column>
@@ -173,8 +175,7 @@
                                     <f:convertNumber type="currency" maxFractionDigits="0"/>
                                 </p:outputLabel>
                             </p:column>
-                        </p:dataTable>
-                            <br/>
+                        </p:dataTable-->
                             <b>...........................................</b>
                             <br/>
                             <p:outputLabel value="Valor Total: "/>
@@ -183,6 +184,22 @@
                             </p:outputLabel>
                         <br/>
                         </center>
+                        <center>  <b>...........................................</b></center>
+                        <div style="text-align: justify;">
+                            <center>
+                            <small>Revisar el Medicamento dentro de la drogueria.
+                            Una vez salga no se aceptan cambios</small>
+                            </center>
+                        </div>
+                        <center>  <b>...........................................</b></center>
+                         <div style="text-align: center">
+                             <center>
+                                 <b>HORARIOS DE ATENCION</b><br/>
+                                <small>Lunes a Domingos:8:30am a 9:30pm</small>
+                                <b>DOMICILIOS</b><br/>
+                                <small>3176248530</small>
+                             </center>
+                         </div>
                     </h:form>
                         </div>
                     <h:form>
