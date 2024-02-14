@@ -14,7 +14,18 @@ public class Recibo {
     private String variable;
     private int cantidad;
     private double total;
+    private String modo_venta;
 
+    public String getModo_venta() {
+        return modo_venta;
+    }
+
+    public void setModo_venta(String modo_venta) {
+        this.modo_venta = modo_venta;
+    }
+    
+    
+    
     public String getVariable() {
         return variable;
     }

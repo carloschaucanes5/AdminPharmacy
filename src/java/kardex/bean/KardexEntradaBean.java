@@ -20,6 +20,7 @@ import kardex.modelo.Empleado;
 import kardex.modelo.Inventario;
 import kardex.modelo.KardexEntrada;
 import kardex.modelo.Laboratorio;
+import kardex.modelo.ModoVenta;
 import kardex.modelo.Proveedor;
 import org.primefaces.context.PrimeFacesContext;
 import org.primefaces.context.RequestContext;
@@ -38,8 +39,18 @@ public class KardexEntradaBean {
     private List<Inventario> listaInventario = new ArrayList<>();
     private List<Proveedor> listaProveedores = new ArrayList<>();
     private List<Laboratorio> listaLaboratorios = new ArrayList<>();
-    
+    private List<ModoVenta> listaModoVenta = new ArrayList<>();
 
+    public List<ModoVenta> getListaModoVenta() {
+        return listaModoVenta;
+    }
+
+    public void setListaModoVenta(List<ModoVenta> listaModoVenta) {
+        this.listaModoVenta = listaModoVenta;
+    }
+
+    
+    
     public double getPrecioSugerido() {
         return precioSugerido;
     }
@@ -116,6 +127,7 @@ public class KardexEntradaBean {
    {
        listarProveedores();
        listarLaboratorios();
+       listarModoVentas();
    }
 
     public void listarProveedores() 
@@ -124,6 +136,19 @@ public class KardexEntradaBean {
         {
            KardexEntradaDao dao = new KardexEntradaDao();
            this.listaProveedores = dao.getListaProveedores();
+        }
+        catch(Exception e)
+        {
+            
+        }
+    }
+    
+        public void listarModoVentas() 
+    {
+        try
+        {
+           KardexEntradaDao dao = new KardexEntradaDao();
+           this.listaModoVenta = dao.getListaModoVentas();
         }
         catch(Exception e)
         {

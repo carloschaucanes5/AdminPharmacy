@@ -9,6 +9,7 @@ package kardex.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -41,6 +42,17 @@ public class InventarioBean {
       
    }
 
+       public List<String> completeText(String query) {
+        String queryLowerCase = query.toLowerCase();
+        List<String> countryList = new ArrayList<>();
+        for (Laboratorio country : this.listaLaboratorios) {
+            countryList.add(country.getNombre_laboratorio());
+        }
+
+        //return countryList.stream().filter(t -> t.toLowerCase().startsWith(queryLowerCase)).collect(Collectors.toList());
+        return countryList.stream().filter(t -> t.toLowerCase().contains(query)).collect(Collectors.toList());
+    }
+   
     public List<Categoria> getListaCategorias() {
         return listaCategorias;
     }

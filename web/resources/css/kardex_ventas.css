@@ -67,3 +67,22 @@ tabla{
     text-align: center;
     background-color: red;
 }
+
+.lema{
+    font-size: medium;
+    font-family: cursive;
+    font-style: italic;
+}
+
+.empresa{
+    font-size: large;
+    font-weight: bold;
+    font-family: cursive;
+    font-style: italic;
+}
+
+.panel-cantidad{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

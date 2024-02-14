@@ -59,38 +59,32 @@
                             <f:facet name="header">Hora</f:facet>
                             <p:outputLabel value="#{detalle.hora_factura}"/>
                         </p:column>
-                        <p:column width="30%">
+                        <p:column width="20%">
                             <f:facet name="header">Producto</f:facet>
                             <p:outputLabel value="#{detalle.nombre_producto}"/>
                         </p:column>
                         <p:column>
-                            <f:facet name="header">Concentración</f:facet>
-                            <p:outputLabel value="#{detalle.concentracion}"/>
+                            <f:facet name="header">Unidad/Medida</f:facet>
+                            <p:outputLabel value="#{detalle.concentracion}/#{detalle.presentacion}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">Presentación</f:facet>
-                            <p:outputLabel value="#{detalle.presentacion}"/>
+                        <p:column width="10%">
+                            <f:facet name="header" >Lab./Tipo</f:facet>
+                            <p:outputLabel value="#{detalle.laboratorio}/#{detalle.categoria}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">Cantidad</f:facet>
+                        <p:column width="5%">
+                            <f:facet name="header">Cant.</f:facet>
                             <p:outputLabel value="#{detalle.cantidad}"/>
                         </p:column>
-                        <p:column>
-                             <f:facet name="header">Costo</f:facet>
-                            <p:outputLabel value="#{detalle.total_costo}">
-                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="2"/>
+                        <p:column >
+                            <f:facet name="header">Precio/Un.</f:facet>
+                            <p:outputLabel value="#{detalle.precio_unitario}">
+                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="0" />
                             </p:outputLabel>
                         </p:column>
                         <p:column>
-                             <f:facet name="header">Precio</f:facet>
+                             <f:facet name="header">Total</f:facet>
                             <p:outputLabel value="#{detalle.total_precio}">
                                 <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="0" />
-                            </p:outputLabel> 
-                        </p:column>
-                        <p:column>
-                             <f:facet name="header">Total</f:facet>
-                            <p:outputLabel value="#{detalle.cantidad * detalle.total_precio}">
-                                <f:convertNumber  type="currency" currencySymbol="$" maxFractionDigits="0"/>
                             </p:outputLabel> 
                         </p:column>
                         <p:column>
@@ -121,12 +115,6 @@
                             <p:outputLabel value="#{general.hora_factura}"/>
                         </p:column>
                         <p:column>
-                            <f:facet name="header">Costo Parcial</f:facet>
-                            <p:outputLabel value="#{general.suma_costo}">
-                                <f:convertNumber  type="currency" currencySymbol="$" integerOnly="true" maxFractionDigits="2"/>
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column>
                             <f:facet name="header">Precio Parcial</f:facet>
                             <p:outputLabel value="#{general.suma_precio}">
                                 <f:convertNumber  type="currency" currencySymbol="$" integerOnly="true"/>
@@ -144,18 +132,9 @@
                     <p:panel>
                         <center>
                             <p:panelGrid columns="2">
-                                <p:outputLabel for="tCosto" value="Total Costo"/>
-                                <p:outputLabel id="tCosto" value="#{reporteVentasBean.totalCosto}">
-                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="1"/>
-                                </p:outputLabel>
-                                <p:outputLabel value="Total Precio" for="tPrecio"/>
+                                <p:outputLabel value="Total Venta" for="tPrecio"/>
                                 <p:outputLabel id="tPrecio" value="#{reporteVentasBean.totalPrecio}">
                                      <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
-                                </p:outputLabel>
-   
-                                <p:outputLabel for="tGanancia" value="Utilidades"/>
-                                <p:outputLabel id="tGanancia" value="#{reporteVentasBean.ganancia}">
-                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
                                 </p:outputLabel>
                             </p:panelGrid>
                         </center>

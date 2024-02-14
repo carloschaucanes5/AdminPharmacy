@@ -42,11 +42,11 @@
                                     <p:outputLabel value=" #{inv.concentracion}/#{inv.presentacion}" />
                                 </p:column>
 
-                                <p:column headerText="Laboratorio" >
-                                    <p:outputLabel value="#{inv.laboratorio}" />
+                                <p:column headerText="Lab/Tipo" >
+                                    <p:outputLabel value="#{inv.laboratorio}/#{inv.categoria}" />
                                 </p:column> 
-                                <p:column headerText="Tipo">
-                                    <p:outputLabel value="#{inv.categoria}" />
+                                <p:column headerText="Modo Venta">
+                                    <p:outputLabel value="#{inv.detalle}" />
                                 </p:column> 
                                 <p:column headerText="Fecha Vencimiento">
                                     <p:outputLabel value="#{inv.fecha_vencimiento}"/>
@@ -73,16 +73,22 @@
                         <center>
                             <h1><b>#{kardexVentaBean.itemProducto.nombre_producto}/ #{kardexVentaBean.itemProducto.concentracion} </b></h1><br/>
                             <h1><b>#{kardexVentaBean.itemProducto.presentacion}/#{kardexVentaBean.itemProducto.categoria}</b></h1>
-                            <h1><b>Precio: $ #{kardexVentaBean.itemProducto.total_precio}</b></h1>
+                            <br/>
+                            <p:panelGrid columns="2" class="panel-cantidad">
+                                <p:outputLabel value="Modo Venta"></p:outputLabel>
+                                <p:outputLabel  value="#{kardexVentaBean.itemProducto.detalle}"/>
+                                <p:outputLabel value="Precio"></p:outputLabel>
+                                <p:outputLabel  value="#{kardexVentaBean.itemProducto.total_precio}">
+                                    <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                               <p:outputLabel value="Cantidad" for="dCantidad"/>
+                                <p:inputText id="dCantidad" type="number"  size="4" value="#{kardexVentaBean.itemCantidad}" label="Cantidad" required="true">
+                                    <f:convertNumber integerOnly="true"  type="number" />
+                                    <f:validator validatorId="validatorCero"/>
+                                </p:inputText>
+                            </p:panelGrid>
                         </center>
-                        
-                        <center>
-                            <p:outputLabel value="Cantidad" for="dCantidad"/>
-                            <p:inputText id="dCantidad" type="number"  size="4" value="#{kardexVentaBean.itemCantidad}" label="Cantidad" required="true">
-                                <f:convertNumber integerOnly="true"  type="number" />
-                                <f:validator validatorId="validatorCero"/>
-                            </p:inputText>
-                        </center><br/>
+                        <br/>
                         <p:commandButton value="Agregar"  actionListener="#{kardexVentaBean.adicionarListaKardexItemVenta(kardexVentaBean.itemProducto, kardexVentaBean.itemCantidad)}" update=":formTransaccion :formTransaccion:resultadoTransaccion :formTransaccion:idTotalPago :formBuscar:idBuscador" oncomplete="PF('wDialogoCantidad').hide();enfocarCampoBuscar()">
                             </p:commandButton>
                         </h:panelGrid>
@@ -147,7 +153,9 @@
                     <h:form id="formFactura" >
                         <p:growl autoUpdate="true" showDetail="true"/>
                         <center>
-                            <p:outputLabel value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
+                            <p:outputLabel class="empresa" value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
+                            <p:outputLabel class="lema" value="Tu mejor opción"/><br/>
+                            <b>...........................................</b><br/>
                             <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
                             <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
                             <p:outputLabel value="Teléfono:#{kardexVentaBean.empresa.telefono}"/><br/>
@@ -162,23 +170,9 @@
                             <br/>
                             <b>...........................................</b> 
                             <div class='contenedor-lista-factura'></div>
-                            <br/>
-                            <!--p:dataTable id='items'  value="#{kardexVentaBean.listaRecibos}" var="fac"  style="text-height: 5px;border: 0;">
-                                <p:column headerText="Item" width="60%" >
-                                <p:outputLabel value="#{fac.variable}" />
-                            </p:column>
-                            <p:column headerText="Ct" width="10%">
-                                <p:outputLabel value="#{fac.cantidad}"/>
-                            </p:column>
-                            <p:column headerText="Total" width="30%">
-                                <p:outputLabel value="#{fac.total}">
-                                    <f:convertNumber type="currency" maxFractionDigits="0"/>
-                                </p:outputLabel>
-                            </p:column>
-                        </p:dataTable-->
                             <b>...........................................</b>
                             <br/>
-                            <p:outputLabel value="Valor Total: "/>
+                            <p:outputLabel value="Total: "/>
                             <p:outputLabel value="#{kardexVentaBean.totalPago}">
                                <f:convertNumber type="currency" maxFractionDigits="0"/> 
                             </p:outputLabel>
@@ -195,9 +189,10 @@
                          <div style="text-align: center">
                              <center>
                                  <b>HORARIOS DE ATENCION</b><br/>
-                                <small>Lunes a Domingos:8:30am a 9:30pm</small>
+                                <small>Lunes a sabado de :8:30am a 9:00pm jornada continua</small>
+                                <small>Domingos de 10:30am a 5:30pm </small>
                                 <b>DOMICILIOS</b><br/>
-                                <small>3176248530</small>
+                                <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3174517751</b></small>
                              </center>
                          </div>
                     </h:form>

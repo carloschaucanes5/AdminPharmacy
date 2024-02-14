@@ -440,6 +440,7 @@ public class KardexVentaBean {
                    re.setVariable(nombre);
                    re.setCantidad(iv.getCantidad());
                    re.setTotal(iv.getTotal_precio());
+                   re.setModo_venta(iv.getInventario().getDetalle());
                    this.listaRecibos.add(re);
                }
            }
@@ -597,7 +598,7 @@ public class KardexVentaBean {
        String html = "<table>";
        html+="<tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>";
        for(int i = 0; i< this.listaRecibos.size();i++){
-        html+="<tr><td>"+this.listaRecibos.get(i).getVariable()+"</td><td>"+this.listaRecibos.get(i).getCantidad()+"</td><td>"+this.listaRecibos.get(i).getTotal()+"</td></tr>";
+        html+="<tr><td>"+this.listaRecibos.get(i).getVariable()+"/"+this.listaRecibos.get(i).getModo_venta()+"</td><td>"+this.listaRecibos.get(i).getCantidad()+"</td><td>"+this.listaRecibos.get(i).getTotal()+"</td></tr>";
        }
        html += "</table>";
        this.setHtmlItems(html);

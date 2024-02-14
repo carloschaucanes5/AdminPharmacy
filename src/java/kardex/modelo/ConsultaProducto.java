@@ -26,10 +26,21 @@ public class ConsultaProducto {
     private double total_precio = 0.0;
     private double iva = 0.0;
     private long cod_entrada=0;
-
+    private String detalle = "";
+    
     public ConsultaProducto() {
     }
 
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    
+    
     public long getCod_entrada() {
         return cod_entrada;
     }

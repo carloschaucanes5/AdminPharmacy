@@ -13,6 +13,7 @@ import java.util.List;
 import kardex.modelo.Inventario;
 import kardex.modelo.KardexEntrada;
 import kardex.modelo.Laboratorio;
+import kardex.modelo.ModoVenta;
 import kardex.modelo.Proveedor;
 
 /**
@@ -223,7 +224,8 @@ public class KardexEntradaDao extends Dao{
                 /*inv.setCosto_unitario(rs.getDouble("costo_unitario"));
                 inv.setPrecio_unitario(rs.getDouble("precio_unitario"));*/
                 inv.setEstado(rs.getString("estado"));
-                inv.setExistencias(rs.getInt("existencias"));
+                inv.setCategoria(rs.getString("categoria"));
+                inv.setLaboratorio(rs.getString("laboratorio"));
                 li.add(inv);
             }
         }catch(Exception e)
@@ -255,6 +257,32 @@ public class KardexEntradaDao extends Dao{
                 prov.setCiudad((rs.getString("ciudad")));
                 prov.setReguimen((rs.getString("reguimen")));
                 lp.add(prov);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return lp;
+    }
+    
+        public List<ModoVenta> getListaModoVentas() throws Exception
+    {
+        List<ModoVenta> lp = new ArrayList<>();
+        try
+        {
+            ResultSet rs = null;
+            this.conectar();
+            PreparedStatement st = this.getCn().prepareStatement("select * from modo_venta");
+            rs=st.executeQuery();
+            while(rs.next()==true)
+            {
+                ModoVenta mv = new ModoVenta();
+                mv.setId_modo(rs.getString("id_modo"));
+                mv.setDescripcion(rs.getString("descripcion"));
+                lp.add(mv);
             }
         }catch(Exception e)
         {

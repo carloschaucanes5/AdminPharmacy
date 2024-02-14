@@ -221,7 +221,7 @@ public class KardexVentaDao  extends Dao{
         {
             this.conectar();
             String sql = "select inv.cod_producto,inv.nombre_producto,inv.concentracion,inv.presentacion,inv.existencias,inv.codigo_barras,inv.categoria,inv.laboratorio,\n" +
-            "ke.fecha_vencimiento,ke.cantidad,ke.total_costo,ke.total_precio,ke.iva,cod_entrada \n" +
+            "ke.fecha_vencimiento,ke.cantidad,ke.total_costo,ke.total_precio,ke.iva,cod_entrada,ke.detalle  \n" +
             "from inventario inv inner join kardex_entrada  ke on inv.cod_producto = ke.cod_producto \n" +
             "where ke.cantidad > 0  and (inv.nombre_producto ilike '"+nombreProducto+"%' or inv.codigo_barras = '"+nombreProducto+"');";
             PreparedStatement st =  this.getCn().prepareStatement(sql);
@@ -247,7 +247,8 @@ public class KardexVentaDao  extends Dao{
                 cp.setTotal_precio(rs.getDouble("total_precio"));
                 cp.setCodigo_barras(rs.getString("codigo_barras"));
                 cp.setIva(rs.getDouble("iva"));
-                cp.setCod_entrada(rs.getInt("cod_entrada"));;
+                cp.setCod_entrada(rs.getInt("cod_entrada"));
+                cp.setDetalle(rs.getString("detalle"));
                 li.add(cp);
             }
         }catch(Exception e)

@@ -17,11 +17,42 @@ public class ReporteFacturaDetalle {
     private String nombre_producto;
     private String concentracion;
     private String presentacion;
+    private String laboratorio;
+    private String categoria;
     private int  cantidad;
     private double total_precio;
     private double total_costo;
-    private String nombre_empleado; 
+    private String nombre_empleado;
+    private double precio_unitario;
 
+    public double getPrecio_unitario() {
+        return precio_unitario;
+    }
+
+    public void setPrecio_unitario(double precio_unitario) {
+        this.precio_unitario = precio_unitario;
+    }
+
+    
+    
+    public String getLaboratorio() {
+        return laboratorio;
+    }
+
+    public void setLaboratorio(String laboratorio) {
+        this.laboratorio = laboratorio;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    
+    
     public int getNumero_factura() {
         return numero_factura;
     }

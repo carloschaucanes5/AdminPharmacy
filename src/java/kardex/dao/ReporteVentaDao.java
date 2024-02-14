@@ -84,37 +84,49 @@ public class ReporteVentaDao extends Dao{
        String sql = "";
        if(empleado == null && tipoTransaccion == -1)
        {
-            sql="select  numero_factura, fecha_factura,hora_factura,sum(total_costo) as suma_costo, sum(total_precio) as suma_precio "
-                    + "from  empleado natural join factura_venta natural join kardex_venta "
-                    + "where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' "
-                    + "group by(numero_factura) "
-                    + "order by fecha_factura desc ";
+   
+            sql="select  fv.numero_factura, fv.fecha_factura,fv.hora_factura,sum(kv.total_costo) as suma_costo, sum(kv.total_precio) as suma_precio\n" +
+"                     from  empleado em inner join factura_venta fv on em.cedula_empleado = fv.cedula_empleado\n" +
+"					inner join kardex_venta  kv on kv.numero_factura = fv.numero_factura\n" +
+"					where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' \n" +
+"				        group by(fv.numero_factura) \n" +
+"					order by fv.fecha_factura desc";
                    
        }
       if(empleado != null && tipoTransaccion == -1)
-       {
-            sql="select  numero_factura, fecha_factura,hora_factura,sum(total_costo) as suma_costo, sum(total_precio) as suma_precio "
-                    + "from  empleado natural join factura_venta natural join kardex_venta "
-                    + "where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and cedula_empleado = '"+empleado.getCedula_empleado()+"' "
-                    + "group by(numero_factura) "
-                    + "order by fecha_factura desc ";         
+       { 
+            
+            sql="select  fv.numero_factura, fv.fecha_factura,fv.hora_factura,sum(kv.total_costo) as suma_costo, sum(kv.total_precio) as suma_precio\n" +
+"                     from  empleado em inner join factura_venta fv on em.cedula_empleado = fv.cedula_empleado\n" +
+"					inner join kardex_venta  kv on kv.numero_factura = fv.numero_factura\n" +
+"					where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and fv.cedula_empleado = '"+empleado.getCedula_empleado()+"'  \n" +
+"				        group by(fv.numero_factura) \n" +
+"					order by fv.fecha_factura desc";
+            
+            
        }
       
       if(empleado == null && tipoTransaccion != -1)
        {
-            sql="select  numero_factura, fecha_factura,hora_factura,sum(total_costo) as suma_costo, sum(total_precio) as suma_precio "
-                    + "from  empleado natural join factura_venta natural join kardex_venta "
-                    + "where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and  cod_tipo_transaccion = "+tipoTransaccion+" "
-                    + "group by(numero_factura) "
-                    + "order by fecha_factura desc ";                         
+            
+            sql="select  fv.numero_factura, fv.fecha_factura,fv.hora_factura,sum(kv.total_costo) as suma_costo, sum(kv.total_precio) as suma_precio\n" +
+"                     from  empleado em inner join factura_venta fv on em.cedula_empleado = fv.cedula_empleado\n" +
+"					inner join kardex_venta  kv on kv.numero_factura = fv.numero_factura\n" +
+"					where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and kv.cod_tipo_transaccion = "+tipoTransaccion+"  \n" +
+"				        group by(fv.numero_factura) \n" +
+"					order by fv.fecha_factura desc";
+            
+            
        }
       if(empleado != null && tipoTransaccion != -1)
        {
-            sql="select  numero_factura, fecha_factura,hora_factura,sum(total_costo) as suma_costo, sum(total_precio) as suma_precio "
-                    + "from  empleado natural join factura_venta natural join kardex_venta "
-                    + "where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and cedula_empleado = '"+empleado.getCedula_empleado()+"' and  cod_tipo_transaccion = "+tipoTransaccion+""
-                    + "group by(numero_factura) "
-                    + "order by fecha_factura desc ";     
+            
+            sql="select  fv.numero_factura, fv.fecha_factura,fv.hora_factura,sum(kv.total_costo) as suma_costo, sum(kv.total_precio) as suma_precio\n" +
+"                     from  empleado em inner join factura_venta fv on em.cedula_empleado = fv.cedula_empleado\n" +
+"					inner join kardex_venta  kv on kv.numero_factura = fv.numero_factura\n" +
+"					where   fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and kv.cod_tipo_transaccion = "+tipoTransaccion+" and fv.cedula_empleado = '"+empleado.getCedula_empleado()+"'  \n" +
+"				        group by(fv.numero_factura) \n" +
+"					order by fv.fecha_factura desc";
        }
       try
       {
@@ -129,34 +141,65 @@ public class ReporteVentaDao extends Dao{
    {
       String sql = "";
        if(empleado == null && tipoTransaccion == -1)
-       {
-           sql = "select numero_factura, fecha_factura, hora_factura,nombre_producto,concentracion,presentacion,cantidad,total_precio,total_costo,nombre "
-                   + "from  factura_venta natural join kardex_venta natural join inventario natural join empleado "
-                   + "where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' "
-                   + "order by fecha_factura desc";
+       {   
+           sql = "select fv.numero_factura, fv.fecha_factura, fv.hora_factura,\n" +
+        "		inv.nombre_producto,inv.concentracion,inv.presentacion,inv.categoria,inv.laboratorio,\n" +
+        "		kv.cantidad,kv.total_precio,kv.total_costo,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
+        "from  \n" +
+        "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
+        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+        "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
+        "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"'\n" +
+        "                 order by fecha_factura desc";
                    
        }
       if(empleado != null && tipoTransaccion == -1)
        {
-            sql = "select numero_factura, fecha_factura, hora_factura,nombre_producto,concentracion,presentacion,cantidad,total_precio,total_costo,nombre "
-                   + "from  factura_venta natural join kardex_venta natural join inventario natural join empleado "
-                   + "where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and cedula_empleado = '"+empleado.getCedula_empleado()+"' "
-                   + "order by fecha_factura desc";
+            
+            sql = "select fv.numero_factura, fv.fecha_factura, fv.hora_factura,\n" +
+        "		inv.nombre_producto,inv.concentracion,inv.presentacion,inv.categoria,inv.laboratorio,\n" +
+        "		kv.cantidad,kv.total_precio,kv.total_costo,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
+        "from  \n" +
+        "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
+        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+        "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
+        "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and em.cedula_empleado = '"+empleado.getCedula_empleado()+"'\n" +
+        "                 order by fecha_factura desc";
+            
        }
       
       if(empleado == null && tipoTransaccion != -1)
        {
-            sql = "select numero_factura, fecha_factura, hora_factura,nombre_producto,concentracion,presentacion,cantidad,total_precio,total_costo,nombre "
-                   + "from  factura_venta natural join kardex_venta natural join inventario natural join empleado "
-                   + "where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and  cod_tipo_transaccion = "+tipoTransaccion+" "
-                   + "order by fecha_factura desc";
+           
+                       sql = "select fv.numero_factura, fv.fecha_factura, fv.hora_factura,\n" +
+        "		inv.nombre_producto,inv.concentracion,inv.presentacion,inv.categoria,inv.laboratorio,\n" +
+        "		kv.cantidad,kv.total_precio,kv.total_costo,kv.cod_tipo_transaccion,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
+        "from  \n" +
+        "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
+        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+        "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
+        "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and   kv.cod_tipo_transaccion = "+tipoTransaccion+"\n" +
+        "                 order by fecha_factura desc";
+            
+            
        }
       if(empleado != null && tipoTransaccion != -1)
        {
-            sql = "select numero_factura, fecha_factura, hora_factura,nombre_producto,concentracion,presentacion,cantidad,total_precio,total_costo,nombre "
-                   + "from  factura_venta natural join kardex_venta natural join inventario natural join empleado "
-                   + "where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and cedula_empleado = '"+empleado.getCedula_empleado()+"' and  cod_tipo_transaccion = "+tipoTransaccion+" "
-                   + "order by fecha_factura desc";
+            
+           sql = "select fv.numero_factura, fv.fecha_factura, fv.hora_factura,\n" +
+        "		inv.nombre_producto,inv.concentracion,inv.presentacion,inv.categoria,inv.laboratorio,\n" +
+        "		kv.cantidad,kv.total_precio,kv.total_costo,kv.cod_tipo_transaccion,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
+        "from  \n" +
+        "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
+        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+        "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
+        "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and em.cedula_empleado = '"+empleado.getCedula_empleado()+"' and  kv.cod_tipo_transaccion = "+tipoTransaccion+"\n" +
+        "                 order by fecha_factura desc";
+            
        }
       try
       {
@@ -219,7 +262,6 @@ public class ReporteVentaDao extends Dao{
             {
                 ReporteFacturaDetalle rfd = new ReporteFacturaDetalle();
                 rfd.setNumero_factura(rs.getInt("numero_factura"));
-
                 rfd.setFecha_factura(rs.getString("fecha_factura"));
                 rfd.setHora_factura(rs.getString("hora_factura"));
                 rfd.setNombre_producto(rs.getString("nombre_producto"));
@@ -229,6 +271,9 @@ public class ReporteVentaDao extends Dao{
                 rfd.setTotal_costo(rs.getDouble("total_costo"));
                 rfd.setTotal_precio(rs.getDouble("total_precio"));
                 rfd.setNombre_empleado(rs.getString("nombre"));
+                rfd.setCategoria(rs.getString("categoria"));
+                rfd.setLaboratorio(rs.getString("laboratorio"));
+                rfd.setPrecio_unitario(rs.getDouble("precio_unitario"));
                 lr.add(rfd);
                 sumaCosto = sumaCosto +  rs.getDouble("total_costo");
                 sumaPrecio = sumaPrecio + rs.getDouble("total_precio");
