@@ -86,3 +86,7 @@ tabla{
     flex-direction: row;
     justify-content: center;
 }
+
+.contenedor_impresora{
+    font-size: 10px;
+}

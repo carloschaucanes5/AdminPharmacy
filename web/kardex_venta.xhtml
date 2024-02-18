@@ -115,10 +115,17 @@
                                             <f:convertNumber integerOnly="true"  type="number" />
                                         </p:outputLabel>
                                     </center>
-                                </p:column> 
-                                <p:column headerText="Total">
+                                </p:column>
+                                <p:column headerText="Subtotal">
                                     <center>
                                         <p:outputLabel  value="#{item.inventario.total_precio}">
+                                            <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                        </p:outputLabel>
+                                    </center>
+                                </p:column>
+                                <p:column headerText="Total">
+                                    <center>
+                                        <p:outputLabel  value="#{item.total_precio}">
                                             <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
                                         </p:outputLabel>
                                     </center>
@@ -139,16 +146,14 @@
                     <center>
                         <br/>
                         <!--p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items"-->
-                        <p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura">
-                            
-                        </p:commandButton>
+                        <p:commandButton ajax="true" value="Efectuar Venta" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura"/>
                         <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
                         <!--p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/-->
                     </center>
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
+                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
                     <div class='contenedor_impresora'>
                     <h:form id="formFactura" >
                         <p:growl autoUpdate="true" showDetail="true"/>
@@ -190,7 +195,7 @@
                              <center>
                                  <b>HORARIOS DE ATENCION</b><br/>
                                 <small>Lunes a sabado de :8:30am a 9:00pm jornada continua</small>
-                                <small>Domingos de 10:30am a 5:30pm </small>
+                                <small>Domingos de 10:30am a 5:30pm </small><br/>
                                 <b>DOMICILIOS</b><br/>
                                 <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3174517751</b></small>
                              </center>
@@ -205,8 +210,10 @@
                                 <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
                                     <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
                                 </p:commandButton>
-                            </center>   
+                            </center>
+                            <br/>
                     </h:form>
+
                 </p:dialog>
                 
                 

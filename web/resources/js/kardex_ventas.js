@@ -84,7 +84,15 @@ function enfocarTareasVentas(){
         const botones = document.querySelectorAll(".boton-eliminar");
         botones[botones.length -1].focus();
     }
+
+    
 }
+
+
+
+const myModal = document.getElementById('dFactura');
+
+
 
 function  enfocarFilasTablaBuscar(){
     const botones = document.querySelectorAll(".boton-adicionar");

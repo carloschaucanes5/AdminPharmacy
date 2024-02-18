@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+        <ui:composition template="./plantillas/tareas.xhtml">
+            <ui:define name="content">
+                <center><h1><b>GENERADOR DE CODIGO DE BARRAS</b></h1></center>
+                    <center>
+                    <br/>
+                    <h:form id="formBarCode">
+                        <p:growl showDetail="true" autoUpdate="true"/>
+                        <h:panelGrid columns="2" >
+                            <p:outputLabel  value="Codigo Barras"/>
+                            <p:outputLabel value="#{barCodeBean.codeConsecutivo}"/>
+                            <p:outputLabel for="pro_nombre" value="Nombre Producto"/>
+                            <p:inputText  id="pro_nombre" size="30" maxlength="100" value="#{barCodeBean.barCode.nombre_producto}" required="true"/>
+                                            
+                            <p:outputLabel for="pro_detalle" value="Detalle"/>
+                            <p:inputTextarea  id="pro_detalle"  maxlength="100" value="#{barCodeBean.barCode.detalle}" required="true"/>             
+                        </h:panelGrid>
+                        <p:commandButton value="Guardar" action="#{barCodeBean.guardarBarCode()}" update="formBarCode"/>
+                         <!--p:commandButton value="Guardar" onclick="generarCode(#{barCodeBean.codeConsecutivo})" /-->
+                    </h:form>
+                    </center>
+                    <hr/>
+                     <center><h1><b>BUSCADOR DE CODIGO DE BARRAS</b></h1></center>
+                      <h:form id="formBarBuscador">
+                        <p:growl showDetail="true" autoUpdate="true"/>
+                        <center>
+                            <h:panelGrid columns="2" >
+                            <p:inputText  id="buscador" size="30" maxlength="100" value="#{barCodeBean.cadenaBuscar}" required="true"/>
+                            <p:commandButton value="Buscar" action="#{barCodeBean.buscarCodigos()}" update="resultadoBuscar"/>
+                        </h:panelGrid>
+                        </center>
+                        <p:dataTable id="resultadoBuscar" value="#{barCodeBean.listaCodigos}" var="codes" paginator="true" rows="5" rowIndexVar="rowIndex">
+                                <p:ajax event="rowSelect" />
+                                <p:column headerText="Código de barras">
+                                    <p:outputLabel value="#{codes.codigo_barras}" />
+                                </p:column>
+                                <p:column headerText="Nombre Producto" width="40%">
+                                    <p:outputLabel class="texto-resaltado" value="#{codes.nombre_producto}" />
+                                </p:column>
+
+                                <p:column headerText="Detalle">
+                                    <p:outputLabel value="#{codes.detalle}" />
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton value="Adicionar" action="#{barCodeBean.seleccionarItemCode(codes)}" class="btn btn-warning" oncomplete="PF('wDialogoCantidad').show()" update=":formCantidad" />                                
+                                </p:column>
+                        </p:dataTable>
+                    </h:form>
+                   <p:dialog widgetVar="wDialogoCantidad"  id="dDialogoCantidad" header="KardexKdd(Codigo Barras)" modal="true" closeOnEscape="true">
+                    <h:form id="formCantidad">
+                        <center>
+                        <p:focus context="panel-cantidad"/>
+                        <p:growl  showDetail="true"/>
+                            <br/>
+                            <p:panelGrid columns="2"  id="panel-cantidad">
+                                <p:outputLabel value="Codigo Barras"></p:outputLabel>
+                                <p:outputLabel  value="#{barCodeBean.barCodeSeleccionado.codigo_barras}"/>
+                                <p:outputLabel value="Nombre Producto"></p:outputLabel>
+                                <p:outputLabel  value="#{barCodeBean.barCodeSeleccionado.nombre_producto}"/>
+                                <p:outputLabel value="Detalle"></p:outputLabel>
+                                <p:outputLabel  value="#{barCodeBean.barCodeSeleccionado.detalle}"/>
+                                <p:outputLabel value="Cantidad de codigos barras" for="cantidad"/>
+                                <p:panelGrid columns="2">
+                                    
+                                    <p:inputText id="cantidad" class="cantidad"  type="number"  size="4"  label="Cantidad" required="true">
+                                        <f:convertNumber integerOnly="true"  type="number"  />
+                                        <f:validator validatorId="validatorCero"/>
+                                    </p:inputText>
+                                    <p:commandButton value="Generar"  onclick="generarCode(#{barCodeBean.barCodeSeleccionado.codigo_barras})" />
+                                 </p:panelGrid>
+                            </p:panelGrid> 
+                        </center>
+                        <br/>
+                        <center>
+                         <div class="contenedor-codes"></div>
+                         <p:commandButton value="Imprimir" onclick="imprimirBarCode()" />
+                        </center>
+
+                    </h:form>
+                       
+                </p:dialog>
+                     
+                  
+                     
+                          
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

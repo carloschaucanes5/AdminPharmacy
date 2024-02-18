@@ -23,9 +23,9 @@
                 <h:form id="formItemsVenta">
                     <p:dataTable id="datosItemsVenta" value="#{kardexDevolucionBean.listaItemsVenta}" var="item" paginator="true" rows="3">
                         <p:column headerText="código">
-                            <p:outputLabel value="#{item.inventario.cod_producto}"/>
+                            <p:outputLabel value="#{item.inventario.cod_entrada}"/>
                         </p:column>
-                        <p:column headerText="Producto">
+                        <p:column headerText="Producto" width="30%">
                             <p:outputLabel value="#{item.inventario.nombre_producto}"/>
                         </p:column>
                         <p:column headerText="Concentración">
@@ -37,8 +37,13 @@
                         <p:column headerText="Cantidad">
                             <p:outputLabel value="#{item.cantidad}"/>
                         </p:column>
-                        <p:column headerText="TotalPrecio">
+                        <p:column headerText="Precio/U">
                             <p:outputLabel value="#{item.total_precio}">
+                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
+                            </p:outputLabel>
+                        </p:column>
+                       <p:column headerText="Subtotal">
+                           <p:outputLabel value="#{item.total_precio * item.cantidad}">
                                 <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
                             </p:outputLabel>
                         </p:column>
@@ -79,19 +84,17 @@
                             <p:commandLink value="Eliminar Item" actionListener="#{kardexDevolucionBean.eliminarItemDevolucion(itemDevolucion)}" update="itemsDevueltos"/>
                         </p:column>
                         <p:column headerText="Código">
-                            <p:outputLabel value="#{itemDevolucion.cod_producto}"/>
+                            <p:outputLabel value="#{itemDevolucion.cod_entrada}"/>
                         </p:column>
                         <p:column headerText="Cantidad Retornada">
                             <p:outputLabel value="#{itemDevolucion.cantidad}"/>
                         </p:column>
-
-                        <p:column headerText="Total Costo">
-                            <p:outputLabel value="#{itemDevolucion.total_costo}">
+                        <p:column headerText="Precio/U.">
+                            <p:outputLabel value="#{itemDevolucion.precio_unitario}">
                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
                             </p:outputLabel>
                         </p:column>
-                        
-                        <p:column headerText="Total Precio">
+                        <p:column headerText="Subtotal">
                             <p:outputLabel value="#{itemDevolucion.total_precio}">
                                <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/> 
                             </p:outputLabel>

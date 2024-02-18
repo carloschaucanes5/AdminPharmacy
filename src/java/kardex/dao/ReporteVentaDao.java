@@ -147,7 +147,7 @@ public class ReporteVentaDao extends Dao{
         "		kv.cantidad,kv.total_precio,kv.total_costo,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
         "from  \n" +
         "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
-        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "                 inner join kardex_entrada_historico ke on kv.cod_producto = ke.cod_entrada\n" +
         "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
         "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
         "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"'\n" +
@@ -162,7 +162,7 @@ public class ReporteVentaDao extends Dao{
         "		kv.cantidad,kv.total_precio,kv.total_costo,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
         "from  \n" +
         "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
-        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "                 inner join kardex_entrada_historico ke on kv.cod_producto = ke.cod_entrada\n" +
         "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
         "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
         "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and em.cedula_empleado = '"+empleado.getCedula_empleado()+"'\n" +
@@ -178,7 +178,7 @@ public class ReporteVentaDao extends Dao{
         "		kv.cantidad,kv.total_precio,kv.total_costo,kv.cod_tipo_transaccion,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
         "from  \n" +
         "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
-        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "                 inner join kardex_entrada_historico ke on kv.cod_producto = ke.cod_entrada\n" +
         "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
         "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
         "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and   kv.cod_tipo_transaccion = "+tipoTransaccion+"\n" +
@@ -194,7 +194,7 @@ public class ReporteVentaDao extends Dao{
         "		kv.cantidad,kv.total_precio,kv.total_costo,kv.cod_tipo_transaccion,em.nombre,em.cedula_empleado,ke.total_precio as precio_unitario                \n" +
         "from  \n" +
         "factura_venta fv inner join kardex_venta kv on fv.numero_factura = kv.numero_factura\n" +
-        "                 inner join kardex_entrada ke on kv.cod_producto = ke.cod_entrada\n" +
+        "                 inner join kardex_entrada_historico ke on kv.cod_producto = ke.cod_entrada\n" +
         "				 inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
         "				 inner join empleado em on em.cedula_empleado = fv.cedula_empleado\n" +
         "                 where fecha_factura >= '"+fechaInicial+"' and fecha_factura <= '"+fechaFinal+"' and em.cedula_empleado = '"+empleado.getCedula_empleado()+"' and  kv.cod_tipo_transaccion = "+tipoTransaccion+"\n" +

@@ -55,10 +55,12 @@ public class ReporteSalidaDao  extends Dao{
         List<ReporteSalida> lr = new ArrayList<>();
         try
         {
-            sql = "select fecha_salida,hora_salida,cod_producto, nombre_producto, concentracion, presentacion ,cantidad, total_costo, total_precio, primer_nombre, primer_apellido ,detalle"
-                  + " from kardex_salida natural join inventario natural join empleado "
-                  + " where fecha_salida >= '"+fechaInicial+"' and  fecha_salida <= '"+fechaFinal+"' "
-                  + " order by fecha_salida desc";
+            sql = "select ks.fecha_salida,ks.hora_salida,ks.cod_producto, inv.nombre_producto, inv.concentracion, inv.presentacion ,ks.cantidad, ks.total_costo, ks.total_precio, em.primer_nombre, em.primer_apellido ,ks.detalle\n" +
+"                  from kardex_salida ks inner join kardex_entrada_historico ke on ks.cod_producto = ke.cod_entrada\n" +
+"				  inner join empleado em on ks.cedula_empleado = em.cedula_empleado\n" +
+"				  inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+"                 where fecha_salida >= '"+fechaInicial+"' and  fecha_salida <= '"+fechaFinal+"'\n" +
+"                 order by fecha_salida desc";
             this.conectar();
             PreparedStatement st = this.getCn().prepareStatement(sql);
             rs=st.executeQuery();

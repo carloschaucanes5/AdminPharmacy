@@ -266,8 +266,8 @@ public class KardexVentaBean {
         ItemVenta itemVenta = new ItemVenta();
         itemVenta.setInventario(itemInventario);
         itemVenta.setCantidad(itemCantidad);
-        itemVenta.getInventario().setTotal_costo(costoTotal);
-        itemVenta.getInventario().setTotal_precio(precioTotal);
+        itemVenta.getInventario().setTotal_costo(itemInventario.getTotal_costo());
+        itemVenta.getInventario().setTotal_precio(itemInventario.getTotal_precio());
         itemVenta.setTotal_costo(costoTotal);
         itemVenta.setTotal_precio(precioTotal);
 
@@ -276,18 +276,19 @@ public class KardexVentaBean {
             if(itemCantidad <= itemInventario.getCantidad())
             {
                 this.kardexVenta.getListaItemsVenta().add(itemVenta);
-                this.setTotalPago(calcularTotalVenta());
                 this.setCadenaNombre("");
             }
             else
             {
                 FacesContext.getCurrentInstance().addMessage(null,new  FacesMessage(FacesMessage.SEVERITY_ERROR,"Error:","La cantidad ingresada no debe superar  la existente"));
             }
+            
         }
         else
         {
             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN,"Advertencia","Este producto ya esta en la lista.Para modificar, elimina el item y vuelve  a ingresar"));
         }
+        this.setTotalPago(calcularTotalVenta());
     }
     
     public void eliminarItemVenta(ItemVenta itemVenta)
@@ -309,8 +310,8 @@ public class KardexVentaBean {
         if(b==1)
         {
             this.kardexVenta.getListaItemsVenta().remove(pos);
-            this.setTotalPago(calcularTotalVenta());
         }
+        this.setTotalPago(calcularTotalVenta());
     }
     
     public double calcularTotalVenta()
@@ -320,7 +321,7 @@ public class KardexVentaBean {
         while(items.hasNext() == true)
         {
             ItemVenta item = items.next();
-            total = total + (item.getInventario().getTotal_precio());
+            total = total + (item.getTotal_precio());
         }
         return total;
     }

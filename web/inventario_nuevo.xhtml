@@ -5,23 +5,16 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-
     <body>
-
         <ui:composition template="./plantillas/tareas.xhtml">
-
             <ui:define name="content">
-
                 <center>
                     <h1><b>NUEVO PRODUCTO</b></h1>
                     <br/>
-                    <p:panel style="background-color: sandybrown" >
-                            <b>Advertencia:El punto(.) indica separador de miles y la coma(,) indica separador de valores decimales<br/>en los campos Precio/Unidad y Costo/Unidad</b>
-                    </p:panel> 
-                    <br/>
-                    <h:form >
-                        <p:growl autoUpdate="true" showDetail="true" />
-                        <h:panelGrid columns="2" title="Acceso al sistema de Ventas">
+                    <h:form id='formNuevoProducto'>
+                        <p:focus context="panel1"/>
+                        <p:growl   showDetail="true"/>
+                        <h:panelGrid columns="2" title="Acceso al sistema de Ventas" id="panel1" >
                             
                             <p:outputLabel for="codigo_barras" value="Codigo de Barras"/>
                             <p:inputText  id="codigo_barras" size="30" maxlength="100"  value="#{inventarioBean.inventario.codigo_barras}" required="true"/>
@@ -42,16 +35,28 @@
                                 <f:selectItems value="#{inventarioBean.listaCategorias}" var="cat" itemLabel="#{cat.descripcion}" itemValue="#{cat.descripcion}"/>
                             </p:selectOneMenu>
                             <p:outputLabel value="Laboratorio" for="laboratorio"/>
-                            <p:autoComplete id="laboratorio" value="#{inventarioBean.inventario.laboratorio}" completeMethod="#{inventarioBean.completeText}" scrollHeight="250"/>
-                            
-                            <!--p:selectOneMenu  id="laboratorio" value="#{inventarioBean.inventario.laboratorio}"   converter="omnifaces.SelectItemsConverter" required="true">
-                                <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
-                                <f:selectItems value="#{inventarioBean.listaLaboratorios}" var="lab" itemLabel="#{lab.nombre_laboratorio}" itemValue="#{lab.nombre_laboratorio}"/>
-                            </p:selectOneMenu-->                       
+                            <p:panel>
+                                <p:autoComplete id="laboratorio" value="#{inventarioBean.inventario.laboratorio}" completeMethod="#{inventarioBean.completeText}" scrollHeight="250"/>
+                                <p:commandLink value="Nuevo" class="btn btn-primary" style="color: white !important;text-decoration: none;" onclick="PF('wDialogoLaboratorio').show()"  />
+                            </p:panel>                    
                             <h:panelGroup/>
                             <p:commandButton value="Guardar"  action="#{inventarioBean.registrarInventario()}" />
                         </h:panelGrid>
                     </h:form>
+                    
+                    <p:dialog widgetVar="wDialogoLaboratorio"  id="dDialogoLaboratorio" header="KardexKdd(Nuevo Laboratorio)" modal="true" closeOnEscape="true">
+                    <h:form >
+                        <p:focus context="panel2"/>
+                        <p:growl  showDetail="true" />
+                        <p:panelGrid id="panel2" columns="2">
+                           <p:outputLabel value="Descripcion" for="dLaboratorio"/>
+                           <p:inputText id="dLaboratorio"   size="40" maxlength="100" value="#{inventarioBean.labNuevo.nombre_laboratorio}" label="Laboratorio" required="true"/>
+                           <br/>
+                           <p:commandButton value="Agregar"  actionListener="#{inventarioBean.registrarLaboratorio()}" oncomplete="PF('wDialogoLaboratorio').hide();" update=":formNuevoProducto" />
+                        </p:panelGrid>
+                        
+                    </h:form>
+                    </p:dialog>
 
                 </center>
             </ui:define>

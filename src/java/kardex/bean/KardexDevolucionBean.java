@@ -161,8 +161,8 @@ public class KardexDevolucionBean {
 public void adicionarKardexDevolucionItems(ItemVenta itemVenta1)
 {
 
-    double costoUnitario = itemVenta1.getTotal_costo()/itemVenta1.getCantidad();
-    double precioUnitario = itemVenta1.getTotal_precio()/itemVenta1.getCantidad();
+    double costoUnitario = itemVenta1.getTotal_costo();
+    double precioUnitario = itemVenta1.getTotal_precio();
     double nuevoCosto = 0;
     double nuevoPrecio = 0;
     if(cantidadRetornada <= itemVenta1.getCantidad())
@@ -174,10 +174,12 @@ public void adicionarKardexDevolucionItems(ItemVenta itemVenta1)
                 nuevoCosto = cantidadRetornada * costoUnitario;
                 nuevoPrecio = cantidadRetornada * precioUnitario;
                 ItemDevolucion itemDevolucion = new ItemDevolucion();
+                itemDevolucion.setCod_entrada(itemVenta1.getInventario().getCod_entrada());
                 itemDevolucion.setCod_producto(itemVenta1.getInventario().getCod_entrada());
                 itemDevolucion.setCantidad(cantidadRetornada);
                 itemDevolucion.setTotal_costo(nuevoCosto);
                 itemDevolucion.setTotal_precio(nuevoPrecio);
+                itemDevolucion.setPrecio_unitario(precioUnitario);
                 kardeDevolucion.getListaItemsDevolucion().add(itemDevolucion);
                 saldoDevolucion = this.getTotalSaldoDevoluion();
             }

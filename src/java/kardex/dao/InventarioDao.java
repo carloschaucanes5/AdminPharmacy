@@ -22,7 +22,29 @@ import kardex.modelo.Laboratorio;
  */
 public class InventarioDao extends Dao{
 
-    
+    public void registrarLaboratorio(Laboratorio lab) throws SQLException, Exception{
+        try
+        {          
+          this.conectar();
+          this.getCn().setAutoCommit(false);
+          String sql=""+
+           "insert into laboratorio"+
+           "(nombre_laboratorio)"+
+           "values('"+lab.getNombre_laboratorio()+"')";
+          PreparedStatement st  = this.getCn().prepareStatement(sql);
+          st.executeUpdate();
+          st.close();
+          System.out.println("Registro almacenado con exito");
+          //---------------------------------------------------------------------------
+          this.getCn().commit();
+        }catch(Exception e)
+        {
+           this.getCn().rollback();
+           throw  e;
+        }finally{
+           this.cerrarConexion();
+        }
+    }
     
     public void registrarInventario(Inventario inventario) throws Exception
     {

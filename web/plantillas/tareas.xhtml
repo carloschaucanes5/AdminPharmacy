@@ -11,16 +11,19 @@
         <h:outputStylesheet library="css" name="bootstrap.min.css" />
          <h:outputStylesheet library="css" name="kardex_ventas.css"/>
          <h:outputStylesheet library="css" name="kardex_entrada.css"/>
+         <h:outputStylesheet library="css" name="bar_cod.css"/>
          <h:outputStylesheet library="css" name="reporte_vencidos.css"/>
         <h:outputScript library="js" name="bootstrap.bundle.min.js" />
+        <h:outputScript library="js" name="JsBarcode.all.min.js" />
         <h:outputScript library="js" name="kardex_ventas.js" />
         <h:outputScript library="js" name="kardex_entrada.js" />
+        <h:outputScript library="js" name="bar_code.js" />
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputStylesheet library="css" name="cssLayout.css"/>
         <title>AdminPharmacy</title>
     </h:head>
-    <!--h:body rendered="#{sessionBean.estadoSession}"-->
-    <h:body>
+    <h:body rendered="#{sessionBean.estadoSession}">
+    <!--h:body-->
         <div class="contenedor_principal">
         <div id="top" class="barra_superior">
             <ui:insert name="top">
@@ -46,6 +49,7 @@
                                         <p:menuitem  disabled="#{sessionBean.administrador}" value="Entradas" url="/faces/kardex_entrada.xhtml"/>
                                         <p:menuitem  disabled="#{sessionBean.administrador}" value="Salidas" url="/faces/kardex_salida.xhtml"/>
                                         <p:menuitem  disabled="#{sessionBean.administrador}" value="Actualizar" url="/faces/inventario_actualizar.xhtml"/>
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Codigo de Barras" url="/faces/barcode.xhtml"/>
                                     </p:submenu>
                                 </p:column>
                             </p:submenu>
@@ -88,11 +92,11 @@
         </div>
             </div>
     </h:body>
-    <!--h:body rendered="#{sessionBean.mensajeSession}">
+    <h:body rendered="#{sessionBean.mensajeSession}">
 
          <h:form>
             <center><h1><b>Debes iniciar sesión para continuar</b></h1></center><br/>
             <center><p:commandLink value="Iniciar Sesión" action="loginPrincipal?faces-redirect=true"/></center>
          </h:form>      
-    </h:body-->
+    </h:body>
 </html>

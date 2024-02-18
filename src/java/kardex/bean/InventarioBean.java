@@ -31,7 +31,7 @@ public class InventarioBean {
     private Inventario inventario = new Inventario();
     private List<Categoria> listaCategorias = new ArrayList<>();
     private List<Laboratorio> listaLaboratorios = new ArrayList<>();
-
+    private Laboratorio labNuevo = new Laboratorio();
 
 
    @PostConstruct 
@@ -52,7 +52,17 @@ public class InventarioBean {
         //return countryList.stream().filter(t -> t.toLowerCase().startsWith(queryLowerCase)).collect(Collectors.toList());
         return countryList.stream().filter(t -> t.toLowerCase().contains(query)).collect(Collectors.toList());
     }
+
+    public Laboratorio getLabNuevo() {
+        return labNuevo;
+    }
+
+    public void setLabNuevo(Laboratorio labNuevo) {
+        this.labNuevo = labNuevo;
+    }
    
+       
+       
     public List<Categoria> getListaCategorias() {
         return listaCategorias;
     }
@@ -120,6 +130,26 @@ public class InventarioBean {
             dao.registrarInventario(this.inventario);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Producto almacenado con exito"));
             return "inventario_nuevo?faces-redirect=true";
+        }
+        catch(Exception e)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Aviso","Error:"+e));
+        }finally
+        {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        }
+        return "";
+    }
+   
+      public String  registrarLaboratorio() throws Exception
+    {
+        try
+        {
+            InventarioDao dao = new InventarioDao();
+            dao.conectar();
+            dao.registrarLaboratorio(this.labNuevo);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Aviso","Laboratorio almacenado almacenado con exito")); 
+            listarLaboratorios();
         }
         catch(Exception e)
         {

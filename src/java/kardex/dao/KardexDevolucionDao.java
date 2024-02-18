@@ -6,6 +6,7 @@
 
 package kardex.dao;
 
+import com.google.gson.Gson;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import kardex.modelo.Inventario;
 import kardex.modelo.ItemDevolucion;
 import kardex.modelo.ItemVenta;
 import kardex.modelo.KardexDevolucion;
+import kardex.modelo.KardexEntrada;
+import kardex.modelo.Proveedor;
 
 /**
  *
@@ -45,8 +48,8 @@ public class KardexDevolucionDao  extends Dao{
         try
         {
             this.conectar();
-            String sql = "select ke.cod_entrada,inv.nombre_producto,inv.concentracion,inv.presentacion,ke.iva,ke.cantidad,ke.total_costo,ke.total_precio,kv.numero_factura  \n" +
-                          " from kardex_venta kv inner join kardex_entrada ke on   kv.cod_producto = ke.cod_entrada\n" +
+            String sql = "select ke.cod_entrada,inv.nombre_producto,inv.concentracion,inv.presentacion,ke.iva,kv.cantidad,ke.total_costo,ke.total_precio,kv.numero_factura  \n" +
+                          " from kardex_venta kv inner join kardex_entrada_historico ke on   kv.cod_producto = ke.cod_entrada\n" +
                           " inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
                           " where kv.numero_factura = "+numeroFactura+"";
             PreparedStatement st =  this.getCn().prepareStatement(sql);
@@ -69,7 +72,7 @@ public class KardexDevolucionDao  extends Dao{
                 iv.setTotal_costo(rs.getDouble("total_costo"));
                 iv.setTotal_precio(rs.getDouble("total_precio"));
                 liv.add(iv);
-                totalSaldoVenta = totalSaldoVenta + rs.getDouble("total_precio");
+                totalSaldoVenta = totalSaldoVenta + (rs.getDouble("total_precio") * rs.getInt("cantidad")) ;
             }
             return liv;
         }catch(Exception e)
@@ -83,7 +86,7 @@ public class KardexDevolucionDao  extends Dao{
     
     
     public void registrarDevolucion(KardexDevolucion kardexDevolucion, Empleado empleado) throws Exception
-    {      
+    {   
         try
         {
           this.conectar();
@@ -100,6 +103,7 @@ public class KardexDevolucionDao  extends Dao{
           this.getCn().commit();
         }catch(Exception e)
         {
+            System.out.println("===>"+e);
            this.getCn().rollback();
            throw  e;
         }finally{
@@ -126,17 +130,17 @@ public class KardexDevolucionDao  extends Dao{
             rs1 = st1.executeQuery();
             while(rs1.next() == true)
             {
-                if(rs1.getInt("cod_producto") == item.getCod_producto())
+                if(rs1.getInt("cod_producto") == item.getCod_entrada())
                 {
                     nuevoCosto = rs1.getInt("total_costo") - item.getTotal_costo();  
                     nuevoPrecio = rs1.getInt("total_precio") - item.getTotal_precio();  
                     nuevaCantidad = rs1.getInt("cantidad") - item.getCantidad();
                    sql2 = "update kardex_venta set cantidad = "+nuevaCantidad+",total_costo = "+nuevoCosto+","+
-                           "total_precio="+nuevoPrecio+" where cod_producto = "+item.getCod_producto()+" "+
+                           "total_precio="+nuevoPrecio+" where cod_producto = "+item.getCod_entrada()+" "+
                            "and numero_factura = "+kardexDevolucion.getNumero_factura()+"";
                    st2 = this.getCn().prepareStatement(sql2);
                    st2.executeUpdate();
-                   actualizarExistenciasInventario(item.getCod_producto(),item.getCantidad());
+                   actualizarExistenciasInventario(item.getCod_entrada(),item.getCantidad());
                 }
             }
             
@@ -147,6 +151,7 @@ public class KardexDevolucionDao  extends Dao{
         }
         catch(Exception err)
         {
+            System.out.println("====opcion2=====>");
             throw err;
         }  
     }
@@ -287,7 +292,7 @@ public class KardexDevolucionDao  extends Dao{
         }
     }
     
-    private void actualizarExistenciasInventario(long codigoProducto,int cantidadRetornada) throws Exception
+    private void actualizarExistenciasInventario(long codigoEntrada,int cantidadRetornada) throws Exception
     {
         String sql1 = "", sql2 = "";
         PreparedStatement st1 = null, st2 = null;
@@ -295,19 +300,35 @@ public class KardexDevolucionDao  extends Dao{
         double suma = 0;
         try
         {
-            sql1 = "select * from kardex_entrada where cod_entrada = "+codigoProducto+"";
+            sql1 = "select * from kardex_entrada_historico where cod_entrada = "+codigoEntrada+"";
             st1 = this.getCn().prepareStatement(sql1);
             rs = st1.executeQuery();
             if(rs.next() == true)
             {
-                int cantidadNueva = rs.getInt("cantidad") + cantidadRetornada;
-                sql2 = "update kardex_entrada set cantidad = "+cantidadNueva+" where cod_entrada = "+codigoProducto+"";
-                st2 = this.getCn().prepareStatement(sql2);
-                st2.executeUpdate();
+                KardexEntrada newEntrada = new KardexEntrada();
+                newEntrada.setNumero_factura(rs.getString("numero_factura"));
+                newEntrada.setCod_entrada(rs.getInt("cod_entrada"));
+                newEntrada.setCod_tipo_transaccion(rs.getInt("cod_tipo_transaccion"));
+                newEntrada.setDetalle(rs.getString("detalle"));
+                newEntrada.setCantidad(cantidadRetornada);
+                newEntrada.setTotal_costo(rs.getDouble("total_costo"));
+                newEntrada.setTotal_precio(rs.getDouble("total_precio"));
+                newEntrada.setIva(rs.getDouble("iva"));
+                newEntrada.setFecha_vencimiento(rs.getString("fecha_vencimiento"));
+                Proveedor pro = new Proveedor();
+                pro.setNit_proveedor(rs.getString(("nit_proveedor")));
+                newEntrada.setProveedor(pro);
+                Empleado em = new Empleado();
+                em.setCedula_empleado(rs.getString("cedula_empleado"));
+                newEntrada.setEmpleado(em);
+                Inventario inv = new Inventario();
+                inv.setCod_producto(rs.getInt("cod_producto"));
+                newEntrada.setInventario(inv);
+                KardexEntradaDao keDao = new KardexEntradaDao();
+                keDao.registrarEntrada(newEntrada);
             }
             rs.close();
             st1.close();
-            st2.close();
         }
         catch(Exception err)
         {
@@ -316,7 +337,33 @@ public class KardexDevolucionDao  extends Dao{
     }
     
 //--------------------------------------------------------------------------
-         public String getFecha() throws Exception
+     //Registrar kardex entrada
+    private void registrarKadexEntrada(KardexEntrada kardexEntrada) throws Exception
+    {
+        String sql1 = "";
+        PreparedStatement st1 = null;
+        try
+        {
+           sql1=""+
+           "insert into kardex_entrada"+
+           "(cod_tipo_transaccion,cod_producto,fecha_transaccion,hora_transaccion,fecha_vencimiento,"+
+           "cantidad,cedula_empleado,detalle,total_costo,total_precio,numero_factura,nit_proveedor,iva)"+
+           "values(100,"+kardexEntrada.getInventario().getCod_producto()+","+
+           "'"+this.getFecha()+"','"+this.getHora()+"',"+
+           "'"+kardexEntrada.getFecha_vencimiento()+"',"+kardexEntrada.getCantidad()+",'"+kardexEntrada.getEmpleado().getCedula_empleado()+"',"+
+           "'"+kardexEntrada.getDetalle()+"',"+kardexEntrada.getTotal_costo()+","+kardexEntrada.getTotal_precio()+","+
+           "'"+kardexEntrada.getNumero_factura()+"','"+kardexEntrada.getProveedor().getNit_proveedor()+"',"+kardexEntrada.getIva()+")";
+           st1  = this.getCn().prepareStatement(sql1);
+          st1.executeUpdate();
+          st1.close();
+        }
+        catch(Exception err)
+        {
+            throw err;
+        }       
+    }
+//---------------------------------------------------------------------------
+ public String getFecha() throws Exception
     {
         String fecha = "";
         try

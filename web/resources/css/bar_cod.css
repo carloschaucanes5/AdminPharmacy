@@ -1,0 +1,25 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 17/02/2024, 3:47:35 p. m.
+    Author     : HP
+*/
+
+.contenedor-codes{
+    width: 90%;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 25vh;
+}
+
+#codigo{
+    padding: 2%;
+    width: 30%;
+}

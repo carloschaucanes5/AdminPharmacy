@@ -19,7 +19,17 @@ public class ItemVenta {
   private int cantidad; 
   private double total_costo;
   private double total_precio;
+  private double precio_unitario;
 
+    public double getPrecio_unitario() {
+        return precio_unitario;
+    }
+
+    public void setPrecio_unitario(double precio_unitario) {
+        this.precio_unitario = precio_unitario;
+    }
+
+  
     public ConsultaProducto getInventario() {
         return inventario;
     }
