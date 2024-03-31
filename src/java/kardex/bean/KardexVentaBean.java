@@ -7,6 +7,7 @@
 package kardex.bean;
 
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,14 @@ import kardex.modelo.ItemVenta;
 import kardex.modelo.KardexVenta;
 import kardex.modelo.Recibo;
 import org.primefaces.context.RequestContext;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -596,13 +605,51 @@ public class KardexVentaBean {
    }
    
    public void generarHtmlItems(){
-       String html = "<table>";
+       String html = "<small><table>";
        html+="<tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>";
        for(int i = 0; i< this.listaRecibos.size();i++){
-        html+="<tr><td>"+this.listaRecibos.get(i).getVariable()+"/"+this.listaRecibos.get(i).getModo_venta()+"</td><td>"+this.listaRecibos.get(i).getCantidad()+"</td><td>"+this.listaRecibos.get(i).getTotal()+"</td></tr>";
+        html+="<tr><td>"+this.listaRecibos.get(i).getVariable()+"/"+this.listaRecibos.get(i).getModo_venta()+"</td><td>"+this.listaRecibos.get(i).getCantidad()+"</td><td>"+this.formatColombianCurrent(this.listaRecibos.get(i).getTotal())+"</td></tr>";
        }
-       html += "</table>";
+       html += "</table></small>";
        this.setHtmlItems(html);
+   }
+   
+   public String formatColombianCurrent(double money){
+     DecimalFormat formatea = new DecimalFormat("###,###.##");
+     return "$"+formatea.format(money)+"";
+   }
+   
+   public String formatHora(String fecha){
+       String output = "";
+       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       // Definir el formato de salida (24 horas)
+        DateFormat outputformat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
+        try {
+            Date date = df.parse(fecha);
+             String f = outputformat.format(date);
+             String a = f.split(" ")[1] + " " + f.split(" ")[2];
+             output = a;
+        } catch (ParseException ex) {
+            Logger.getLogger(KardexVentaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return output;
+   }
+   
+      
+   public String formatFecha(String fecha){
+       String output = "";
+       DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       // Definir el formato de salida (24 horas)
+        DateFormat outputformat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss aa");
+        try {
+            Date date = df.parse(fecha);
+             String f = outputformat.format(date);
+             String a = f.split(" ")[0];
+             output = a;
+        } catch (ParseException ex) {
+            Logger.getLogger(KardexVentaBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       return output;
    }
    
 

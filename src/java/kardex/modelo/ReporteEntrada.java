@@ -24,11 +24,22 @@ public class ReporteEntrada {
   private String nombre_proveedor;
   private String primer_nombre;
   private String primer_apellido;
+  private String fecha_vencimiento;
 
     public String getNumero_factura() {
         return numero_factura;
     }
 
+    public String getFecha_vencimiento() {
+        return fecha_vencimiento;
+    }
+
+    public void setFecha_vencimiento(String fecha_vencimiento) {
+        this.fecha_vencimiento = fecha_vencimiento;
+    }
+
+    
+    
     public void setNumero_factura(String numero_factura) {
         this.numero_factura = numero_factura;
     }

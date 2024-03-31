@@ -72,10 +72,11 @@ public class ReporteEntradaDao extends Dao{
                 re.setCantidad(rs.getInt("cantidad"));
                 re.setTotal_costo(rs.getDouble("total_costo"));
                 re.setTotal_precio(rs.getDouble("total_precio"));
-                re.setNombre_laboratorio(rs.getString("nombre_laboratorio"));
+                re.setNombre_laboratorio(rs.getString("laboratorio"));
                 re.setNombre_proveedor(rs.getString("nombre_proveedor"));
                 re.setPrimer_nombre(rs.getString("primer_nombre"));
                 re.setPrimer_apellido(rs.getString("primer_apellido"));
+                re.setFecha_vencimiento(rs.getString("fecha_vencimiento"));
                 lr.add(re);
                 sumaPrecio = sumaPrecio + rs.getDouble("total_precio");
                 sumaCosto = sumaCosto + rs.getDouble("total_costo");
@@ -97,17 +98,30 @@ public class ReporteEntradaDao extends Dao{
  private String validarSQL(String fechaInicial, String fechaFinal,String numeroFactura)
 {
     String sql = "";
-    if(numeroFactura.length()==0)
-    {
-        sql = "select numero_factura,fecha_transaccion, hora_transaccion,nombre_producto, concentracion,presentacion,cantidad ,total_costo,total_precio,nombre_laboratorio,nombre_proveedor,primer_nombre,primer_apellido  "
-              + "from  kardex_entrada_historico natural join inventario natural join laboratorio natural join proveedor natural join empleado "
-              + "where fecha_transaccion >= '"+fechaInicial +"' and fecha_transaccion <= '"+fechaFinal+"' order by fecha_transaccion desc";
+    if(numeroFactura.trim().length()==0)
+    {    
+        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,\n" +
+"                     inv.presentacion,ke.cantidad,ke.total_costo,ke.total_precio,inv.nombre_producto,inv.categoria,inv.laboratorio,\n" +
+"                     pro.nombre_proveedor,emp.nombre,emp.primer_nombre,emp.primer_apellido\n" +
+"                     from kardex_entrada ke\n" +
+"                     inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+"                     inner join proveedor pro on pro.nit_proveedor = ke.nit_proveedor\n" +
+"                     inner join empleado emp on ke.cedula_empleado = emp.cedula_empleado\n" +
+"                     where ke.fecha_transaccion >= '"+fechaInicial +"' and ke.fecha_transaccion <= '"+fechaFinal+"'  and\n" +
+"                     ke.cantidad > 0 order by inv.nombre_producto ";
     }
     else
     {
-        sql = "select numero_factura,fecha_transaccion, hora_transaccion,nombre_producto, concentracion,presentacion,cantidad ,total_costo,total_precio,nombre_laboratorio,nombre_proveedor,primer_nombre,primer_apellido  "
-              + "from  kardex_entrada_historico natural join inventario natural join laboratorio natural join proveedor natural join empleado "
-              + "where  numero_factura = '"+numeroFactura+"' order by fecha_transaccion desc";
+
+        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,\n" +
+"           inv.presentacion,ke.cantidad,ke.total_costo,ke.total_precio,inv.nombre_producto,inv.categoria,inv.laboratorio,\n" +
+"           pro.nombre_proveedor,emp.nombre,emp.primer_nombre,emp.primer_apellido\n" +
+"	    from kardex_entrada ke\n" +
+"           inner join inventario inv on ke.cod_producto = inv.cod_producto\n" +
+"		 inner join proveedor pro on pro.nit_proveedor = ke.nit_proveedor\n" +
+"		 inner join empleado emp on ke.cedula_empleado = emp.cedula_empleado\n" +
+"		 where ke.numero_factura = '"+numeroFactura+"'  and\n" +
+"		 ke.cantidad > 0 order by inv.nombre_producto";
     }
     return sql;
 }

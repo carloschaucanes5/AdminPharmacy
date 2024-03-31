@@ -161,26 +161,30 @@
                             <p:outputLabel class="empresa" value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
                             <p:outputLabel class="lema" value="Tu mejor opción"/><br/>
                             <b>...........................................</b><br/>
-                            <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
-                            <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
-                            <p:outputLabel value="Teléfono:#{kardexVentaBean.empresa.telefono}"/><br/>
-                            <p:outputLabel value="Ciudad:#{kardexVentaBean.empresa.ciudad}"/>
-                            <br/>
-                            <b>...........................................</b>
-                            <br/>                            
-                            <p:outputLabel value="Factura No: #{kardexVentaBean.kardexVenta.numero_factura}"/><br/>
-                            <p:outputLabel value="Cajero: #{sessionBean.nombre}"/><br/>
-                            <p:outputLabel value="Fecha: #{kardexVentaBean.fecha}"/><br/>
-                            <p:outputLabel value="Hora: #{kardexVentaBean.hora}"/>
+                            <small>
+                                <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
+                                <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
+                                <p:outputLabel value="Teléfono:#{kardexVentaBean.empresa.telefono}"/><br/>
+                                <p:outputLabel value="Ciudad:#{kardexVentaBean.empresa.ciudad}"/>
+                                <br/>
+                                <b>...........................................</b>
+                                <br/>                            
+                                <p:outputLabel value="Factura No: #{kardexVentaBean.kardexVenta.numero_factura}"/><br/>
+                                <p:outputLabel value="Cajero: #{sessionBean.nombre}"/><br/>
+                                <p:outputLabel value="Fecha: #{kardexVentaBean.fecha}"/><br/>
+                                <p:outputLabel value="Hora: #{kardexVentaBean.hora}"/>
+                            </small>
                             <br/>
                             <b>...........................................</b> 
                             <div class='contenedor-lista-factura'></div>
                             <b>...........................................</b>
                             <br/>
-                            <p:outputLabel value="Total: "/>
-                            <p:outputLabel value="#{kardexVentaBean.totalPago}">
-                               <f:convertNumber type="currency" maxFractionDigits="0"/> 
-                            </p:outputLabel>
+                                <small>
+                                <p:outputLabel value="Total: "/>
+                                <p:outputLabel value="#{kardexVentaBean.totalPago}">
+                                   <f:convertNumber type="currency" maxFractionDigits="0"/> 
+                                </p:outputLabel>
+                            </small>
                         <br/>
                         </center>
                         <center>  <b>...........................................</b></center>
@@ -194,10 +198,10 @@
                          <div style="text-align: center">
                              <center>
                                  <b>HORARIOS DE ATENCION</b><br/>
-                                <small>Lunes a sabado de :8:30am a 9:00pm jornada continua</small>
-                                <small>Domingos de 10:30am a 5:30pm </small><br/>
+                                <small>Lunes a sabado de 7:00am a 9:00pm jornada continua</small>
+                                <small>Domingos de 9:30am a 5:30pm </small><br/>
                                 <b>DOMICILIOS</b><br/>
-                                <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3174517751</b></small>
+                                <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3183537326</b></small>
                              </center>
                          </div>
                     </h:form>

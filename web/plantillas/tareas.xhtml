@@ -31,7 +31,7 @@
                     <center><h4>...¡ SISTEMA DE VENTAS KARDEXKDD !...</h4></center>
                     <div id="cerrarSesion">
                         <h:form>
-                            <p:commandLink value="Cerrar Sesión" action="#{sessionBean.cerrarSession()}"/>
+                            <p:commandButton value="Cerrar Sesión" action="#{sessionBean.cerrarSession()}"/>
                         </h:form>
                     </div>
                     <div id="datosSesion">
@@ -42,8 +42,8 @@
                     </div>
                     <h:form>
                         <p:megaMenu>
-                            <p:submenu label="Productos" icon="ui-icon-print" >
-                                <p:column>
+                            <p:submenu label="Productos" icon="ui-icon-print" rendered="#{sessionBean.mostrarModulos}" >
+                                <p:column >
                                     <p:submenu label="--Productos--">
                                         <p:menuitem  disabled="#{sessionBean.administrador}" value="Nuevo" url="/faces/inventario_nuevo.xhtml" />
                                         <p:menuitem  disabled="#{sessionBean.administrador}" value="Entradas" url="/faces/kardex_entrada.xhtml"/>
@@ -57,8 +57,8 @@
                                 <p:column>
                                     <p:submenu label="--Ventas--">
                                         <p:menuitem value="Nueva"  url="/faces/kardex_venta.xhtml"/>
-                                        <p:menuitem value="Devolución" url="/faces/kardex_devolucion.xhtml"/>
-                                        <p:menuitem value="Cuentas por Cobrar" url="/faces/kardex_cuentas_cobrar.xhtml"/>
+                                        <p:menuitem rendered="#{sessionBean.mostrarModulos}" value="Devolución" url="/faces/kardex_devolucion.xhtml"/>
+                                        <p:menuitem rendered="#{sessionBean.mostrarModulos}"  value="Cuentas por Cobrar" url="/faces/kardex_cuentas_cobrar.xhtml"/>
                                     </p:submenu>
                                 </p:column>
                             </p:submenu>

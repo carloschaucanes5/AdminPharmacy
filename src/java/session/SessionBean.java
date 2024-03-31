@@ -34,7 +34,18 @@ public class SessionBean {
     private FacesMessage facesMessage;
     private boolean estadoSession;
     private boolean mensajeSession;
+    private boolean mostrarModulos;
 
+    public boolean isMostrarModulos() {
+        return mostrarModulos;
+    }
+
+    public void setMostrarModulos(boolean mostrarModulos) {
+        this.mostrarModulos = mostrarModulos;
+    }
+
+    
+    
     public String getTipo() {
         return tipo;
     }
@@ -102,8 +113,6 @@ public class SessionBean {
         this.facesMessage = facesMessage;
     }
     
-    
-    
     public SessionBean() 
     {
         faceContext=FacesContext.getCurrentInstance();
@@ -113,7 +122,15 @@ public class SessionBean {
             this.cedula_empleado=httpServletRequest.getSession().getAttribute("sessionCedula").toString();
             this.nombre = httpServletRequest.getSession().getAttribute("sessionNombre").toString();
             this.tipo = httpServletRequest.getSession().getAttribute("sessionTipo").toString();
-            this.empleado.setCedula_empleado(cedula_empleado);
+            this.empleado.setCedula_empleado(this.cedula_empleado);
+            if(this.cedula_empleado.compareTo("1004726794")==0)
+            {
+                this.setMostrarModulos(true);
+            }
+            else
+            {
+                this.setMostrarModulos(false);
+            }
             this.empleado.setNombre(nombre);
             this.setEstadoSession(true);
             this.setMensajeSession(false);
