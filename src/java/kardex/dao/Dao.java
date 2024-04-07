@@ -25,7 +25,7 @@ public class Dao {
         try
         {
             Class.forName("org.postgresql.Driver");
-            this.cn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/kardex","postgres","postgres1"); 
+            this.cn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/adminpharmacy","postgres","postgres1"); 
         }catch(Exception e)
         {
             throw e;
