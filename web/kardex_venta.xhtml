@@ -210,7 +210,9 @@
                         <p:focus/>
                             <br/>
                             <center>
-                                <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar" action="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}"  update=":formTransaccion"/>
+                                <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">
+                                    <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="facturarsinimprimir()"/>
+                                </p:commandButton>
                                 <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
                                     <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
                                 </p:commandButton>
