@@ -146,6 +146,14 @@ function imprimir(){
     //document.body.innerHTML = page;
 }
 
+function facturarsinimprimir(){
+    let contenedor = "<b></b>";
+    let page = document.body.innerHTML;
+    window.document.body.innerHTML = contenedor;
+    window.print();
+    location.reload();  
+}
+
 
 function direccionBotonFacturar(){
     //37 izquierda  39 derecha

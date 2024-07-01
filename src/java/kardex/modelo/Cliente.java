@@ -17,7 +17,36 @@ public class Cliente {
   private String apellidos;
   private String direccion;
   private String telefono; 
+  private String correo;
+  private int id_ciudad;
+  private int tipo_identificacion;
 
+    public int getTipo_identificacion() {
+        return tipo_identificacion;
+    }
+
+    public void setTipo_identificacion(int tipo_identificacion) {
+        this.tipo_identificacion = tipo_identificacion;
+    }
+
+    public int getId_ciudad() {
+        return id_ciudad;
+    }
+
+    public void setId_ciudad(int id_ciudad) {
+        this.id_ciudad = id_ciudad;
+    }
+          
+    
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+  
+  
     public String getCedula_cliente() {
         return cedula_cliente;
     }

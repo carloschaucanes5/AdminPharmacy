@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import kardex.modelo.Cliente;
+import kardex.modelo.Municipio;
+import kardex.modelo.TipoIdentificacion;
 
 /**
  *
@@ -24,13 +26,15 @@ public class ClienteDao extends Dao{
         try
         {
           this.conectar();
-          String sql= "insert into cliente(cedula_cliente,nombres,apellidos,direccion, telefono)values(?,?,?,?,?)";
+          String sql= "insert into cliente(cedula_cliente,nombres,apellidos,direccion, telefono,correo,id_ciudad)values(?,?,?,?,?,?,?)";
           PreparedStatement st  = this.getCn().prepareStatement(sql);
           st.setString(1, cli.getCedula_cliente());
           st.setString(2, cli.getNombres());
           st.setString(3, cli.getApellidos());
           st.setString(4, cli.getDireccion());
           st.setString(5, cli.getTelefono());
+          st.setString(6, cli.getCorreo());
+          st.setInt(7,cli.getId_ciudad());
           st.executeUpdate();
           st.close();
         }catch(Exception e)
@@ -127,6 +131,8 @@ public class ClienteDao extends Dao{
               cli.setApellidos(rs.getString("apellidos"));
               cli.setDireccion(rs.getString("direccion"));
               cli.setTelefono(rs.getString("telefono"));
+              cli.setTipo_identificacion(rs.getInt("tipo_identificacion"));
+              cli.setId_ciudad(rs.getInt("id_ciudad"));
           }
           else
           {
@@ -158,6 +164,60 @@ public class ClienteDao extends Dao{
                 cli.setApellidos(rs.getString("apellidos"));
                 cli.setDireccion(rs.getString("direccion"));
                 cli.setTelefono(rs.getString("telefono"));
+                lc.add(cli);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return lc;
+    }
+    
+    public List<TipoIdentificacion> getTiposIdentificacion()throws Exception{
+        List<TipoIdentificacion> lisTI = new ArrayList<TipoIdentificacion>();
+        try
+        {
+            this.conectar();
+            String sql = "select * from tipo_identificacion";
+            PreparedStatement st =  this.getCn().prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while(rs.next() == true)
+            {
+                TipoIdentificacion ti = new TipoIdentificacion();
+                ti.setIdentificacion_id(rs.getInt("identificacion_id"));
+                ti.setNombre(rs.getString("nombre"));
+                ti.setCodigo(rs.getString("codigo"));
+                lisTI.add(ti);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return lisTI;
+    }
+    
+        public List<Municipio> buscarMunicipio(String nombreMunicipio) throws Exception
+    {
+        List<Municipio> lc = new ArrayList<Municipio>();
+        try
+        {
+            this.conectar();
+            String sql = "select * from municipio  where titulo ilike '%"+nombreMunicipio+"%'";
+            PreparedStatement st =  this.getCn().prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while(rs.next() == true)
+            {
+                Municipio cli = new Municipio();
+                cli.setMunicipality_id(rs.getInt("municipality_id"));
+                cli.setDepartamento(rs.getString("departamento"));
+                cli.setMunicipio(rs.getString("municipio"));
+                cli.setTitulo(rs.getString("titulo"));
                 lc.add(cli);
             }
         }catch(Exception e)

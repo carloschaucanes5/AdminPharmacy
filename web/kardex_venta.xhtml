@@ -31,10 +31,10 @@
                         <div class="contenedor-tabla-busqueda">
                             <p:dataTable id="resultadoBuscar" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="5" rowIndexVar="rowIndex">
                                 <p:ajax event="rowSelect" />
-                                <p:column headerText="Código">
+                                <!--p:column headerText="Código">
                                     <p:outputLabel value="#{inv.cod_entrada}" />
-                                </p:column>
-                                <p:column headerText="Nombre Producto" width="30%">
+                                </p:column-->
+                                <p:column headerText="Nombre Producto" width="28%">
                                     <p:outputLabel class="texto-resaltado" value="#{inv.nombre_producto}" />
                                 </p:column>
 
@@ -42,13 +42,13 @@
                                     <p:outputLabel value=" #{inv.concentracion}/#{inv.presentacion}" />
                                 </p:column>
 
-                                <p:column headerText="Lab/Tipo" >
+                                <p:column headerText="Lab/Tipo" width="23%" >
                                     <p:outputLabel value="#{inv.laboratorio}/#{inv.categoria}" />
                                 </p:column> 
                                 <p:column headerText="Modo Venta">
                                     <p:outputLabel value="#{inv.detalle}" />
                                 </p:column> 
-                                <p:column headerText="Fecha Vencimiento">
+                                <p:column headerText="Fecha Vencimiento" width="10%">
                                     <p:outputLabel value="#{inv.fecha_vencimiento}"/>
                                 </p:column>
                                 <p:column headerText="Cant." width="4%">
@@ -103,13 +103,13 @@
                                 <p:column headerText="Eliminar" id="seleccion" >
                                     <center><p:commandButton class="btn btn-danger boton-eliminar" onkeypress="enfocarCampoBuscar()" onkeyup="enfocarEliminarItems(this)" value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
                                 </p:column>
-                                <p:column headerText="Código">
+                                <!--p:column headerText="Código">
                                     <center><p:outputLabel value="#{item.inventario.cod_entrada}" /></center>
-                                </p:column>
+                                </p:column-->
                                 <p:column headerText="Nombre Producto" width="50%">
                                     <center><p:outputLabel class="texto-resaltado" value="#{item.inventario.nombre_producto}" /></center>
                                 </p:column>
-                                <p:column headerText="cant." id="count" width="4%">
+                                <p:column headerText="cant." id="count" width="8%">
                                     <center>
                                         <p:outputLabel id="pro_iva"  value="#{item.cantidad}" >
                                             <f:convertNumber integerOnly="true"  type="number" />
@@ -153,14 +153,13 @@
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="300px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
-                    <div class='contenedor_impresora'>
+                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="400px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
+                    <div class='contenedor_impresora' style="display:none;">
                     <h:form id="formFactura" >
                         <p:growl autoUpdate="true" showDetail="true"/>
                         <center>
                             <p:outputLabel class="empresa" value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
                             <p:outputLabel class="lema" value="Tu mejor opción"/><br/>
-                            <b>...........................................</b><br/>
                             <small>
                                 <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
                                 <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
@@ -194,7 +193,6 @@
                             Una vez salga no se aceptan cambios</small>
                             </center>
                         </div>
-                        <center>  <b>...........................................</b></center>
                          <div style="text-align: center">
                              <center>
                                  <b>HORARIOS DE ATENCION</b><br/>
@@ -208,16 +206,32 @@
                         </div>
                     <h:form>
                         <p:focus/>
+                        <br/>
+                        <center>
+                            <table border="1">
+                                <th>
+                                    <p:outputLabel value="Datos Cliente"></p:outputLabel>
+                                </th>
+                                <th>
+                                    <small>
+                                    <p:outputLabel  value="No. Documento:#{kardexVentaBean.cliente.cedula_cliente}"/>
+                                    <p:outputLabel  value=" Nombre:#{kardexVentaBean.cliente.nombres} #{kardexVentaBean.cliente.apellidos}"/>
+                                    <p:outputLabel  value="Correo: #{kardexVentaBean.cliente.correo}/Teléfono: #{kardexVentaBean.cliente.telefono}/Dirección: #{kardexVentaBean.cliente.direccion}"/>
+                                    </small>
+                                </th>
+                                <th>
+                                   <p:commandButton value="Buscar" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/>
+                                </th>
+                            </table>
                             <br/>
-                            <center>
-                                <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">
-                                    <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="facturarsinimprimir()"/>
-                                </p:commandButton>
-                                <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
-                                    <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
-                                </p:commandButton>
-                            </center>
-                            <br/>
+                            <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">
+                                <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="facturarsinimprimir()"/>
+                            </p:commandButton>
+                            <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
+                                <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
+                            </p:commandButton>
+                        </center>
+                        <br/>
                     </h:form>
 
                 </p:dialog>
@@ -238,17 +252,32 @@
                         <center>
                         <p:growl autoUpdate="true" showDetail="true"/>
                         <h:panelGrid columns="2">
+                            <p:outputLabel value="Tipo Documento" for="cliTipoDocumento"/>
+                            <p:selectOneMenu  id="cliTipoDocumento" class="boton-entrada"  value="#{kardexVentaBean.cliente.tipo_identificacion}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                <f:selectItems  value="#{kardexVentaBean.tiposIdentificacion}" var="tipoi" itemLabel="#{tipoi.nombre}" itemValue="#{tipoi.identificacion_id}"/>
+                            </p:selectOneMenu>
                             <p:outputLabel value="Cedula" for="cliCedula"/>
                             <p:inputText  id="cliCedula" value="#{kardexVentaBean.cliente.cedula_cliente}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}" accesskey="cliNombres"/>
                             <p:outputLabel value="Nombres" for="cliNombres"/>
                             <p:inputText  id="cliNombres" value="#{kardexVentaBean.cliente.nombres}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}" accesskey="cliApellidos"/>
                             <p:outputLabel value="Apellidos" for="cliApellidos"/>
                             <p:inputText  id="cliApellidos" value="#{kardexVentaBean.cliente.apellidos}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                            
+                            <p:outputLabel value="Correo" for="cliCorreo"/>
+                            <p:inputText  id="cliCorreo" value="#{kardexVentaBean.cliente.correo}" required="true" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                            
                             <p:outputLabel value="Dirección" for="cliDireccion"/>
                             <p:inputText  id="cliDireccion" value="#{kardexVentaBean.cliente.direccion}" readonly="#{kardexVentaBean.activarCamposCliente}"/>
                             <p:outputLabel value="Teléfono" for="cliTelefono"/>
                             <p:inputText  id="cliTelefono" value="#{kardexVentaBean.cliente.telefono}" readonly="#{kardexVentaBean.activarCamposCliente}"/>
+                            <p:outputLabel value="Ciudad" for="cliCiudad"/>
+                            <h:panelGrid columns="2">
+                                <p:inputText  id="cliCiudad" value="#{kardexVentaBean.cliente.id_ciudad}" readonly="true"/>
+                                 <p:commandButton value="Buscar" oncomplete="PF('wDialogoCiudad').show()" update=":dDialogoCiudad"/>
+                            </h:panelGrid>
+                        
                         </h:panelGrid>
+                        
                             <hr/>
                         <h:panelGrid columns="2">
                             <p:outputLabel value="Detalle" for="cxcDetalle"/>
@@ -287,6 +316,32 @@
                                 </p:column>
                                 <p:column headerText="Teléfono">
                                     <p:commandButton value="Seleccionar" actionListener="#{kardexVentaBean.cliente.setCedula_cliente(cli.cedula_cliente)}" oncomplete="PF('wDialogoBuscar').hide()" update=":formVerificarCliente"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </center>
+                </p:dialog>
+                
+                <p:dialog widgetVar="wDialogoCiudad" id="dDialogoCiudad" header="Adminpharmacy(Buscar Ciudad)" modal="true">
+                    <center>
+                        <h:form>
+                            <p:outputLabel value="Nombre Ciudad" for="bNombre"/>
+                            <p:inputText value="#{kardexVentaBean.cadenaMunicipioNombre}" id="bNombre"/>
+                            <p:commandButton value="Buscar" actionListener="#{kardexVentaBean.buscarMunicipioNombre()}" update=":formListaCiudades:tablaCiudades"/>
+                        </h:form>
+                        <h:form id="formListaCiudades">
+                            <p:dataTable id='tablaCiudades' value="#{kardexVentaBean.listaMunicipios}" var="mun" paginator="true" rows="6">
+                                <p:column headerText="Id">
+                                    <p:outputLabel value="#{mun.municipality_id}"/>
+                                </p:column>
+                                <p:column headerText="Ciudad">
+                                    <p:outputLabel value="#{mun.municipio}"/>
+                                </p:column>
+                                <p:column headerText="Departamento">
+                                    <p:outputLabel value="#{mun.departamento}"/>
+                                </p:column>
+                                <p:column headerText="">
+                                    <p:commandButton value="Seleccionar" actionListener="#{kardexVentaBean.cliente.setId_ciudad(mun.municipality_id)}" oncomplete="PF('wDialogoCiudad').hide()" update=":formCliente"/>
                                 </p:column>
                             </p:dataTable>
                         </h:form>

@@ -27,7 +27,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 .contenedor-tabla-busqueda{
-    width: 80%;
+    width: 85%;
     margin: auto;
 }
 
@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .contenedor-carrito{
     display: flex;
     flex-direction: row;
-    width: 80%;
+    width: 85%;
     margin: auto;
 }
 .contenedor-orden{
@@ -88,5 +88,6 @@ tabla{
 }
 
 .contenedor_impresora{
-    font-size: 8px;
+    font-size: 3px;
+    font-family: fantasy;
 }

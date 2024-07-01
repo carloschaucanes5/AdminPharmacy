@@ -7,6 +7,7 @@
 package kardex.bean;
 
 
+import com.google.gson.Gson;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +38,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import kardex.modelo.Municipio;
+import kardex.modelo.TipoIdentificacion;
+
 
 /**
  *
@@ -55,21 +59,64 @@ public class KardexVentaBean {
     private double formaPago;
     private double saldoRetorno;
     private String htmlItems;
+    private List<TipoIdentificacion> tiposIdentificacion = new ArrayList<TipoIdentificacion>();
     
-    
+    private Municipio municipio = new Municipio();
     private Cliente cliente = new Cliente();
     private String activarBotonCliente;
     private String activarBotonEjecutarVenta = "none";
     private boolean activarCamposCliente;
     private List<Cliente> listaClientes = new ArrayList<Cliente>();
+    private List<Municipio> listaMunicipios = new ArrayList<Municipio>();
     private String detalleCxC;
     private String cadenaClienteNombre;
+    private String cadenaMunicipioNombre;
     
     private List<Recibo> listaRecibos = new ArrayList<Recibo>();
     private Empresa empresa = new Empresa();
     private String fecha;
     private String hora;
 
+    
+    public Municipio getMunicipio() {
+        return municipio;
+    }
+
+    public void setMunicipio(Municipio municipio) {
+        this.municipio = municipio;
+    }
+
+   
+    public List<Municipio> getListaMunicipios() {
+        return listaMunicipios;
+    }
+
+    public void setListaMunicipios(List<Municipio> listaMunicipios) {
+        this.listaMunicipios = listaMunicipios;
+    }
+
+    public String getCadenaMunicipioNombre() {
+        return cadenaMunicipioNombre;
+    }
+
+    public void setCadenaMunicipioNombre(String cadenaMunicipioNombre) {
+        this.cadenaMunicipioNombre = cadenaMunicipioNombre;
+    }
+
+
+
+    
+   
+
+    public List<TipoIdentificacion> getTiposIdentificacion() {
+        return tiposIdentificacion;
+    }
+
+    public void setTiposIdentificacion(List<TipoIdentificacion> tiposIdentificacion) {
+        this.tiposIdentificacion = tiposIdentificacion;
+    }
+
+   
     public String getHtmlItems() {
         return htmlItems;
     }
@@ -390,10 +437,13 @@ public class KardexVentaBean {
       try
        {  
            KardexVentaDao dao = new KardexVentaDao();
+           ClienteDao daoCli = new ClienteDao();
            this.kardexVenta.setNumero_factura(dao.getConsecutivoNumeroFactura());
+           this.cliente = this.getClienteFinal();
+           setTiposIdentificacion(daoCli.getTiposIdentificacion());
        }
-       catch(Exception err)
-       {
+       catch(Exception err){
+
        } 
    }
    
@@ -404,6 +454,9 @@ public class KardexVentaBean {
            KardexVentaDao dao = new KardexVentaDao();
            if(this.kardexVenta.getListaItemsVenta().size() > 0)
            {
+               Gson g = new Gson();
+               String cad = g.toJson(this.kardexVenta);
+               System.out.println(cad);
                dao.registrarVenta(this.kardexVenta, 102, empleado);
                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"KardexKDD","Venta Almacenada con éxito"));
                kardexVenta.getListaItemsVenta().clear();
@@ -537,6 +590,36 @@ public class KardexVentaBean {
        }
    }
    //-----------------------------listar Clientes-------------------------------
+   
+   public Cliente getClienteFinal(){
+       Cliente clien = new Cliente();
+       try{            
+           ClienteDao dao = new ClienteDao();
+           clien = dao.buscarClienteCedula("222222222222");
+           if(clien == null)
+           {
+               FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error:","El cliente no se encuentra registrado"));
+               this.cliente.setNombres("");
+               this.cliente.setApellidos("");
+               this.cliente.setDireccion("");
+               this.cliente.setTelefono("");
+               this.activarBotonCliente = "show";
+               this.activarCamposCliente = false;
+               this.activarBotonEjecutarVenta = "none";
+           }
+           else
+           {
+               this.cliente = clien;
+               this.activarBotonCliente = "none";
+               this.activarBotonEjecutarVenta = "show";
+               this.activarCamposCliente = true;
+           } 
+       }catch(Exception err){
+           return null;
+       }
+      return  clien;
+   }
+   
    public void buscarClienteCedula()
    {
        try
@@ -597,6 +680,19 @@ public class KardexVentaBean {
        {
            ClienteDao dao = new ClienteDao();
            this.listaClientes = dao.buscarClienteNombre(this.cadenaClienteNombre);
+       }
+       catch(Exception err)
+       {
+           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error:",""+err));
+       }
+   }
+   
+   public void buscarMunicipioNombre() throws Exception
+   {
+       try
+       {
+           ClienteDao dao = new ClienteDao();
+           this.listaMunicipios = dao.buscarMunicipio(this.cadenaMunicipioNombre);
        }
        catch(Exception err)
        {

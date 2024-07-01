@@ -8,14 +8,14 @@ contenedor_principal{
 {
     position: fixed;
     left:20px;
-    top: 30px;
+    top: 15px;
 }
 
 #cerrarSesion
 {
     position: fixed;
     right: 20px;
-    top: 30px;
+    top: 15px;
 }
 
 #top {
