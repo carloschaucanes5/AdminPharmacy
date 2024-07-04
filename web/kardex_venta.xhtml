@@ -204,25 +204,35 @@
                          </div>
                     </h:form>
                         </div>
-                    <h:form>
+                    <h:form id="content-client">
                         <p:focus/>
                         <br/>
-                        <center>
+                        
+                        <b><p:outputLabel value="Datos Cliente"></p:outputLabel></b>
                             <table border="1">
                                 <th>
-                                    <p:outputLabel value="Datos Cliente"></p:outputLabel>
-                                </th>
-                                <th>
                                     <small>
-                                    <p:outputLabel  value="No. Documento:#{kardexVentaBean.cliente.cedula_cliente}"/>
-                                    <p:outputLabel  value=" Nombre:#{kardexVentaBean.cliente.nombres} #{kardexVentaBean.cliente.apellidos}"/>
-                                    <p:outputLabel  value="Correo: #{kardexVentaBean.cliente.correo}/Teléfono: #{kardexVentaBean.cliente.telefono}/Dirección: #{kardexVentaBean.cliente.direccion}"/>
+                                        <p:outputLabel  value="No. Documento:#{kardexVentaBean.clienteSeleccionado.cedula_cliente}"/>
+                                    <p:outputLabel  value=" Nombre:#{kardexVentaBean.clienteSeleccionado.nombres} #{kardexVentaBean.clienteSeleccionado.apellidos}"/>
+                                    <p:outputLabel  value="Correo: #{kardexVentaBean.clienteSeleccionado.correo}/Teléfono: #{kardexVentaBean.clienteSeleccionado.telefono}/Dirección: #{kardexVentaBean.clienteSeleccionado.direccion}"/>
                                     </small>
                                 </th>
                                 <th>
                                    <p:commandButton value="Buscar" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/>
                                 </th>
                             </table>
+                           <br/>
+                            <b><p:outputLabel value="Forma de pago"></p:outputLabel></b>
+                             <table>
+                                <th>
+                                    <small>
+                                        <p:selectOneMenu  id="metodoPago" class="boton-entrada"  value="#{kardexVentaBean.metodoPago.code_dian}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                            <f:selectItems  value="#{kardexVentaBean.listaMetodosPago}" var="mp" itemLabel="#{mp.nombre}" itemValue="#{mp.code_dian}"/>
+                                        </p:selectOneMenu>
+                                    </small>
+                                </th>
+                            </table>
+                        
                             <br/>
                             <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">
                                 <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="facturarsinimprimir()"/>
@@ -230,7 +240,7 @@
                             <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
                                 <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
                             </p:commandButton>
-                        </center>
+                        
                         <br/>
                     </h:form>
 
@@ -285,8 +295,7 @@
                         </h:panelGrid>   
                             <hr/>
                             <p:commandButton value="Guardar Usuario" style="display:#{kardexVentaBean.activarBotonCliente}" actionListener="#{kardexVentaBean.guardarCliente(kardexVentaBean.cliente)}" update="formCliente"/>
-                            <p:commandButton value="Ejecutar Venta" style="display:#{kardexVentaBean.activarBotonEjecutarVenta}" action="#{kardexVentaBean.registrarVentaCredito(sessionBean.empleado)}" />
-                                <p:commandButton value="Cancelar"/>     
+                            <p:commandButton value="Seleccionar" style="display:#{kardexVentaBean.activarBotonEjecutarVenta}" action="#{kardexVentaBean.setClienteSeleccionado(kardexVentaBean.cliente)}" update=":content-client" oncomplete="PF('wDialogoCliente').hide()" /> 
                         </center>                       
                     </h:form>
                 </p:dialog>

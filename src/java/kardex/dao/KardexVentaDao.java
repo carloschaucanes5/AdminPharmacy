@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import kardex.modelo.ConsultaProducto;
 import kardex.modelo.CuentaCobrar;
 import kardex.modelo.Empleado;
@@ -19,6 +21,7 @@ import kardex.modelo.Empresa;
 import kardex.modelo.Inventario;
 import kardex.modelo.ItemVenta;
 import kardex.modelo.KardexVenta;
+import kardex.modelo.MetodoPago;
 import kardex.modelo.Recibo;
 
 /**
@@ -329,6 +332,37 @@ public class KardexVentaDao  extends Dao{
         }
         return em;
     }
+    
+        public List<MetodoPago> getListaMetodosPago() throws Exception
+    {
+        List<MetodoPago> li = new ArrayList<MetodoPago>();
+        try
+        {
+            this.conectar();
+            String sql = "select * from metodo_pago where estado = 'a'";
+            PreparedStatement st =  this.getCn().prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next() == true)
+            {
+                MetodoPago mp = new MetodoPago();
+                mp.setId_metodo(rs.getInt("id_metodo"));
+                mp.setNombre(rs.getString("nombre"));
+                mp.setCode_dian(rs.getInt("code_dian"));
+                mp.setDescripcion(rs.getString("descripcion"));
+                li.add(mp);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return li;
+    }
+        
+
 
 }
 

@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import kardex.modelo.MetodoPago;
 import kardex.modelo.Municipio;
 import kardex.modelo.TipoIdentificacion;
 
@@ -63,6 +64,9 @@ public class KardexVentaBean {
     
     private Municipio municipio = new Municipio();
     private Cliente cliente = new Cliente();
+    private Cliente clienteSeleccionado = new Cliente();
+    private List<MetodoPago> listaMetodosPago = new ArrayList<MetodoPago>();
+    private MetodoPago metodoPago = new MetodoPago();
     private String activarBotonCliente;
     private String activarBotonEjecutarVenta = "none";
     private boolean activarCamposCliente;
@@ -77,7 +81,31 @@ public class KardexVentaBean {
     private String fecha;
     private String hora;
 
+    public List<MetodoPago> getListaMetodosPago() {
+        return listaMetodosPago;
+    }
+
+    public void setListaMetodosPago(List<MetodoPago> listaMetodosPago) {
+        this.listaMetodosPago = listaMetodosPago;
+    }
+
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
     
+    public Cliente getClienteSeleccionado() {
+        return clienteSeleccionado;
+    }
+
+    public void setClienteSeleccionado(Cliente clienteSeleccionado) {
+        this.clienteSeleccionado = clienteSeleccionado;
+    }
+
     public Municipio getMunicipio() {
         return municipio;
     }
@@ -439,8 +467,10 @@ public class KardexVentaBean {
            KardexVentaDao dao = new KardexVentaDao();
            ClienteDao daoCli = new ClienteDao();
            this.kardexVenta.setNumero_factura(dao.getConsecutivoNumeroFactura());
-           this.cliente = this.getClienteFinal();
+           this.clienteSeleccionado = this.getClienteFinal();
            setTiposIdentificacion(daoCli.getTiposIdentificacion());
+           setListaMetodosPago(dao.getListaMetodosPago());
+           
        }
        catch(Exception err){
 
@@ -599,17 +629,17 @@ public class KardexVentaBean {
            if(clien == null)
            {
                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error:","El cliente no se encuentra registrado"));
-               this.cliente.setNombres("");
-               this.cliente.setApellidos("");
-               this.cliente.setDireccion("");
-               this.cliente.setTelefono("");
+               this.clienteSeleccionado.setNombres("");
+               this.clienteSeleccionado.setApellidos("");
+               this.clienteSeleccionado.setDireccion("");
+               this.clienteSeleccionado.setTelefono("");
                this.activarBotonCliente = "show";
                this.activarCamposCliente = false;
                this.activarBotonEjecutarVenta = "none";
            }
            else
            {
-               this.cliente = clien;
+               this.clienteSeleccionado = clien;
                this.activarBotonCliente = "none";
                this.activarBotonEjecutarVenta = "show";
                this.activarCamposCliente = true;
