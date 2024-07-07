@@ -146,14 +146,14 @@
                     <center>
                         <br/>
                         <!--p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items"-->
-                        <p:commandButton ajax="true" value="Efectuar Venta" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura"/>
+                        <p:commandButton ajax="true" value="Efectuar Venta" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura :content-client"/>
                         <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
                         <!--p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/-->
                     </center>
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="400px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
+                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="800px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
                     <div class='contenedor_impresora' style="display:none;">
                     <h:form id="formFactura" >
                         <p:growl autoUpdate="true" showDetail="true"/>
@@ -207,12 +207,11 @@
                     <h:form id="content-client">
                         <p:focus/>
                         <br/>
-                        
                         <b><p:outputLabel value="Datos Cliente"></p:outputLabel></b>
                             <table border="1">
                                 <th>
                                     <small>
-                                        <p:outputLabel  value="No. Documento:#{kardexVentaBean.clienteSeleccionado.cedula_cliente}"/>
+                                    <p:outputLabel  value="No. Documento:#{kardexVentaBean.clienteSeleccionado.cedula_cliente}"/>
                                     <p:outputLabel  value=" Nombre:#{kardexVentaBean.clienteSeleccionado.nombres} #{kardexVentaBean.clienteSeleccionado.apellidos}"/>
                                     <p:outputLabel  value="Correo: #{kardexVentaBean.clienteSeleccionado.correo}/Teléfono: #{kardexVentaBean.clienteSeleccionado.telefono}/Dirección: #{kardexVentaBean.clienteSeleccionado.direccion}"/>
                                     </small>
@@ -224,14 +223,89 @@
                            <br/>
                             <b><p:outputLabel value="Forma de pago"></p:outputLabel></b>
                              <table>
-                                <th>
+                                 <tr>
+                                   <th>
                                     <small>
-                                        <p:selectOneMenu  id="metodoPago" class="boton-entrada"  value="#{kardexVentaBean.metodoPago.code_dian}"   converter="omnifaces.SelectItemsConverter" required="true">
-                                            <f:selectItems  value="#{kardexVentaBean.listaMetodosPago}" var="mp" itemLabel="#{mp.nombre}" itemValue="#{mp.code_dian}"/>
+                                         <h:panelGrid columns="1">
+                                        <p:selectOneMenu  id="metodoPago" class="boton-entrada"  value="#{kardexVentaBean.metodoPago}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                            <f:selectItems  value="#{kardexVentaBean.listaMetodosPago}" var="mp" itemLabel="#{mp.nombre}" itemValue="#{mp}"/>
+                                            <p:ajax update="valor"/>
                                         </p:selectOneMenu>
+                                        <p:outputLabel value="Ingresar valor" for="valor"/>
+                                        <p:inputText value="#{kardexVentaBean.metodoPago.saldo}" id="valor"/>
+                                        <p:commandButton value="Asignar" action="#{kardexVentaBean.asignarMetodoPago(kardexVentaBean.metodoPago)}" update="formMetodosPago:metodosPago" />
+                                         </h:panelGrid>
                                     </small>
-                                </th>
+                                    </th>
+                                    <th>
+                                        <h:panelGrid columns="4">
+                                            
+                                            <h:commandButton  title="1000" image="./imagenes/iconos/1000.PNG" action="#{kardexVentaBean.operacionBillete(1000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="2000" image="./imagenes/iconos/2000.PNG" action="#{kardexVentaBean.operacionBillete(2000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="5000" image="./imagenes/iconos/5000.PNG" action="#{kardexVentaBean.operacionBillete(5000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="10000" image="./imagenes/iconos/10000.PNG" action="#{kardexVentaBean.operacionBillete(10000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="20000" image="./imagenes/iconos/20000.PNG" action="#{kardexVentaBean.operacionBillete(2000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="50000" image="./imagenes/iconos/50000.PNG" action="#{kardexVentaBean.operacionBillete(50000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+                                            <h:commandButton  title="100000" image="./imagenes/iconos/2000.PNG" action="#{kardexVentaBean.operacionBillete(100000)}"  style="width: 130px;height: 60px">
+                                                <f:ajax execute="@form" rendered="@form"></f:ajax>
+                                                <p:ajax event="click" update="valor"/>
+                                            </h:commandButton>
+
+                                       </h:panelGrid>
+                                    </th>
+                                 </tr>
                             </table>
+                
+                        <h:panelGrid columns="1">
+                            <h:form id="formMetodosPago">
+                                <p:growl autoUpdate="true" id="message"  showDetail="true"/>
+                                <p:outputLabel value="Metodos de pago" for="metodosPago"/>
+                                <p:dataTable id="metodosPago" value="#{kardexVentaBean.saldo.metodosPago}" var="item" style="width: 50%" >
+                                    <p:column headerText="" >
+                                        <p:commandButton  value="Eliminar" action="#{kardexVentaBean.eliminarMetodoPago(item)}" update="metodosPago"/>
+                                    </p:column>
+                                    <p:column headerText="Descripcion" >
+                                        <p:outputLabel class="texto-resaltado" value="#{item.nombre}" />
+                                    </p:column>
+                                    <p:column headerText="Saldo" id="count" >
+                                        <p:outputLabel id="pro_iva"  value="#{item.saldo}" >
+                                            </p:outputLabel>
+                                    </p:column>
+                                 </p:dataTable>
+                            </h:form>
+                      </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel value="Total a pagar: " for="total"/>
+                            <p:outputLabel id="total"  value="#{kardexVentaBean.saldo.total}">
+                                 <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                             </p:outputLabel>  
+                        </h:panelGrid>
+                                       
+                                       
+
+
+                                     
+
+                               
+                           
                         
                             <br/>
                             <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">

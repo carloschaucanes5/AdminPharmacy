@@ -21,7 +21,7 @@
                 <h:form id="formDatosTabla">
                 <div class="contenedor_tabla">
                     <p:dataTable  id="datos" value="#{kardexEntradaBean.listaInventario}" var="inv" paginator="true" rows="8">
-                        <p:column headerText="Código">
+                        <p:column headerText="Cod. Barras">
                             <p:outputLabel value="#{inv.codigo_barras}" />
                         </p:column>
                         <p:column  headerText="Nombre Producto" width="40%">
@@ -47,11 +47,11 @@
                 <p:dialog header="KardexKDD(Entradas)"  id="dDialogoEntrada" widgetVar="wDialogoEntrada" class="modal modalCustom" closeOnEscape="true"  >
                     <h:form id="formDatosEntrada" >
                         <p:growl id="avisoEntrada" showSummary="true" autoUpdate="true" showDetail="true"/>
-                        <p:panelGrid columns="2">
-                                <p:outputLabel   value="Código" for="codigo"/>
-                                <h:outputText id="codigo"  value="#{kardexEntradaBean.kardexEntrada.inventario.cod_producto}"/>
-                                <p:outputLabel   value="Nombre" for="nombre"/>
-                                <p:outputLabel id="nombre"  value="#{kardexEntradaBean.kardexEntrada.inventario.nombre}"/>
+                        <p:panelGrid columns="2">    
+                                <h:outputLabel   value="Cod. Barras" for="codigo"/>
+                                <h:outputText id="codigo"  value="#{kardexEntradaBean.kardexEntrada.inventario.codigo_barras}"/>
+                                <p:outputLabel   value="Producto" for="nombre"/>
+                                <h:outputText id="nombre"  value="Nombre: #{kardexEntradaBean.kardexEntrada.inventario.nombre} &lt;br /&gt;Concentración: #{kardexEntradaBean.kardexEntrada.inventario.concentracion} &lt;br /&gt;Presentación: #{kardexEntradaBean.kardexEntrada.inventario.presentacion}&lt;br /&gt;Tipo: #{kardexEntradaBean.kardexEntrada.inventario.categoria}&lt;br /&gt;Laboratorio: #{kardexEntradaBean.kardexEntrada.inventario.laboratorio}" escape="false" />
                                 <p:outputLabel value="Proveedor" for="proveedor"/>
                                 <p:selectOneMenu  id="proveedor" class="boton-entrada" onkeyup="recorrerCampos(this)" value="#{kardexEntradaBean.kardexEntrada.proveedor}"   converter="omnifaces.SelectItemsConverter" required="true">
                                     <f:selectItems  value="#{kardexEntradaBean.listaProveedores}" var="prov" itemLabel="#{prov.nombre_proveedor}" itemValue="#{prov}"/>

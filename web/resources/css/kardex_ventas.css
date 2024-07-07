@@ -91,3 +91,9 @@ tabla{
     font-size: 3px;
     font-family: fantasy;
 }
+
+.b1000 {
+            background: url("../..//imagenes/iconos/1000.PNG")  no-repeat top left !important;;
+            width: 100px;
+            height: 60px;
+}
