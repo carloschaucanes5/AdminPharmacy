@@ -63,6 +63,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-weight: bold;
 }
 
+.total_cambio{
+    color: orange;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 tabla{
     text-align: center;
     background-color: red;
@@ -87,13 +93,99 @@ tabla{
     justify-content: center;
 }
 
+
+@media print { 
+    .contenedor_impresora{
+        font-size: 3px;
+        font-family: fantasy;
+    }
+}
+
 .contenedor_impresora{
-    font-size: 3px;
+    font-size: 10px;
     font-family: fantasy;
 }
+
 
 .b1000 {
             background: url("../..//imagenes/iconos/1000.PNG")  no-repeat top left !important;;
             width: 100px;
             height: 60px;
 }
+
+.grid_cliente{
+    background-color: #c2dfef;
+    width: 100%;
+
+}
+
+.contenedor_factura{
+    display: flex;
+    flex-direction: column;
+    width: 100%
+}
+
+.contenedor_cliente{
+  width: 100%;
+}
+
+.contenedor_billetes{
+  width: 100%;
+}
+
+.billete{
+    width: 14%;
+    height: 60px;
+    border: 2px solid green;
+    margin: 0.1%;
+}
+
+#contenedor_pago{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#formas_saldo{
+    width: 84%;
+    background-color: #D4DEDF; 
+}
+
+.billetes{
+    width: 100%;
+}
+#formas_pago{
+    width: 16%;
+    background-color: #c2dfef;
+}
+
+.two{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.one{
+    width: 25%;
+}
+
+.one_one{
+     width: 50%;
+}
+.control_payment{
+    width: 80%;
+}
+
+
+
+.value_total{
+    font-size:5rem;
+    color: orange;
+}
+
+.label_total{
+    font-size:5rem;
+    color: blue;
+}
+
+
+

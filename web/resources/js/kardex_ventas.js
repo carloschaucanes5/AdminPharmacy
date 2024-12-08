@@ -11,6 +11,10 @@ function enfocarCampoVentaContado(){
     document.querySelector('.btnVentaContado').focus();
 }
 
+function enfocarCampoCambio(){
+    document.querySelector('.pagacon').focus();
+}
+
 function enfocarEliminarItems(btn){
 
     if(window.event.keyCode === 40 || window.event.keyCode===38 ){
@@ -69,6 +73,7 @@ function enfocarTareasBuscador(){
 function enfocarTareasVentas(){
     if(window.event.keyCode ===39){
         enfocarFilasTablaBuscar();
+        
     }
     //flecha hacia abajo
     if(window.event.keyCode === 40)
@@ -77,15 +82,26 @@ function enfocarTareasVentas(){
     }
     //flecha hacia arriba
     if(window.event.keyCode ===38){
-        document.querySelector('.idBuscador').focus();
+        enfocarCampoCambio();
+        //document.querySelector('.idBuscador').focus();
     }
     //const botones = document.querySelectorAll(".boton-eliminar");
     if(window.event.keyCode ===37){
         const botones = document.querySelectorAll(".boton-eliminar");
         botones[botones.length -1].focus();
     }
+}
 
-    
+function enfocarTareasCambio(){
+    console.log(window.event.keyCode);
+    //flecha hacia abajo
+    if(window.event.keyCode === 40)
+    {
+        enfocarCampoVentaContado();
+    }
+    if(window.event.keyCode ===38){
+        document.querySelector('.idBuscador').focus();
+    }
 }
 
 
@@ -146,6 +162,15 @@ function imprimir(){
     //document.body.innerHTML = page;
 }
 
+
+function imprimir1(){
+    let contenedor = document.querySelector(".contenedor_impresora").innerHTML;
+    let page = document.body.innerHTML;
+    window.document.body.innerHTML = contenedor;
+    window.print();
+    //document.body.innerHTML = page;
+}
+
 function facturarsinimprimir(){
     let contenedor = "<b></b>";
     let page = document.body.innerHTML;
@@ -156,10 +181,14 @@ function facturarsinimprimir(){
 
 
 function direccionBotonFacturar(){
-    //37 izquierda  39 derecha
     if(window.event.keyCode === 39){
         document.querySelector(".boton-imprimir").focus();
     }
+    //console.log(window.event.keyCode );
+    /*var contenido = document.querySelector('.contenedor_impresora').innerHTML;
+    document.getElementById('html_factura').value = contenido;*/
+    //37 izquierda  39 derecha
+
 }
 
 function direccionBotonImprimir(){
@@ -176,4 +205,37 @@ function enfocarBotonFacturar(){
 
 function setHtmlItemsFactura(html){
     document.querySelector(".contenedor-lista-factura").innerHTML = html;
+}
+
+function verificar_cambio(){
+   let cambio = document.querySelector('.total_cambio').innerText;
+   let cam = cambio.replace('.','');
+   if( parseInt(cam)>=0){
+      document.getElementById('cambio_faltante').textContent = "Cambio";
+      document.getElementById('cambio_faltante').style.color = "green";
+   }
+   else
+   {
+      document.getElementById('cambio_faltante').textContent = "Faltante";
+      document.getElementById('cambio_faltante').style.color = "red";
+   }
+   
+}
+
+function resetCambio(){
+    console.log(document.querySelector(".pagacon").value );
+    document.querySelector(".pagacon").value = 0;
+}
+
+
+ 
+
+function validarCambio(){
+   let cambio = document.querySelector('.total_cambio').innerText;
+   let cam = cambio.replace('.','');
+   if( parseInt(cam)<0){
+         return alert("Hay saldo faltante para completar la venta");
+   }else{
+          return PF('wFactura').show();
+    }
 }

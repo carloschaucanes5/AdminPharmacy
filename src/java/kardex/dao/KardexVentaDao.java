@@ -42,8 +42,8 @@ public class KardexVentaDao  extends Dao{
           PreparedStatement st = null,st1=null,st2=null,st3=null;
           String sql = "", sql1 = "", sql2 = "", sql3=""; 
           //-------------------------------------------------------------------          
-          sql3 = "insert into factura_venta(numero_factura,fecha_factura,hora_factura,cedula_empleado)"+
-          "values("+kardexVenta.getNumero_factura()+",'"+this.getFecha()+"','"+this.getHora()+"','"+empleado.getCedula_empleado()+"')";
+          sql3 = "insert into factura_venta(numero_factura,fecha_factura,hora_factura,cedula_empleado,contenido)values("+kardexVenta.getNumero_factura()+",'"+this.getFecha()+"','"+this.getHora()+"','"+empleado.getCedula_empleado()+"','"+kardexVenta.getContenido()+"')";
+          System.out.println(sql3);
           st3  = this.getCn().prepareStatement(sql3);
           st3.executeUpdate();
           //-------------------------------------------------------------------

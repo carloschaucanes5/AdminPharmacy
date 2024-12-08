@@ -77,6 +77,7 @@ public class ReporteEntradaDao extends Dao{
                 re.setPrimer_nombre(rs.getString("primer_nombre"));
                 re.setPrimer_apellido(rs.getString("primer_apellido"));
                 re.setFecha_vencimiento(rs.getString("fecha_vencimiento"));
+                re.setDetalle(rs.getString("detalle"));
                 lr.add(re);
                 sumaPrecio = sumaPrecio + rs.getDouble("total_precio");
                 sumaCosto = sumaCosto + rs.getDouble("total_costo");
@@ -100,7 +101,7 @@ public class ReporteEntradaDao extends Dao{
     String sql = "";
     if(numeroFactura.trim().length()==0)
     {    
-        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,\n" +
+        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,ke.detalle,\n" +
 "                     inv.presentacion,ke.cantidad,ke.total_costo,ke.total_precio,inv.nombre_producto,inv.categoria,inv.laboratorio,\n" +
 "                     pro.nombre_proveedor,emp.nombre,emp.primer_nombre,emp.primer_apellido\n" +
 "                     from kardex_entrada ke\n" +
@@ -113,7 +114,7 @@ public class ReporteEntradaDao extends Dao{
     else
     {
 
-        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,\n" +
+        sql = "select ke.numero_factura,ke.fecha_transaccion, ke.hora_transaccion,ke.fecha_vencimiento,inv.concentracion,ke.detalle,\n" +
 "           inv.presentacion,ke.cantidad,ke.total_costo,ke.total_precio,inv.nombre_producto,inv.categoria,inv.laboratorio,\n" +
 "           pro.nombre_proveedor,emp.nombre,emp.primer_nombre,emp.primer_apellido\n" +
 "	    from kardex_entrada ke\n" +

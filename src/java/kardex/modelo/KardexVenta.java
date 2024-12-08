@@ -15,6 +15,7 @@ import java.util.List;
 public class KardexVenta {
     private int numero_factura;
     private List<ItemVenta> listaItemsVenta = new ArrayList<ItemVenta>();
+    private String contenido;
 
     public int getNumero_factura() {
         return numero_factura;
@@ -31,8 +32,14 @@ public class KardexVenta {
     public void setListaItemsVenta(List<ItemVenta> listaItemsVenta) {
         this.listaItemsVenta = listaItemsVenta;
     }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
     
-    
-    
-    
+ 
 }

@@ -38,8 +38,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import kardex.modelo.Factura;
 import kardex.modelo.MetodoPago;
 import kardex.modelo.Municipio;
+import kardex.modelo.Saldo;
 import kardex.modelo.TipoIdentificacion;
 
 
@@ -61,7 +63,7 @@ public class KardexVentaBean {
     private double saldoRetorno;
     private String htmlItems;
     private List<TipoIdentificacion> tiposIdentificacion = new ArrayList<TipoIdentificacion>();
-    
+    private Saldo saldo = new Saldo();
     private Municipio municipio = new Municipio();
     private Cliente cliente = new Cliente();
     private Cliente clienteSeleccionado = new Cliente();
@@ -75,12 +77,76 @@ public class KardexVentaBean {
     private String detalleCxC;
     private String cadenaClienteNombre;
     private String cadenaMunicipioNombre;
+    private String encabezadoFactura;
+    private String pieFactura;
     
     private List<Recibo> listaRecibos = new ArrayList<Recibo>();
     private Empresa empresa = new Empresa();
     private String fecha;
     private String hora;
+    
+    private Factura factura = new Factura();
 
+    private double cambio = 0;
+    private double pagacon = 0;
+
+    public double getPagacon() {
+        return pagacon;
+    }
+
+    public void setPagacon(double pagacon) {
+        this.pagacon = pagacon;
+    }
+
+    
+   
+    
+    public double getCambio() {
+        return cambio;
+    }
+
+    public void setCambio(double cambio) {
+        this.cambio = cambio;
+    }
+    
+    
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+    
+    public String getPieFactura() {
+        return pieFactura;
+    }
+
+    public void setPieFactura(String pieFactura) {
+        this.pieFactura = pieFactura;
+    }
+
+    public String getEncabezadoFactura() {
+        return encabezadoFactura;
+    }
+
+    public void setEncabezadoFactura(String encabezadoFactura) {
+        this.encabezadoFactura = encabezadoFactura;
+    }
+
+    
+    
+    
+    public Saldo getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Saldo saldo) {
+        this.saldo = saldo;
+    }
+
+   
+    
     public List<MetodoPago> getListaMetodosPago() {
         return listaMetodosPago;
     }
@@ -130,11 +196,6 @@ public class KardexVentaBean {
     public void setCadenaMunicipioNombre(String cadenaMunicipioNombre) {
         this.cadenaMunicipioNombre = cadenaMunicipioNombre;
     }
-
-
-
-    
-   
 
     public List<TipoIdentificacion> getTiposIdentificacion() {
         return tiposIdentificacion;
@@ -354,7 +415,6 @@ public class KardexVentaBean {
         itemVenta.getInventario().setTotal_precio(itemInventario.getTotal_precio());
         itemVenta.setTotal_costo(costoTotal);
         itemVenta.setTotal_precio(precioTotal);
-
         if(verificarRepetidos(itemInventario)==false)
         {
             if(itemCantidad <= itemInventario.getCantidad())
@@ -377,7 +437,6 @@ public class KardexVentaBean {
     
     public void eliminarItemVenta(ItemVenta itemVenta)
     {
-        
         List<ItemVenta> items = this.kardexVenta.getListaItemsVenta();
         int j = 0;
         int b = 0;
@@ -396,6 +455,8 @@ public class KardexVentaBean {
             this.kardexVenta.getListaItemsVenta().remove(pos);
         }
         this.setTotalPago(calcularTotalVenta());
+        this.pagacon = 0;
+        this.cambio = 0;
     }
     
     public double calcularTotalVenta()
@@ -467,7 +528,7 @@ public class KardexVentaBean {
            KardexVentaDao dao = new KardexVentaDao();
            ClienteDao daoCli = new ClienteDao();
            this.kardexVenta.setNumero_factura(dao.getConsecutivoNumeroFactura());
-           this.clienteSeleccionado = this.getClienteFinal();
+           //this.clienteSeleccionado = this.getClienteFinal();
            setTiposIdentificacion(daoCli.getTiposIdentificacion());
            setListaMetodosPago(dao.getListaMetodosPago());
            
@@ -485,8 +546,10 @@ public class KardexVentaBean {
            if(this.kardexVenta.getListaItemsVenta().size() > 0)
            {
                Gson g = new Gson();
-               String cad = g.toJson(this.kardexVenta);
-               System.out.println(cad);
+               this.factura.setCambio(this.cambio);
+               String cad = g.toJson(this.factura);
+               cad = cad.replace("\"", "\\\"");
+               this.kardexVenta.setContenido(cad);
                dao.registrarVenta(this.kardexVenta, 102, empleado);
                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"KardexKDD","Venta Almacenada con éxito"));
                kardexVenta.getListaItemsVenta().clear();
@@ -511,6 +574,8 @@ public class KardexVentaBean {
            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
        }
    }
+   
+   
    //---------------------------------------------------------------------------
    public void generarFactura()
    {
@@ -730,7 +795,8 @@ public class KardexVentaBean {
        }
    }
    
-   public void generarHtmlItems(){
+   public void generarHtmlItems(String nombreEmpleado){
+       this.setDatosFactura(nombreEmpleado);
        String html = "<small><table>";
        html+="<tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>";
        for(int i = 0; i< this.listaRecibos.size();i++){
@@ -738,7 +804,35 @@ public class KardexVentaBean {
        }
        html += "</table></small>";
        this.setHtmlItems(html);
+       this.saldo.total = this.totalPago;
+       
    }
+   
+   public void setDatosFactura(String nombreEmpleado){
+       this.factura.setLineas(this.listaRecibos);
+       this.factura.setNombre_empresa(this.empresa.getNombre_empresa());
+       this.factura.setLema("Tu mejor opción");
+       this.factura.setNit_empresa(this.empresa.getNit_empresa());
+       this.factura.setDireccion(this.empresa.getDireccion());
+       this.factura.setTelefono(this.empresa.getTelefono());
+       this.factura.setCiudad(this.empresa.getCiudad());
+       this.factura.setNumero_factura(this.kardexVenta.getNumero_factura());
+       this.factura.setFecha(this.fecha);
+       this.factura.setHora(hora);
+       this.factura.setNombre(nombreEmpleado);
+       
+       this.factura.setAdvertencia("Revisar el Medicamento y el cambio dentro de la drogueria.\n" +
+"                            Una vez salga no se aceptan devoluciones");
+       this.factura.setHorario_mensaje("HORARIOS DE ATENCION");
+       this.factura.setHorario_ordinario("Lunes a sabado de 7:30am a 9:00pm jornada continua");
+       this.factura.setHorario_festivos("Domingos y festivos de 2:00pm a 8:00pm");
+       this.factura.setDomicilios_mensaje("DOMICILIOS");
+       this.factura.setUrl_foto("./imagenes/iconos/whatsapp.png");
+       this.factura.setWhatsapp("3176730862");
+   }
+   
+
+   
    
    public String formatColombianCurrent(double money){
      DecimalFormat formatea = new DecimalFormat("###,###.##");
@@ -778,5 +872,60 @@ public class KardexVentaBean {
        return output;
    }
    
+   
+   public void asignarMetodoPago(MetodoPago mp){
+       double total=0;
+       double subtotal=0;
+       double cambio = 0;
+       double faltante =0;
+       double sobrante = 0;
+       List<MetodoPago> lis = this.saldo.metodosPago;
+       int b=0;
+       for(int i =0; i<lis.size();i++){
+           if(lis.get(i).id_metodo==mp.id_metodo ){
+               b=1;
+           }
+       }
+       if(b==0){
+           if(mp.saldo !=0){
+               this.saldo.metodosPago.add(mp);
+               
+           }else{
+               FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Adminpharmacy:","El saldo debe ser diferente de cero (0)")); 
+           }       
+       }else{
+           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Adminpharmacy:","Ya se ha seleccionado este tipo de pago")); 
+       }
+       
+   }
+   
+   public void eliminarMetodoPago(MetodoPago mp){
+       List<MetodoPago> lis = this.saldo.metodosPago;
+       for(int i =0; i<lis.size();i++){
+           if(lis.get(i).id_metodo==mp.id_metodo){
+               lis.remove(i);
+           }
+       }
+       this.saldo.setMetodosPago(lis);
+   }
+   
+   
+   public void operacionBillete(double valor){
+       this.metodoPago.saldo = valor;
+       double resta = this.metodoPago.saldo - 1;
+   }
+   
+   public void operacionSaldo(){
+   
+   }
+   
+   public void calcularCambio(){
+      this.cambio = this.pagacon - this.totalPago;
+   }
+   
+   public String transformarHora(String hora){
+       String ho = hora.split("\\.")[0];
+       return ho;
+   }
 
 }

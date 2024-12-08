@@ -29,7 +29,7 @@
                             <br/>
                         </center>
                         <div class="contenedor-tabla-busqueda">
-                            <p:dataTable id="resultadoBuscar" paginatorPosition="bottom" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="5" rowIndexVar="rowIndex">
+                            <p:dataTable id="resultadoBuscar" value="#{kardexVentaBean.listaInventario}" var="inv" paginator="true" rows="5" rowIndexVar="rowIndex">
                                 <p:ajax event="rowSelect" />
                                 <!--p:column headerText="Código">
                                     <p:outputLabel value="#{inv.cod_entrada}" />
@@ -97,17 +97,17 @@
                 <h:form id="formTransaccion">
                     <div class="contenedor-carrito">
                         <div class="contenedor-orden">
-                            <center><b>ORDEN DE VENTA</b></center>
-                            <p:growl autoUpdate="true" id="message"  showDetail="true" />
-                            <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item"  paginatorPosition="bottom" paginator="true" rows="3">
+                            <center><b>ORDEN DE VENTA</b></center><br/>
+                            <p:growl autoUpdate="true" id="message"  showDetail="true"/>
+                            <p:dataTable id="resultadoTransaccion" value="#{kardexVentaBean.kardexVenta.listaItemsVenta}" var="item" paginator="true" rows="3">
                                 <p:column headerText="Eliminar" id="seleccion" >
-                                    <center><p:commandButton onclick="resetCambio()" class="btn btn-danger boton-eliminar" onkeypress="enfocarCampoBuscar()" onkeyup="enfocarEliminarItems(this)" value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago :formTransaccion:idTotalCambio" /></center>
+                                    <center><p:commandButton class="btn btn-danger boton-eliminar" onkeypress="enfocarCampoBuscar()" onkeyup="enfocarEliminarItems(this)" value="Eliminar" actionListener="#{kardexVentaBean.eliminarItemVenta(item)}" update="resultadoTransaccion :formTransaccion:idTotalPago" /></center>
                                 </p:column>
                                 <!--p:column headerText="Código">
                                     <center><p:outputLabel value="#{item.inventario.cod_entrada}" /></center>
                                 </p:column-->
                                 <p:column headerText="Nombre Producto" width="50%">
-                                    <center><p:outputLabel class="texto-resaltado" value="#{item.inventario.nombre_producto} (#{item.inventario.detalle})" /></center>
+                                    <center><p:outputLabel class="texto-resaltado" value="#{item.inventario.nombre_producto}" /></center>
                                 </p:column>
                                 <p:column headerText="cant." id="count" width="8%">
                                     <center>
@@ -134,45 +134,32 @@
                             
                         </div>
                         <div class="contenedor-valores">
+                            <br/><br/>
                            <h1><b>Total a Pagar </b></h1>
                            <p>
                                 <p:outputLabel id="idTotalPago" class="total_pago" value="#{kardexVentaBean.totalPago}">
                                     <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
                                 </p:outputLabel>
                            </p>
-                           <h1><span id="cambio_faltante">Cambio</span></h1>
-                           <p>
-                                <p:outputLabel id="idTotalCambio" class="total_cambio" value="#{kardexVentaBean.cambio}">
-                                    <f:convertNumber  minFractionDigits="0"/>
-                                </p:outputLabel>
-                           </p>
                         </div>
                     </div>
-                    <div>
-                        <center>
-                        <!--p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems(sessionBean.nombre)}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items"-->
-                        <p:outputLabel for="pagacon" value="Paga Con:" /><br/><b>$</b>
-                        <p:inputText  id="pagacon" onchange="" class="pagacon" onkeyup="enfocarTareasCambio()"  value="#{kardexVentaBean.pagacon}">
-                            <f:convertNumber  integerOnly="true" pattern="#,##0" type="number"/>
-                            <p:ajax listener="#{kardexVentaBean.calcularCambio()}"   event="keyup" update="idTotalCambio" oncomplete="verificar_cambio()"/>
-                        </p:inputText>
+                    <center>
                         <br/>
-                        <p:commandButton ajax="true" value="Efectuar Venta"  actionListener="#{kardexVentaBean.generarHtmlItems(sessionBean.nombre)}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="validarCambio()"   update=":dFactura formTransaccion :formFactura"/>
+                        <!--p:commandButton ajax="true" value="Venta Contado" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura:items"-->
+                        <p:commandButton ajax="true" value="Efectuar Venta" actionListener="#{kardexVentaBean.generarHtmlItems()}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura formTransaccion :formFactura :content-client"/>
                         <!--p:commandButton value="Venta Crédito" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/-->
                         <!--p:commandButton value="Factura" actionListener="#{kardexVentaBean.generarFactura()}" oncomplete="PF('wFactura').show()" update=":dFactura"/-->
-                        </center>
-                    </div>
+                    </center>
                 </h:form>
                 
                 
-                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="800px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
-                   
+                <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{kardexVentaBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="960px" height="450px" modal="true" closeOnEscape="true" onHide="enfocarCampoVentaContado()">
+                    <div class='contenedor_impresora'>
                     <h:form id="formFactura" >
-                         <div class='contenedor_impresora'>
                         <p:growl autoUpdate="true" showDetail="true"/>
                         <center>
                             <p:outputLabel class="empresa" value="#{kardexVentaBean.empresa.nombre_empresa}"/><br/>
-                            <p:outputLabel class="lema" value="Tu Salud, Nuestra Prioridad"/><br/>
+                            <p:outputLabel class="lema" value="Tu mejor opción"/><br/>
                             <small>
                                 <p:outputLabel value="Nit:#{kardexVentaBean.empresa.nit_empresa}"/><br/>
                                 <p:outputLabel value="Dirección:#{kardexVentaBean.empresa.direccion}"/><br/>
@@ -184,7 +171,7 @@
                                 <p:outputLabel value="Factura No: #{kardexVentaBean.kardexVenta.numero_factura}"/><br/>
                                 <p:outputLabel value="Cajero: #{sessionBean.nombre}"/><br/>
                                 <p:outputLabel value="Fecha: #{kardexVentaBean.fecha}"/><br/>
-                                <p:outputLabel value="Hora:  #{kardexVentaBean.transformarHora(kardexVentaBean.hora)}"/>
+                                <p:outputLabel value="Hora: #{kardexVentaBean.hora}"/>
                             </small>
                             <br/>
                             <b>...........................................</b> 
@@ -196,45 +183,79 @@
                                 <p:outputLabel value="#{kardexVentaBean.totalPago}">
                                    <f:convertNumber type="currency" maxFractionDigits="0"/> 
                                 </p:outputLabel>
-                                </small>
-                            <br/>
-                                <small>
-                                    <p:outputLabel value="Cambio: "/>
-                                    <p:outputLabel value="#{kardexVentaBean.cambio}">
-                                       <f:convertNumber type="currency" maxFractionDigits="0"/> 
-                                    </p:outputLabel>
-                                </small>
+                            </small>
                         <br/>
                         </center>
                         <center>  <b>...........................................</b></center>
                         <div style="text-align: justify;">
                             <center>
-                            <small>Revisar el Medicamento y el cambio dentro de la drogueria.
-                            Una vez salga no se aceptan devoluciones</small>
+                            <small>Revisar el Medicamento dentro de la drogueria.
+                            Una vez salga no se aceptan cambios</small>
                             </center>
                         </div>
                          <div style="text-align: center">
                              <center>
                                  <b>HORARIOS DE ATENCION</b><br/>
-                                <small>Lunes a sabado de 7:30am a 9:00pm jornada continua</small>
-                                <small>Domingos y festivos de 2:00pm a 8:00pm </small><br/>
+                                <small>Lunes a sabado de 7:00am a 9:00pm jornada continua</small>
+                                <small>Domingos de 9:30am a 5:30pm </small><br/>
                                 <b>DOMICILIOS</b><br/>
-                                <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3176730862</b></small>
+                                <small><img src="./imagenes/iconos/whatsapp.png" width="15px" height="15px"/><b>3183537326</b></small>
                              </center>
                          </div>
+                    </h:form>
+                 </div>  
+                    <div id="contenedor_pago" style="display:none">
+                        <div id="formas_pago">
+                            <h:form id="form_metodos_pago">
+                                <center><h6>Pagar con</h6></center>
+                                 <h:panelGrid columns="1">
+                                    <p:selectOneMenu  id="metodoPago" class="boton-entrada control_payment"  value="#{kardexVentaBean.metodoPago}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                        <f:selectItems  value="#{kardexVentaBean.listaMetodosPago}" var="mp" itemLabel="#{mp.nombre}" itemValue="#{mp}"/>
+                                        <p:ajax />
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Ingresar valor" for="valor"/>
+                                    <p:inputText class="control_payment" value="#{kardexVentaBean.metodoPago.saldo}" id="valor"/><br/>
+                                    <center>
+                                        <p:commandButton value="Agregar Método" action="#{kardexVentaBean.asignarMetodoPago(kardexVentaBean.metodoPago)}"  />
+                                    </center>
+                                 </h:panelGrid>
+                            </h:form>
                         </div>
-                        <br/>
-                        <center>
+
+                    </div>
+                    <h:form id="content-client">
+                        <div class="contenedor_cliente" style="display:none" >
+                            <h5>Datos Cliente:</h5>
+                                <p:focus/>
+                                <table class="grid_cliente">
+                                    <tr>
+                                        <th>No. Documento: #{kardexVentaBean.clienteSeleccionado.cedula_cliente}</th>
+                                        <th>
+                                              <p:commandButton value="Adicionar Cliente" oncomplete="PF('wDialogoCliente').show()" onclick="#{kardexVentaBean.setActivarBotonCliente('show')}"/>
+                                        </th>
+                                    </tr>
+                                    <tr><th>Nombre: #{kardexVentaBean.clienteSeleccionado.nombres} #{kardexVentaBean.clienteSeleccionado.apellidos}</th></tr>
+                                    <tr><th><b>Contactos:<br/></b>
+                                            Email:#{kardexVentaBean.clienteSeleccionado.correo}<br/>
+                                            Teléfono:#{kardexVentaBean.clienteSeleccionado.telefono}<br/>
+                                            Dirección:#{kardexVentaBean.clienteSeleccionado.direccion}<br/>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                    </tr>
+                                </table>
+                        </div>
                             <p:commandButton  value="Feacturar"  onkeyup="direccionBotonFacturar()" class="boton-facturar"  update=":formTransaccion">
                                 <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="facturarsinimprimir()"/>
                             </p:commandButton>
                             <p:commandButton value="Facturar e Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
                                 <p:ajax listener="#{kardexVentaBean.registrarVentaContado(sessionBean.empleado)}" oncomplete="imprimir()"/>
                             </p:commandButton>
-                        </center>
                     </h:form>
-                        
                 </p:dialog>
+                
+                
+                
                 
                 
                 <p:dialog widgetVar="wDialogoCliente" id="dDialogoCliente" header="KardexKdd(Asignar Cliente)" modal="true">
@@ -285,7 +306,7 @@
                         </h:panelGrid>   
                             <hr/>
                             <p:commandButton value="Guardar Usuario" style="display:#{kardexVentaBean.activarBotonCliente}" actionListener="#{kardexVentaBean.guardarCliente(kardexVentaBean.cliente)}" update="formCliente"/>
-                            <p:commandButton value="Seleccionar" style="display:#{kardexVentaBean.activarBotonEjecutarVenta}" action="#{kardexVentaBean.setClienteSeleccionado(kardexVentaBean.cliente)}"  oncomplete="PF('wDialogoCliente').hide()" /> 
+                            <p:commandButton value="Seleccionar" style="display:#{kardexVentaBean.activarBotonEjecutarVenta}" action="#{kardexVentaBean.setClienteSeleccionado(kardexVentaBean.cliente)}" update=":content-client" oncomplete="PF('wDialogoCliente').hide()" /> 
                         </center>                       
                     </h:form>
                 </p:dialog>

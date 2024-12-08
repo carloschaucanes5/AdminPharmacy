@@ -20,10 +20,11 @@
         <h:outputScript library="js" name="bar_code.js" />
         <h:outputStylesheet library="css" name="default.css"/>
         <h:outputStylesheet library="css" name="cssLayout.css"/>
+        
         <title>AdminPharmacy</title>
     </h:head>
-    <!--h:body rendered="#{sessionBean.estadoSession}"-->
-    <h:body>
+    <h:body rendered="#{sessionBean.estadoSession}">
+    <!--h:body-->
         <div class="contenedor_principal">
         <div id="top" class="barra_superior">
             <ui:insert name="top">
@@ -42,6 +43,13 @@
                     </div>
                     <h:form>
                         <p:megaMenu>
+                            <p:submenu label="Usuarios" icon="ui-icon-person" rendered="#{sessionBean.mostrarModulos}" >
+                                <p:column >
+                                    <p:submenu label="--Usuarios--">
+                                        <p:menuitem  disabled="#{sessionBean.administrador}" value="Configurar" url="/faces/permisos.xhtml"/>
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
                             <p:submenu label="Productos" icon="ui-icon-print" rendered="#{sessionBean.mostrarModulos}" >
                                 <p:column >
                                     <p:submenu label="--Productos--">

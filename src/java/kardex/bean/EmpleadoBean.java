@@ -6,6 +6,10 @@
 
 package kardex.bean;
 
+import kardex.modelo.Permiso;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -21,9 +25,37 @@ import kardex.modelo.Empleado;
 @ViewScoped
 public class EmpleadoBean {
     private Empleado empleado = new Empleado();
+    private Permiso permiso = new Permiso("", "");
     
     private String cedula;
     private String contrasenia;
+    private List<Empleado> listaEmpleados =  new ArrayList<Empleado>();
+    private List<Permiso>  listaPermisos = new ArrayList<Permiso>();
+
+    public Permiso getPermiso() {
+        return permiso;
+    }
+
+    public void setPermiso(Permiso permiso) {
+        this.permiso = permiso;
+    }
+
+    public List<Permiso> getListaPermisos() {
+        return listaPermisos;
+    }
+
+    public void setListaPermisos(List<Permiso> listaPermisos) {
+        this.listaPermisos = listaPermisos;
+    }
+    
+    public List<Empleado> getListaEmpleados() {
+        return listaEmpleados;
+    }
+
+    public void setListaEmpleados(List<Empleado> listaEmpleados) {
+        this.listaEmpleados = listaEmpleados;
+    }
+    
 
     /**
      * Creates a new instance of EmpleadoBean
@@ -55,6 +87,29 @@ public class EmpleadoBean {
         this.empleado = empleado;
     }
 
+    @PostConstruct
+    public void listarEmpleados()
+    {  
+        try
+        {
+            EmpleadoDao dao = new EmpleadoDao();
+            this.listaEmpleados = dao.getListaEmpleados1();
+            Permiso per1 = new Permiso("Soporte","s");
+            Permiso per2 = new Permiso("Administrador","a");
+            Permiso per3 = new Permiso("Empleado","e");
+            this.listaPermisos.add(per1);
+            this.listaPermisos.add(per2);
+            this.listaPermisos.add(per3);
+        }
+        catch(Exception e)
+        {
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Info:",""+e));
+            
+        }
+                
+    }
+    
+    
     public String registraEmpleado()
     {
         try
@@ -153,5 +208,22 @@ public class EmpleadoBean {
    return "";
     }
   
+  public String actualizarPermiso(){
+      try
+        {
+
+            EmpleadoDao dao = new EmpleadoDao();
+            dao.modificarPermiso(empleado,permiso);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"KardexKdd:","El usuario "+empleado.getNombre()+" ha cambiado el rol como "+permiso.getDescripcion()));
+        }
+        catch(Exception err)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,"Fatal:",""+err));
+        }finally
+        {
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        }
+   return "";
+  }
   
 }

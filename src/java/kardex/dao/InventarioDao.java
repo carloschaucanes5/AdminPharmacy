@@ -82,15 +82,18 @@ public class InventarioDao extends Dao{
           this.conectar();
           this.getCn().setAutoCommit(false);
           String sql="update inventario set "
-                  + "nombre_producto = ?, concentracion = ?, presentacion = ? , "
+                  + "nombre_producto = ?, concentracion = ?, presentacion = ? ,codigo_barras = ?, categoria=?, laboratorio=?, "
                   + "estado=?"
                   + "where cod_producto = ? ";
           PreparedStatement st  = this.getCn().prepareStatement(sql);
           st.setString(1, inventario.getNombre());
           st.setString(2, inventario.getConcentracion());
           st.setString(3, inventario.getPresentacion());
-          st.setString(4, inventario.getEstado());
-          st.setInt(5, inventario.getCod_producto());
+          st.setString(4, inventario.getCodigo_barras());
+          st.setString(5, inventario.getCategoria());
+          st.setString(6, inventario.getLaboratorio());
+          st.setString(7, inventario.getEstado());
+          st.setInt(8, inventario.getCod_producto());
           st.executeUpdate();
           st.close();
           System.out.println("Registro almacenado con éxito");
@@ -124,7 +127,7 @@ public class InventarioDao extends Dao{
                 inv.setPresentacion(rs.getString("presentacion"));
                 inv.setCategoria(rs.getString("categoria"));
                 inv.setLaboratorio(rs.getString("laboratorio"));
-                inv.setLaboratorio(rs.getString("codigo_barras"));
+                inv.setCodigo_barras(rs.getString("codigo_barras"));
                 inv.setEstado(rs.getString("estado"));
                 inv.setExistencias(rs.getInt("existencias"));
                 li.add(inv);

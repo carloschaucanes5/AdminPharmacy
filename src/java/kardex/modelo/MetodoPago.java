@@ -14,6 +14,17 @@ public class MetodoPago {
     public int code_dian;
     public String descripcion;
     public String estado;
+    public double saldo;
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+    
+    
 
     public int getId_metodo() {
         return id_metodo;

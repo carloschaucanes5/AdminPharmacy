@@ -25,7 +25,17 @@ public class ReporteEntrada {
   private String primer_nombre;
   private String primer_apellido;
   private String fecha_vencimiento;
+  private String detalle;
 
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+ 
     public String getNumero_factura() {
         return numero_factura;
     }

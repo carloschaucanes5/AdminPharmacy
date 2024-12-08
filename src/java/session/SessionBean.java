@@ -123,7 +123,7 @@ public class SessionBean {
             this.nombre = httpServletRequest.getSession().getAttribute("sessionNombre").toString();
             this.tipo = httpServletRequest.getSession().getAttribute("sessionTipo").toString();
             this.empleado.setCedula_empleado(this.cedula_empleado);
-            if(this.cedula_empleado.compareTo("1004726794")==0)
+            if(this.tipo.compareTo("a")==0 || this.tipo.compareTo("s")==0)
             {
                 this.setMostrarModulos(true);
             }
@@ -134,7 +134,7 @@ public class SessionBean {
             this.empleado.setNombre(nombre);
             this.setEstadoSession(true);
             this.setMensajeSession(false);
-            if(this.tipo.compareTo("a")==0){
+            if(this.tipo.compareTo("a")!=0 || this.tipo.compareTo("s")!=0){
                 this.setAdministrador(false);
             }
             else

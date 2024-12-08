@@ -24,6 +24,28 @@ public class ReporteFacturaDetalle {
     private double total_costo;
     private String nombre_empleado;
     private double precio_unitario;
+    private String contenido;
+    private String detalle;
+
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    
+    
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+    
+    
 
     public double getPrecio_unitario() {
         return precio_unitario;

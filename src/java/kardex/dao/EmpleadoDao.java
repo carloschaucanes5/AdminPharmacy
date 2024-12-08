@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import kardex.modelo.Empleado;
+import kardex.modelo.Permiso;
 
 /**
  *
@@ -74,13 +75,39 @@ public class EmpleadoDao extends Dao{
         return le;
     }
     
+        public List<Empleado> getListaEmpleados1() throws Exception
+    {
+        List<Empleado> le = new ArrayList<Empleado>();
+         try
+        {
+            ResultSet rs = null;
+            this.conectar();
+            PreparedStatement st = this.getCn().prepareStatement("select * from empleado where tipo <> 's' ");
+            rs=st.executeQuery();
+            while(rs.next()==true)
+            {
+                Empleado emp = new Empleado();
+                emp.setCedula_empleado(rs.getString("cedula_empleado"));
+                emp.setNombre(rs.getString("nombre"));
+                le.add(emp);
+            }
+        }catch(Exception e)
+        {
+            throw e;
+        }finally
+        {
+            this.cerrarConexion();
+        }
+        return le;
+    }
+    
     public void registrarEmpleado(Empleado empleado) throws Exception
     {
         String alias = empleado.getPrimer_nombre()+" " +empleado.getPrimer_apellido();
         try
         {
           this.conectar();
-          String sql= "insert into empleado(cedula_empleado,nombre,clave_acceso,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido)values(?,?,?,?,?,?,?)";
+          String sql= "insert into empleado(cedula_empleado,nombre,clave_acceso,primer_nombre,segundo_nombre,primer_apellido,segundo_apellido,tipo)values(?,?,?,?,?,?,?,?)";
           PreparedStatement st  = this.getCn().prepareStatement(sql);
           st.setString(1,empleado.getCedula_empleado());
           st.setString(2,alias);
@@ -89,6 +116,7 @@ public class EmpleadoDao extends Dao{
           st.setString(5,empleado.getSegundo_nombre());
           st.setString(6,empleado.getPrimer_apellido());
           st.setString(7,empleado.getSegundo_apellido());
+          st.setString(8, "e");
           st.executeUpdate();
           st.close();
         }catch(Exception e)
@@ -122,6 +150,26 @@ public class EmpleadoDao extends Dao{
            this.cerrarConexion();
         }
     }
+    
+    
+   public void modificarPermiso(Empleado empleado,Permiso permiso) throws Exception
+    {
+        try
+        {
+          this.conectar();
+          String sql= "update empleado set tipo=? where cedula_empleado=?";
+          PreparedStatement st  = this.getCn().prepareStatement(sql);
+          st.setString(1,permiso.getTipo());
+          st.setString(2, empleado.getCedula_empleado());
+          st.executeUpdate();
+        }catch(Exception e)
+        {
+           throw e;
+        }finally{
+           this.cerrarConexion();
+        }
+    }
+    
     
      public  Empleado getEmpleadoActu(String cedula) throws Exception
     {

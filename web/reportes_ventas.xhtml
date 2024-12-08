@@ -45,19 +45,15 @@
                 </center>
                 
                 <h:form id="formDetalle">
-                    <p:dataTable id="tablaDetalle" value="#{reporteVentasBean.listaFacturaDetalle}" var="detalle" 
+                    <p:dataTable id="tablaDetalle" paginatorPosition="bottom" value="#{reporteVentasBean.listaFacturaDetalle}" var="detalle" 
                                  style="display: #{reporteVentasBean.displayTablaDetalle}}" paginator="true" rows="8">
                         <p:column>
                             <f:facet name="header">Factura</f:facet>
                             <p:outputLabel value="#{detalle.numero_factura}"/>
                         </p:column>
                         <p:column>
-                            <f:facet name="header">Fecha</f:facet>
-                            <p:outputLabel value="#{detalle.fecha_factura}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">Hora</f:facet>
-                            <p:outputLabel value="#{detalle.hora_factura}"/>
+                            <f:facet name="header">Fecha/hora</f:facet>
+                            <p:outputLabel value="#{detalle.fecha_factura} #{reporteVentasBean.transformarHora(detalle.hora_factura)} "/>
                         </p:column>
                         <p:column width="20%">
                             <f:facet name="header">Producto</f:facet>
@@ -70,6 +66,10 @@
                         <p:column width="10%">
                             <f:facet name="header" >Lab./Tipo</f:facet>
                             <p:outputLabel value="#{detalle.laboratorio}/#{detalle.categoria}"/>
+                        </p:column>
+                        <p:column width="6%">
+                            <f:facet name="header" >Modo/Venta</f:facet>
+                            <p:outputLabel value="#{detalle.detalle}"/>
                         </p:column>
                         <p:column width="5%">
                             <f:facet name="header">Cant.</f:facet>
@@ -91,6 +91,11 @@
                             <f:facet name="header">Responsable</f:facet>
                             <p:outputLabel value="#{detalle.nombre_empleado}"/>
                         </p:column>
+                        <p:column>
+                            <f:facet name="header"></f:facet>
+                            <p:commandButton ajax="true" value="Ver" actionListener="#{reporteVentasBean.generarHtmlItems(detalle.contenido)}"   onkeyup="enfocarTareasVentas()"  class="btnVentaContado" oncomplete="PF('wFactura').show();"   update=":dFactura  :formFactura"/>
+                        </p:column>
+                        
                     </p:dataTable>
                        <center>
                         <br/>
@@ -99,8 +104,77 @@
                         </h:commandLink>
                     </center>
                 </h:form>
+                
+                
+                 <p:dialog widgetVar="wFactura" position="center" onShow="setHtmlItemsFactura('#{reporteVentasBean.htmlItems}')"   id="dFactura" header="KardexKDD(Factura)" width="800px" height="450px" modal="true" closeOnEscape="true">  
+                    <h:form id="formFactura" >
+                         <div class='contenedor_impresora'>
+                        <p:growl autoUpdate="true" showDetail="true"/>
+                        <center>
+                            <p:outputLabel class="empresa" value="#{reporteVentasBean.factura.nombre_empresa}"/><br/>
+                            <p:outputLabel class="lema" value="Tu mejor opción"/><br/>
+                            <small>
+                                <p:outputLabel value="Nit:#{reporteVentasBean.factura.nit_empresa}"/><br/>
+                                <p:outputLabel value="Dirección:#{reporteVentasBean.factura.direccion}"/><br/>
+                                <p:outputLabel value="Teléfono:#{reporteVentasBean.factura.telefono}"/><br/>
+                                <p:outputLabel value="Ciudad:#{reporteVentasBean.factura.ciudad}"/>
+                                <br/>
+                                <b>...........................................</b>
+                                <br/>                            
+                                <p:outputLabel value="Factura No: #{reporteVentasBean.factura.numero_factura}"/><br/>
+                                <p:outputLabel value="Cajero: #{reporteVentasBean.factura.nombre}"/><br/>
+                                <p:outputLabel value="Fecha: #{reporteVentasBean.factura.fecha}"/><br/>
+                                <p:outputLabel value="Hora: #{reporteVentasBean.transformarHora(reporteVentasBean.factura.hora)}"/>
+                            </small>
+                            <br/>
+                            <b>...........................................</b> 
+                            <div class='contenedor-lista-factura'></div>
+                            <b>...........................................</b>
+                            <br/>
+                                <small>
+                                <p:outputLabel value="Total: "/>
+                                <p:outputLabel value="#{reporteVentasBean.factura.totalPago}">
+                                   <f:convertNumber type="currency" maxFractionDigits="0"/> 
+                                </p:outputLabel>
+                                </small>
+                                <br/>
+                                <small>
+                                <p:outputLabel value="Cambio: "/>
+                                <p:outputLabel value="#{reporteVentasBean.factura.cambio}">
+                                   <f:convertNumber type="currency" maxFractionDigits="0"/> 
+                                </p:outputLabel>
+                                </small>
+                        <br/>
+                        </center>
+                        <center>  <b>...........................................</b></center>
+                        <div style="text-align: justify;">
+                            <center>
+                                <small>#{reporteVentasBean.factura.advertencia}</small>
+                            </center>
+                        </div>
+                         <div style="text-align: center">
+                             <center>
+                                 <b>#{reporteVentasBean.factura.horario_mensaje}</b><br/>
+                                 <small>#{reporteVentasBean.factura.horario_ordinario}</small>
+                                 <small>#{reporteVentasBean.factura.horario_festivos} </small><br/>
+                                 <b>#{reporteVentasBean.factura.domicilios_mensaje}</b><br/>
+                                 <small><img src="#{reporteVentasBean.factura.url_foto}" width="15px" height="15px"/><b>#{reporteVentasBean.factura.whatsapp}</b></small>
+                             </center>
+                         </div>
+                        </div>
+                        <br/>
+                        <center>
+                        <p:commandButton value="Imprimir" onkeyup="direccionBotonImprimir()" class="boton-imprimir"  >
+                            <p:ajax  oncomplete="imprimir1()"/>
+                        </p:commandButton>
+                        </center>
+                    </h:form>
+
+                </p:dialog>
+                
+                
                 <h:form id="formGeneral">
-                    <p:dataTable  id="tablaGeneral" value="#{reporteVentasBean.listafacturaGeneral}" var="general" 
+                    <p:dataTable paginatorPosition="bottom" id="tablaGeneral" value="#{reporteVentasBean.listafacturaGeneral}" var="general" 
                                   style="display: #{reporteVentasBean.displayTablaGeneral}}" paginator="true" rows="8">
                         <p:column>
                             <f:facet name="header">Factura</f:facet>
@@ -132,9 +206,17 @@
                     <p:panel>
                         <center>
                             <p:panelGrid columns="2">
+                                <p:outputLabel value="Total Costo" for="tCosto"/>
+                                <p:outputLabel id="tCosto" value="#{reporteVentasBean.totalCosto}">
+                                     <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
+                                </p:outputLabel>
                                 <p:outputLabel value="Total Venta" for="tPrecio"/>
                                 <p:outputLabel id="tPrecio" value="#{reporteVentasBean.totalPrecio}">
                                      <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="0"/>
+                                </p:outputLabel>
+                                <p:outputLabel value="Utilidad" for="tUtilidad"/>
+                                <p:outputLabel id="tUtilidad" value="#{reporteVentasBean.totalPrecio-reporteVentasBean.totalCosto}">
+                                     <f:convertNumber type="currency" currencySymbol="$" minFractionDigits="2"/>
                                 </p:outputLabel>
                             </p:panelGrid>
                         </center>
@@ -143,6 +225,10 @@
             </ui:define>
 
         </ui:composition>
+        
+        
+        
+        
         
     </body>
 </html>

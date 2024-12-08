@@ -6,6 +6,8 @@
 
 package kardex.bean;
 
+import com.google.gson.Gson;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -16,6 +18,7 @@ import javax.faces.context.FacesContext;
 import kardex.dao.EmpleadoDao;
 import kardex.modelo.Empleado;
 import kardex.dao.ReporteVentaDao;
+import kardex.modelo.Factura;
 import kardex.modelo.ReporteFacturaDetalle;
 import kardex.modelo.ReporteFacturaGeneral;
 
@@ -43,6 +46,25 @@ public class ReporteVentasBean {
     private double totalCosto;
     private double totalPrecio;
     private double ganancia;
+    private Factura factura;
+    private String htmlItems;
+
+    public Factura getFactura() {
+        return factura;
+    }
+
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+
+    public String getHtmlItems() {
+        return htmlItems;
+    }
+
+    public void setHtmlItems(String htmlItems) {
+        this.htmlItems = htmlItems;
+    }
+    
     
 
     public ReporteVentasBean()
@@ -222,4 +244,33 @@ public class ReporteVentasBean {
             FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         }
     }
+    
+    public void generarHtmlItems(String facturaJson){
+        try{
+        Gson g = new Gson();
+        this.factura = g.fromJson(facturaJson.replace("\\\"", "\""), Factura.class);
+       String html = "<small><table>";
+       html+="<tr><th>Producto</th><th>Cant.</th><th>Subtotal</th></tr>";
+       double saldo = 0;
+       for(int i = 0; i< this.factura.getLineas().size();i++){
+        html+="<tr><td>"+this.factura.getLineas().get(i).getVariable()+"/"+this.factura.getLineas().get(i).getModo_venta()+"</td><td>"+this.factura.getLineas().get(i).getCantidad()+"</td><td>"+this.formatColombianCurrent(this.factura.getLineas().get(i).getTotal())+"</td></tr>";
+        saldo = saldo + this.factura.getLineas().get(i).getTotal();
+       }
+       this.factura.setTotalPago(saldo);
+       html += "</table></small>";
+       this.setHtmlItems(html);
+        }catch(Exception e){
+         System.out.println(e.toString());
+        }
+
+   }
+    public String formatColombianCurrent(double money){
+     DecimalFormat formatea = new DecimalFormat("###,###.##");
+     return "$"+formatea.format(money)+"";
+    }
+    
+   public String transformarHora(String hora){
+       String ho = hora.split("\\.")[0];
+       return ho;
+   }
 }

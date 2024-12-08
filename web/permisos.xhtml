@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./plantillas/tareas.xhtml">
+            <ui:define name="content">
+                <center>
+                    <h1><b>Configuración de Información de Usuarios</b></h1>
+                    <br/>
+                    <h:form id='formPermisos'>
+                        <p:focus context="panel1"/>
+                        <p:growl   showDetail="true"/>
+                        <h:panelGrid columns="2" title="Configuración de permisos" id="panel1" >        
+                            <p:outputLabel value="Usuario" for="usuario"/>
+                            <p:selectOneMenu  id="usuario" value="#{empleadoBean.empleado}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
+                                <f:selectItems value="#{empleadoBean.listaEmpleados}" var="emp" itemLabel="#{emp.nombre}" itemValue="#{emp}"/>
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Tipo" for="tipo"/>
+                            <p:selectOneMenu  id="tipo" value="#{empleadoBean.permiso}"   converter="omnifaces.SelectItemsConverter" required="true">
+                                <f:selectItem noSelectionOption="true" itemLabel="Seleccionar" value="#{null}"/>
+                                <f:selectItems value="#{empleadoBean.listaPermisos}" var="per" itemLabel="#{per.descripcion}" itemValue="#{per}"/>
+                            </p:selectOneMenu>
+                   
+                            <h:panelGroup/>
+                            <p:commandButton value="Actualizar"  action="#{empleadoBean.actualizarPermiso()}" />
+                        </h:panelGrid>
+                    </h:form>
+                </center>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
